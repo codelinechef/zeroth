@@ -55,6 +55,41 @@ SHINGLE_SAMPLE = 16
 # Used ONLY where a document has no real page breaks, and recorded as such.
 CHARS_PER_PAGE = 3000
 
+# A tenant below this many chunks is folded into a semantic sibling. Per-tenant
+# HNSW is meaningless on a 43-chunk partition — ef_search=200 exceeds the whole
+# partition — and a 150x spread between the largest and smallest tenant makes
+# isolation tests measure partition size rather than access control.
+MIN_TENANT_CHUNKS = 500
+
+# Siblings are semantic, never arbitrary: merged tenants must still hold
+# documents that genuinely resemble each other, or the embedding clustering
+# that makes RLS testing realistic is lost.
+RFC_FAMILY = {"httpstate": "httpbis", "quic": "tls"}
+
+CUAD_FAMILY = {
+    "license": "license-ip", "intellectual-property": "license-ip",
+    "distribution": "distribution", "reseller": "distribution",
+    "affiliate": "distribution", "remarketing": "distribution",
+    "agency": "distribution",
+    "marketing": "marketing", "promotion": "marketing",
+    "sponsorship": "marketing", "endorsement": "marketing",
+    "co-branding": "marketing",
+    "service": "services", "maintenance": "services", "hosting": "services",
+    "outsourcing": "services", "consulting": "services",
+    "supply": "supply", "manufacturing": "supply", "transportation": "supply",
+    "joint-venture": "alliance", "strategic-alliance": "alliance",
+    "collaboration": "alliance", "development": "alliance",
+    "franchise": "other", "employment": "other", "other": "other",
+}
+
+# SIC major group -> division, for folding small filers into a sector sibling.
+SIC_DIVISIONS = [
+    (1, 9, "agriculture"), (10, 14, "mining"), (15, 17, "construction"),
+    (20, 39, "manufacturing"), (40, 49, "transport-utilities"),
+    (50, 51, "wholesale"), (52, 59, "retail"), (60, 67, "finance"),
+    (70, 89, "services"), (91, 99, "public"),
+]
+
 
 def log(m: str) -> None:
     print(m, flush=True)
@@ -65,6 +100,75 @@ def atomic_write(path: Path, text: str) -> None:
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(text)
     os.replace(tmp, path)
+
+
+def sic_division(sic: str | None) -> str:
+    try:
+        major = int(str(sic)[:2])
+    except (TypeError, ValueError):
+        return "unclassified"
+    for lo, hi, name in SIC_DIVISIONS:
+        if lo <= major <= hi:
+            return name
+    return "unclassified"
+
+
+def merge_small_tenants(chunk_counts: dict[str, int],
+                        doc_meta: dict[str, dict]) -> dict[str, str]:
+    """Map base tenant -> final tenant, folding anything under the floor.
+
+    The family of a tenant is derived ONCE, from the metadata of the documents
+    it actually holds. Deriving it again from an already-merged name is what
+    produced `edgar-unclassified`: a family bucket owns no documents, so the
+    lookup found nothing and invented a division.
+
+    CUAD and RFC pool the WHOLE family when any member is short — contract
+    types and protocol families are peers, and pooling only the small ones
+    leaves a large sibling stranded beside a bucket named after it. EDGAR does
+    not: a filing company is the tenant the specification asks for, so large
+    companies keep their own tenant and only short ones fall back to a sector
+    bucket."""
+    # family per base tenant, computed once from the documents themselves
+    base_family: dict[str, str] = {}
+    for tenant in chunk_counts:
+        if tenant.startswith("rfc-"):
+            wg = tenant[4:]
+            base_family[tenant] = f"rfc-{RFC_FAMILY.get(wg, wg)}"
+        elif tenant.startswith("cuad-"):
+            base_family[tenant] = f"cuad-{CUAD_FAMILY.get(tenant[5:], 'misc')}"
+        elif tenant.startswith("edgar-"):
+            sic = next((d.get("sic") for d in doc_meta.values()
+                        if d.get("tenant_base") == tenant), None)
+            base_family[tenant] = f"edgar-{sic_division(sic)}"
+        else:
+            base_family[tenant] = tenant
+
+    mapping = {t: t for t in chunk_counts}
+
+    # CUAD / RFC: if any peer in a family is short, the family becomes the tenant
+    members: dict[str, list[str]] = {}
+    for base, fam in base_family.items():
+        members.setdefault(fam, []).append(base)
+    for fam, mem in members.items():
+        if fam.startswith("edgar-"):
+            continue
+        if any(chunk_counts[b] < MIN_TENANT_CHUNKS for b in mem):
+            for b in mem:
+                mapping[b] = fam
+
+    # EDGAR: only short filers fall back to their sector
+    for base in chunk_counts:
+        if base.startswith("edgar-") and chunk_counts[base] < MIN_TENANT_CHUNKS:
+            mapping[base] = base_family[base]
+
+    # anything still short after that goes to a per-source bucket
+    counts: dict[str, int] = {}
+    for base, n in chunk_counts.items():
+        counts[mapping[base]] = counts.get(mapping[base], 0) + n
+    for base, cur in list(mapping.items()):
+        if counts.get(cur, 0) < MIN_TENANT_CHUNKS:
+            mapping[base] = cur.split("-")[0] + "-misc"
+    return mapping
 
 
 # --------------------------------------------------------------------------
@@ -462,8 +566,7 @@ def main() -> int:
             log(f"  {i}/{len(docs)} parsed")
     log(f"  parsed {len(parsed_docs)}, failed {len(failed)}")
 
-    tenants = sorted({p["tenant"] for p in parsed_docs.values()})
-    log(f"  tenants: {len(tenants)}")
+    log(f"  base tenants: {len({p['tenant'] for p in parsed_docs.values()})}")
 
     # ---- dedup -------------------------------------------------------------
     log("\n=== dedup (containment) ===")
@@ -478,6 +581,7 @@ def main() -> int:
     ch = Chunker(tok)
 
     counts = {}
+    per_tenant_chunks: dict[str, int] = {}
     for strategy, fn in (("fixed-512", ch.fixed), ("section-aware", ch.section_aware)):
         out_path = CHUNKS / f"{strategy}.jsonl"
         n = 0
@@ -488,11 +592,42 @@ def main() -> int:
                 for c in fn(p):
                     fh.write(json.dumps(c) + "\n")
                     n += 1
+                    if strategy == "fixed-512":
+                        per_tenant_chunks[c["tenant"]] = \
+                            per_tenant_chunks.get(c["tenant"], 0) + 1
                 if i % 100 == 0:
                     log(f"  {strategy}: {i}/{len(parsed_docs)} docs, {n:,} chunks")
-        os.replace(out_path.with_suffix(".jsonl.tmp"), out_path)
         counts[strategy] = n
-        log(f"  {strategy}: {n:,} chunks -> {out_path.name}")
+        log(f"  {strategy}: {n:,} chunks (base tenants)")
+
+    # ---- merge small tenants, then rewrite both files ----------------------
+    log("\n=== tenant merge ===")
+    doc_meta = {d["doc_id"]: {**by_id[d["doc_id"]],
+                              "tenant_base": parsed_docs[d["doc_id"]]["tenant"]}
+                for d in docs if d["doc_id"] in parsed_docs}
+    mapping = merge_small_tenants(per_tenant_chunks, doc_meta)
+    merged = {b: f for b, f in mapping.items() if b != f}
+    log(f"  {len(per_tenant_chunks)} base tenants -> "
+        f"{len(set(mapping.values()))} after merge ({len(merged)} folded)")
+    for b, f in sorted(merged.items()):
+        log(f"    {b:<34} -> {f}  ({per_tenant_chunks[b]:,} chunks)")
+
+    for strategy in ("fixed-512", "section-aware"):
+        src = CHUNKS / f"{strategy}.jsonl.tmp"
+        dst = CHUNKS / f"{strategy}.jsonl"
+        with open(src) as fin, open(str(dst) + ".2", "w") as fout:
+            for line in fin:
+                c = json.loads(line)
+                c["tenant_base"] = c["tenant"]
+                c["tenant"] = mapping.get(c["tenant"], c["tenant"])
+                fout.write(json.dumps(c) + "\n")
+        os.replace(str(dst) + ".2", dst)
+        src.unlink(missing_ok=True)
+        log(f"  rewrote {strategy}.jsonl with final tenants")
+
+    for p in parsed_docs.values():
+        p["tenant_base"] = p["tenant"]
+        p["tenant"] = mapping.get(p["tenant"], p["tenant"])
 
     # ---- manifest ----------------------------------------------------------
     for d in manifest["documents"]:
@@ -503,6 +638,7 @@ def main() -> int:
         d["pages_source"] = p["pages_source"]
         d["normalised_checksum"] = p["normalised_checksum"]
         d["tenant"] = p["tenant"]
+        d["tenant_base"] = p.get("tenant_base", p["tenant"])
         d.pop("tenant_provisional", None)
         d["dedup"] = decisions.get(d["doc_id"])
 
@@ -516,7 +652,10 @@ def main() -> int:
                           if d.get("pages_source") in ("page-break", "form-feed")),
         "pages_estimated": sum(d.get("pages") or 0 for d in kept
                                if d.get("pages_source") == "estimated"),
-        "tenants": len(tenants),
+        "tenants": len({p["tenant"] for p in parsed_docs.values()}),
+        "tenants_before_merge": len(per_tenant_chunks),
+        "tenant_merges": merged,
+        "min_tenant_chunks": MIN_TENANT_CHUNKS,
         "chunks": counts,
         "parse_failures": failed,
         "dedup_config": {"metric": "containment", "threshold": CONTAINMENT_THRESHOLD,

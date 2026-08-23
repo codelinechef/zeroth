@@ -498,6 +498,8 @@ def fetch_edgar(f: Fetcher, st: State, tickers: list[str], per_company: int,
         st.meta["cik_map"] = cik_map
         st.save()
 
+    prune_edgar(st, per_company)
+
     missing = [t for t in tickers if t.upper() not in cik_map]
     if missing:
         log(f"  !! not found in EDGAR ticker map, skipping: {', '.join(missing)}")
@@ -567,6 +569,34 @@ def fetch_edgar(f: Fetcher, st: State, tickers: list[str], per_company: int,
             st.save()
             st.write_manifest()
             log(f"    ok {filing['report_date']}  {len(body):>9,} B  {filing['primary']}")
+
+
+def prune_edgar(st: "State", per_company: int) -> int:
+    """Drop filings beyond the newest `per_company` for each CIK.
+
+    Makes --per-company idempotent: lowering it on a later run reduces the
+    corpus instead of leaving earlier extras behind. Without this, the
+    committed manifest would not match what a fresh clone produces from the
+    same command, which is the whole reproducibility claim (§3.2)."""
+    by_cik: dict[str, list] = {}
+    for doc_id, d in st.documents.items():
+        if d.get("source") == "edgar":
+            by_cik.setdefault(d["cik"], []).append((d.get("filing_date", ""), doc_id))
+
+    removed = 0
+    for cik, filings in by_cik.items():
+        # same ordering fetch_edgar uses: newest filing_date first
+        filings.sort(reverse=True)
+        for _, doc_id in filings[per_company:]:
+            path = ROOT / st.documents[doc_id]["raw_path"]
+            path.unlink(missing_ok=True)
+            st.documents.pop(doc_id, None)
+            removed += 1
+    if removed:
+        log(f"  pruned {removed} filings beyond --per-company {per_company}")
+        st.save()
+        st.write_manifest()
+    return removed
 
 
 def _collect_10ks(f: Fetcher, sub: dict, cik10: str) -> list[dict]:

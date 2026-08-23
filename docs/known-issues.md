@@ -80,3 +80,84 @@ SELECT t, (SELECT array_agg(random()) FROM generate_series(1,384)) FROM generate
 An uncorrelated subquery is hoisted and evaluated once regardless of volatility.
 Use a `VOLATILE` function taking the row key as an argument instead. This cost
 an hour and produced a plausible-looking corpus with no tenant structure at all.
+
+## Two silent data bugs found in Phase 1 ingestion
+
+Both produced plausible output. Neither raised anything. Both would have
+corrupted published figures, and both are the kind of mistake that recurs in a
+different form — so the pattern matters more than the specific fix.
+
+### `slug()` truncation dropped 26 real contracts
+
+CUAD filenames routinely exceed 60 characters and differ only in a trailing
+digit or suffix:
+
+```
+...EX-10.12_11817081_EX-10.12_Manufacturing Agreement1.txt
+...EX-10.12_11817081_EX-10.12_Manufacturing Agreement2.txt
+...SERVICES AGREEMENT.txt
+...SERVICES AGREEMENT_AMENDMENT.txt
+...SERVICES AGREEMENT_SECONDAMENDMENT.txt
+```
+
+`slug(name, maxlen=60)` collapsed these to one `doc_id`. `st.documents[doc_id] =
+entry(...)` then overwrote silently, and because the resume check found the
+first file's entry intact, the later files were **never extracted to disk
+either**. 15 ids absorbed 41 files; 26 distinct contracts vanished.
+
+The only visible symptom was two numbers on different lines of the log
+disagreeing — "selected 510 contract texts" and "registered 484 CUAD
+documents". Nothing else.
+
+**Fixes:** `doc_id` now carries an 8-character hash of the full archive member
+name, so it is total rather than best-effort. `State.register()` refuses to
+overwrite an existing id belonging to a different document and records a
+collision failure instead. The CUAD stage prints an explicit reconciliation
+block rather than leaving two counts to be compared by eye.
+
+**The general lesson:** a derived identifier that is *lossy* (truncated, slugged,
+normalised) is not an identifier. Either make it total, or check for collisions
+when you assign it. And any pipeline that reports "selected N" then "wrote M"
+should reconcile N against M itself.
+
+### lxml `id()` reuse over-counted pages 3-5x
+
+To count page breaks in 10-K HTML:
+
+```python
+breaks = {id(el) for el in doc.xpath('//*[contains(@style,"page-break")] | //hr')}
+for el in doc.iter():
+    if id(el) in breaks:        # WRONG
+        page += 1
+```
+
+lxml creates element proxy objects on demand and frees them when the last
+reference goes. Once the xpath result list is discarded, those `id()` values are
+**reused by new proxies** created during `doc.iter()`, so unrelated elements
+matched the set. One filing recorded 535 pages against 162 actual page breaks.
+
+`pages` is a published corpus figure, so this was a fabricated number reaching
+the site by accident — exactly what §3.3 forbids, arrived at through a bug
+rather than a decision.
+
+**Fix:** test each element directly during the single pass, never pre-collect
+identities:
+
+```python
+for el in doc.iter():
+    if el.tag == "hr" or "page-break" in (el.get("style") or "").lower():
+        page += 1
+```
+
+Verified afterwards by re-deriving page counts independently and asserting
+`pages == breaks + 1` on every filing.
+
+**The general lesson:** `id()` is only valid while a reference is held. This is
+not lxml-specific — any library with on-demand proxy objects (ORM rows,
+lazy AST nodes, some `ctypes` wrappers) behaves the same way. Identity-based
+sets across two traversals are the smell.
+
+**And the reason both were caught:** a derived figure was checked against an
+independent recomputation. The page count was compared against a fresh count
+from the source HTML; the contract count against the archive's own member list.
+Neither bug was found by reading the code.

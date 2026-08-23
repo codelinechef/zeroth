@@ -72,6 +72,22 @@ export default function MethodologyPage() {
           hand-labelled and will not be described as such.
         </li>
         <li>
+          <strong>CUAD tenants are contract type, not counterparty.</strong>{" "}
+          The specification assigns tenants by filing company, contract
+          counterparty, and RFC working group. Filing company and working group
+          map cleanly. Counterparty does not: the 510 CUAD contracts come from
+          463 distinct filers, so one tenant per counterparty would mean about
+          1.1 documents each. Tenant isolation cannot be tested meaningfully at
+          that size — a partition holding a single document proves nothing about
+          access control. Contract type is used instead. It is bounded,
+          deterministic from the source filename, and semantically coherent, so
+          contracts sharing a tenant genuinely resemble each other, which is the
+          property that makes retrieval under access control behave like the
+          real system rather than like random filtering. Tenants below a chunk
+          floor are further folded into a semantic sibling for the same reason.
+          Every document records both its final tenant and the unmerged original.
+        </li>
+        <li>
           <strong>The corpus has two document shapes from one publisher, not
           three independent sources.</strong> The 10-K filings and the CUAD
           contracts both originate from EDGAR; only the RFCs are independently
