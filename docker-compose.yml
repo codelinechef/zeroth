@@ -1,0 +1,23 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: zeroth-db
+    restart: unless-stopped
+    # Docker's 64MB default /dev/shm fails parallel HNSW index builds.
+    # See docs/known-issues.md.
+    shm_size: '1gb'
+    ports: ["5433:5432"]
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: local_dev_only
+      POSTGRES_DB: zeroth
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

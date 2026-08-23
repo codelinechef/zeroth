@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Zeroth design tokens — brief §7.
+   Six colours. Colour always carries meaning, never decoration.
+   No dark mode: explicitly out of scope (§12).
+   --------------------------------------------------------------------------- */
+:root {
+  --paper:      #EDEFF2;
+  --ink:        #14161A;
+  --ink-muted:  #5C636E;
+  --rule:       #C8CDD4;
+  --signal:     #1E4FD8;
+  --regress:    #A33A2A;
+
+  /* Type scale. Nothing outside it. */
+  --t-75:   0.75rem;
+  --t-875:  0.875rem;
+  --t-100:  1rem;
+  --t-125:  1.25rem;
+  --t-150:  1.5rem;
+  --t-200:  2rem;
+  --t-275:  2.75rem;
+
+  /* The dot-leader grid. One monospace text run, so alignment is exact by
+     construction at every breakpoint rather than by arithmetic we maintain. */
+  --leader-cols: 52;
+}
+
+/* NOTE: plain `@theme`, not `@theme inline`. With `inline` Tailwind resolves
+   these into utility classes but never emits them as custom properties, so a
+   hand-written `var(--font-mono)` silently resolves to nothing and every
+   monospace rule falls back to the preflight sans stack — which quietly breaks
+   dot-leader alignment while still looking plausible. */
+@theme {
+  --color-paper:     var(--paper);
+  --color-ink:       var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-rule:      var(--rule);
+  --color-signal:    var(--signal);
+  --color-regress:   var(--regress);
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
+  --font-serif:   var(--font-source-serif), ui-serif, Georgia, serif;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--t-875);
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Uppercase eyebrow — §7 */
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: var(--t-75);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* Prose measure capped at 72 characters — the width RFCs are published at,
+   applied literally. */
+.prose-spec {
+  font-family: var(--font-serif);
+  font-size: var(--t-100);
+  line-height: 1.7;
+  max-width: 72ch;
+}
+.prose-spec p + p { margin-top: 1rem; }
+
+a {
+  color: var(--signal);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+/* Visible keyboard focus everywhere — quality floor, §3.7 */
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+.rule { border: 0; border-top: 1px solid var(--rule); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Dot leaders.
+   The whole line is a single pre-formatted monospace text run, so the label,
+   the dots and the value cannot drift out of alignment at any width. The line
+   is sized so the full 52-column grid always fits, down to 360px.
+   --------------------------------------------------------------------------- */
+.leader-line {
+  display: block;
+  white-space: pre;
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-size: clamp(0.625rem, 2.35vw, var(--t-875));
+  font-feature-settings: "tnum" 1;
+}
+@media (min-width: 900px) {
+  .leader-line { font-size: var(--t-875); }
+}
+
+/* ---------------------------------------------------------------------------
+   Motion: one moment only. Table rows reveal top-to-bottom in a 40ms stagger
+   on first paint, as if being typeset. Under 500ms total. — §7
+   --------------------------------------------------------------------------- */
+@keyframes typeset {
+  from { opacity: 0; transform: translateY(-2px); }
+  to   { opacity: 1; transform: none; }
+}
+.typeset-row {
+  animation: typeset 160ms ease-out backwards;
+  animation-delay: calc(var(--row) * 40ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typeset-row { animation: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
