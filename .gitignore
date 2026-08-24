@@ -11,5 +11,8 @@ data/corpus/raw/
 data/corpus/parsed/
 data/corpus/chunks/
 data/corpus/.fetch_state.json
+# resume position; the golden set itself IS committed
+data/golden/.gen_state.json
+data/golden/.verify_state.json
 *.log
 .DS_Store
