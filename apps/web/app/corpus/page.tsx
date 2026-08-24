@@ -1,82 +1,76 @@
-import { DotLeader } from "@/components/DotLeader";
-import { EmptyState } from "@/components/EmptyState";
-import { getCorpusIds } from "@/lib/content";
+import { Prose, MarginNote, Figure } from "@/components/Paper";
+import { CorpusComposition } from "@/components/figures/CorpusComposition";
+import { getCorpusStats } from "@/lib/content";
 
 export const metadata = { title: "Corpus · Zeroth" };
 
 export default function CorpusPage() {
-  const ids = getCorpusIds();
-
+  const s = getCorpusStats();
   return (
     <>
-      <p className="eyebrow">Clause 3 · Corpus</p>
-      <h1 className="mt-2 text-[length:var(--t-200)]">Corpus</h1>
-      <hr className="rule my-8" />
+      <p className="eyebrow">Section 3</p>
+      <h1 className="mt-2">Corpus</h1>
 
-      <h2 className="text-[length:var(--t-125)]">3.1 Measured composition</h2>
-      <div className="mt-4">
-        {ids.length === 0 ? (
-          <EmptyState>
-            No corpus has been ingested yet. Composition figures publish once
-            the ingestion pipeline runs and the manifest is committed.
-          </EmptyState>
-        ) : (
-          <ul className="space-y-1">
-            {ids.map((id) => (
-              <li key={id}>{id}</li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <div className="mt-6">
-        <DotLeader label="Documents" value="—" />
-        <DotLeader label="Pages" value="—" />
-        <DotLeader label="Chunks" value="—" />
-        <DotLeader label="Tenants" value="—" />
-      </div>
+      <Prose className="mt-6">
+        <p className="lede">
+          Public documents, chosen to be long, messy, cross-referencing, and
+          naturally partitioned into tenants.
+        </p>
+        <MarginNote label="Provenance">
+          Every figure on this page is read from the committed manifest, which
+          records source, identifier, URL, checksum and tenant per document.
+        </MarginNote>
+        <p>
+          The manifest is what makes the corpus reproducible without
+          redistributing gigabytes: replay the URL, verify the checksum. Raw
+          documents are cached locally and not committed.
+        </p>
+      </Prose>
 
-      <h2 className="mt-12 text-[length:var(--t-125)]">3.2 Planned sources</h2>
-      <p className="prose-spec mt-3">
-        Described here as intent. Nothing below has been fetched, parsed, or
-        counted, and no figure on this page is a measurement.
-      </p>
+      <Figure n={7} caption="Composition by source, with page provenance separated into counted and estimated.">
+        <div className="p-4"><CorpusComposition /></div>
+      </Figure>
 
-      <div className="prose-spec mt-6 space-y-6">
-        <div>
-          <h3 className="font-semibold not-italic">SEC EDGAR 10-K filings</h3>
-          <p className="mt-1 text-ink-muted">
-            Long, structurally messy, heavy with cross-references and tables.
-            They partition naturally by filing company, which is what makes the
-            tenant isolation tests meaningful rather than theatrical.
+      <h2 className="mt-14">3.1 Sources</h2>
+      <Prose>
+        <h3>SEC EDGAR 10-K filings</h3>
+        <p>
+          Long, structurally messy, heavy with cross-references and tables. They
+          partition naturally by filing company, which is what makes tenant
+          isolation meaningful to test rather than theatrical. Only the primary
+          document of each filing is fetched.
+        </p>
+        <h3>CUAD — Contract Understanding Atticus Dataset</h3>
+        <p>
+          Commercial contracts annotated with clause spans, CC BY 4.0, which
+          supplies ground truth for a subset of queries. These contracts are
+          themselves drawn from EDGAR, so they are a different document shape
+          from the same publisher rather than an independent source, and they
+          are deduplicated against the filing set by containment.
+        </p>
+        <h3>RFCs</h3>
+        <p>
+          Documents from the HTTP and TLS families. Freely redistributable,
+          densely cross-referencing, and a clean hard-mode subset — the only
+          genuinely independent third source.
+        </p>
+      </Prose>
+
+      <h2 className="mt-14">3.2 Attribution</h2>
+      <Prose>
+        <p className="text-ink-muted">
+          CUAD: Hendrycks et al., NeurIPS 2021; The Atticus Project. Licensed
+          CC BY 4.0. Chunking and re-indexing constitute modification and are
+          indicated as such. EDGAR filings are published by the US Securities
+          and Exchange Commission. RFCs are published by the IETF and RFC
+          Editor under BCP 78.
+        </p>
+        {s ? (
+          <p className="mono text-[length:var(--t-75)] text-ink-muted">
+            Corpus {s.corpusId}
           </p>
-        </div>
-        <div>
-          <h3 className="font-semibold not-italic">
-            CUAD — Contract Understanding Atticus Dataset
-          </h3>
-          <p className="mt-1 text-ink-muted">
-            Commercial contracts annotated with clause spans, CC BY 4.0, which
-            supplies free ground truth for a subset of queries. These contracts
-            are themselves drawn from EDGAR, so they are a different document
-            shape from the same publisher rather than an independent source,
-            and they are deduplicated against the 10-K set.
-          </p>
-        </div>
-        <div>
-          <h3 className="font-semibold not-italic">RFCs</h3>
-          <p className="mt-1 text-ink-muted">
-            Documents from the HTTP and TLS families. Freely redistributable,
-            densely cross-referencing, and a clean hard-mode subset.
-          </p>
-        </div>
-      </div>
-
-      <h2 className="mt-12 text-[length:var(--t-125)]">3.3 Attribution</h2>
-      <p className="prose-spec mt-3 text-ink-muted">
-        Source licences and attribution are recorded with the corpus manifest
-        when it is committed. CUAD is CC BY 4.0; chunking and re-indexing
-        constitute modification and will be indicated as such.
-      </p>
+        ) : null}
+      </Prose>
     </>
   );
 }

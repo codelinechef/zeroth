@@ -1,0 +1,20 @@
+{
+  "id": "judge-sees-labels",
+  "title": "The judge sees the drafter's labels",
+  "status": "prevented-by-design",
+  "what": "If the model grading relevance can see which passages the query was written from, it agrees with them. The agreement rate then measures conformity rather than correctness.",
+  "why_invisible": "The number goes up. A high agreement rate looks like a well-constructed set.",
+  "corrupts": [
+    "recall_at_10",
+    "ndcg_at_10",
+    "context_precision",
+    "faithfulness",
+    "answer_correctness"
+  ],
+  "detection": "The judging prompt interpolates only the question and the passage text. Source membership is recorded in the output but never sent to the judge.",
+  "evidence": "Verified by inspecting the compiled prompt template: the only interpolated fields are the relevance statement, the question, and the passages.",
+  "figure": 5,
+  "metrics": [
+    "recall_at_10"
+  ]
+}

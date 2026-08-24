@@ -1,0 +1,51 @@
+{
+  "id": "faithfulness",
+  "name": "Faithfulness",
+  "family": "grounding",
+  "tag": "GRD",
+  "one_line": "Proportion of generated claims entailed by the retrieved chunks.",
+  "formula": {
+    "notation": "F(a) = |{ claims in a entailed by context }| / |claims in a|",
+    "terms": [
+      {
+        "symbol": "claims",
+        "meaning": "atomic assertions extracted from the answer"
+      },
+      {
+        "symbol": "entailed",
+        "meaning": "judged by an LLM against a published rubric, not string match"
+      }
+    ]
+  },
+  "range": {
+    "min": 0,
+    "max": 1,
+    "unit": null,
+    "note": "Mathematical range. No typical value is stated: it would be a number with no run behind it."
+  },
+  "computed_by": {
+    "file": "harness/eval/scorers.py",
+    "symbol": "faithfulness",
+    "phase": 4
+  },
+  "ci": {
+    "method": "bootstrap",
+    "resamples": 1000,
+    "level": 0.95,
+    "why": "A point estimate over a few hundred queries without an interval is the first thing a reviewer attacks."
+  },
+  "worked_example": {
+    "requires": "human_verified",
+    "state": "unavailable"
+  },
+  "failure_modes": [
+    "judge-sees-labels",
+    "unpinned-model",
+    "max-tokens-truncation"
+  ],
+  "related": [
+    "citation_accuracy",
+    "citation_coverage",
+    "answer_correctness"
+  ]
+}

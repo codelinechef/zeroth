@@ -83,3 +83,58 @@ export function getRun(id: string): Run | undefined {
 export function getCorpusIds(): string[] {
   return [...new Set(getRuns().map((r) => r.corpus.id))];
 }
+
+/**
+ * Corpus id and document count from the committed manifest. Read at build
+ * time, never hardcoded — the footer carries provenance, so it has to be the
+ * real corpus or nothing.
+ */
+export function getCorpusVersion(): string | null {
+  const manifest = path.join(process.cwd(), "..", "..", "data", "corpus",
+                             "corpus_manifest.json");
+  if (!fs.existsSync(manifest)) return null;
+  try {
+    const m = JSON.parse(fs.readFileSync(manifest, "utf8"));
+    const n = m?.corpus_stats?.documents_after_dedup;
+    return n ? `${m.corpus_id} · ${n} documents` : (m.corpus_id ?? null);
+  } catch {
+    return null;
+  }
+}
+
+export type CorpusStats = {
+  corpusId: string; documents: number; pages: number; chunks: number;
+  tenants: number; pagesReal: number; pagesEstimated: number;
+  bySource: { source: string; documents: number }[];
+};
+
+/** Corpus figures from the committed manifest. Null when nothing is ingested. */
+export function getCorpusStats(): CorpusStats | null {
+  const f = path.join(process.cwd(), "..", "..", "data", "corpus",
+                      "corpus_manifest.json");
+  if (!fs.existsSync(f)) return null;
+  try {
+    const m = JSON.parse(fs.readFileSync(f, "utf8"));
+    const s = m?.corpus_stats;
+    if (!s) return null;
+    const counts = new Map<string, number>();
+    for (const d of m.documents ?? []) {
+      if (d.dedup) continue;
+      counts.set(d.source, (counts.get(d.source) ?? 0) + 1);
+    }
+    return {
+      corpusId: m.corpus_id,
+      documents: s.documents_after_dedup,
+      pages: s.pages_total,
+      chunks: s.chunks?.["fixed-512"] ?? 0,
+      tenants: s.tenants,
+      pagesReal: s.pages_real,
+      pagesEstimated: s.pages_estimated,
+      bySource: [...counts.entries()]
+        .map(([source, documents]) => ({ source, documents }))
+        .sort((a, b) => b.documents - a.documents),
+    };
+  } catch {
+    return null;
+  }
+}

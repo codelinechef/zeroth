@@ -1,0 +1,45 @@
+{
+  "id": "answer_correctness",
+  "name": "Answer correctness",
+  "family": "grounding",
+  "tag": "GRD",
+  "one_line": "Agreement with the reference answer, judged against a published rubric.",
+  "formula": {
+    "notation": "correctness = judge(answer, reference) in {0, 1}",
+    "terms": [
+      {
+        "symbol": "reference",
+        "meaning": "the golden set answer, model-drafted and partially human-verified"
+      }
+    ]
+  },
+  "range": {
+    "min": 0,
+    "max": 1,
+    "unit": null,
+    "note": "Mathematical range. No typical value is stated: it would be a number with no run behind it."
+  },
+  "computed_by": {
+    "file": "harness/eval/scorers.py",
+    "symbol": "answer_correctness",
+    "phase": 4
+  },
+  "ci": {
+    "method": "bootstrap",
+    "resamples": 1000,
+    "level": 0.95,
+    "why": "A point estimate over a few hundred queries without an interval is the first thing a reviewer attacks."
+  },
+  "worked_example": {
+    "requires": "human_verified",
+    "state": "unavailable"
+  },
+  "failure_modes": [
+    "judge-sees-labels",
+    "unpinned-model"
+  ],
+  "related": [
+    "answer_relevance",
+    "faithfulness"
+  ]
+}

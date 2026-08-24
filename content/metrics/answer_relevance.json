@@ -1,0 +1,44 @@
+{
+  "id": "answer_relevance",
+  "name": "Answer relevance",
+  "family": "grounding",
+  "tag": "GRD",
+  "one_line": "Whether the answer addresses the question that was actually asked.",
+  "formula": {
+    "notation": "relevance = judge(answer, question) in {0, 1}",
+    "terms": [
+      {
+        "symbol": "judge",
+        "meaning": "LLM against a published rubric; the model reference is pinned per run"
+      }
+    ]
+  },
+  "range": {
+    "min": 0,
+    "max": 1,
+    "unit": null,
+    "note": "Mathematical range. No typical value is stated: it would be a number with no run behind it."
+  },
+  "computed_by": {
+    "file": "harness/eval/scorers.py",
+    "symbol": "answer_relevance",
+    "phase": 4
+  },
+  "ci": {
+    "method": "bootstrap",
+    "resamples": 1000,
+    "level": 0.95,
+    "why": "A point estimate over a few hundred queries without an interval is the first thing a reviewer attacks."
+  },
+  "worked_example": {
+    "requires": "human_verified",
+    "state": "unavailable"
+  },
+  "failure_modes": [
+    "judge-sees-labels",
+    "unpinned-model"
+  ],
+  "related": [
+    "answer_correctness"
+  ]
+}

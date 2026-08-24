@@ -1,0 +1,42 @@
+{
+  "id": "latency_p95_s",
+  "name": "p95 latency",
+  "family": "performance",
+  "tag": "PRF",
+  "one_line": "95th percentile end-to-end time, retrieval through verification.",
+  "formula": {
+    "notation": "p95 = quantile(latencies, 0.95) over 3 repeats per query",
+    "terms": [
+      {
+        "symbol": "end-to-end",
+        "meaning": "retrieval, rerank, generation, citation resolution, verification"
+      },
+      {
+        "symbol": "repeats",
+        "meaning": "three per query; the distribution is over all of them"
+      }
+    ]
+  },
+  "range": {
+    "min": 0,
+    "max": null,
+    "unit": "seconds",
+    "note": "Wall clock seconds. Lower is better. Machine-dependent, so it is only comparable within a run set."
+  },
+  "computed_by": {
+    "file": "harness/eval/runner.py",
+    "symbol": "latency_percentiles",
+    "phase": 4
+  },
+  "ci": null,
+  "worked_example": {
+    "requires": "human_verified",
+    "state": "unavailable"
+  },
+  "failure_modes": [
+    "planner-flip"
+  ],
+  "related": [
+    "cost_per_query"
+  ]
+}

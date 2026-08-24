@@ -1,0 +1,49 @@
+{
+  "id": "citation_accuracy",
+  "name": "Citation accuracy",
+  "family": "grounding",
+  "tag": "GRD",
+  "one_line": "Proportion of citations that resolve to a chunk actually supporting the cited claim.",
+  "formula": {
+    "notation": "A = |{ citations resolving to a supporting chunk }| / |citations|",
+    "terms": [
+      {
+        "symbol": "resolve",
+        "meaning": "the cited chunk id exists in the index for this run"
+      },
+      {
+        "symbol": "supporting",
+        "meaning": "string containment first; LLM judge only where containment fails"
+      }
+    ]
+  },
+  "range": {
+    "min": 0,
+    "max": 1,
+    "unit": null,
+    "note": "Mathematical range. No typical value is stated: it would be a number with no run behind it."
+  },
+  "computed_by": {
+    "file": "platform/generation/verify.py",
+    "symbol": "citation_accuracy",
+    "phase": 2
+  },
+  "ci": {
+    "method": "bootstrap",
+    "resamples": 1000,
+    "level": 0.95,
+    "why": "A point estimate over a few hundred queries without an interval is the first thing a reviewer attacks."
+  },
+  "worked_example": {
+    "requires": "human_verified",
+    "state": "unavailable"
+  },
+  "failure_modes": [
+    "max-tokens-truncation",
+    "judge-sees-labels"
+  ],
+  "related": [
+    "citation_coverage",
+    "faithfulness"
+  ]
+}

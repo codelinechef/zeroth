@@ -1,0 +1,44 @@
+{
+  "id": "citation_coverage",
+  "name": "Citation coverage",
+  "family": "grounding",
+  "tag": "GRD",
+  "one_line": "Proportion of factual claims that carry a citation at all.",
+  "formula": {
+    "notation": "C = |{ claims with >= 1 citation }| / |factual claims|",
+    "terms": [
+      {
+        "symbol": "factual claim",
+        "meaning": "an assertion that could be checked against a source"
+      }
+    ]
+  },
+  "range": {
+    "min": 0,
+    "max": 1,
+    "unit": null,
+    "note": "Mathematical range. No typical value is stated: it would be a number with no run behind it."
+  },
+  "computed_by": {
+    "file": "platform/generation/verify.py",
+    "symbol": "citation_coverage",
+    "phase": 2
+  },
+  "ci": {
+    "method": "bootstrap",
+    "resamples": 1000,
+    "level": 0.95,
+    "why": "A point estimate over a few hundred queries without an interval is the first thing a reviewer attacks."
+  },
+  "worked_example": {
+    "requires": "human_verified",
+    "state": "unavailable"
+  },
+  "failure_modes": [
+    "max-tokens-truncation"
+  ],
+  "related": [
+    "citation_accuracy",
+    "faithfulness"
+  ]
+}

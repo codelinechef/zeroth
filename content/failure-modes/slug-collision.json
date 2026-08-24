@@ -1,0 +1,15 @@
+{
+  "id": "slug-collision",
+  "title": "Truncated identifier collision",
+  "status": "observed",
+  "what": "A document id derived by slugging and truncating a filename is lossy. Two distinct source files can map to the same id, and the second silently overwrites the first.",
+  "why_invisible": "Nothing raises. The only symptom was two counts on different lines of a log disagreeing.",
+  "corrupts": [
+    "Corpus document count",
+    "every metric measured over the corpus"
+  ],
+  "detection": "Identifiers now carry a hash of the full source path, and registration refuses to overwrite an existing id belonging to a different document, recording a collision instead.",
+  "evidence": "26 real contracts were dropped this way. Because the resume check found the first file's entry intact, the later files were never extracted to disk either.",
+  "figure": null,
+  "metrics": []
+}

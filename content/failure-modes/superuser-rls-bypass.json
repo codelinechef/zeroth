@@ -1,0 +1,14 @@
+{
+  "id": "superuser-rls-bypass",
+  "title": "Superuser bypasses Row-Level Security",
+  "status": "prevented-by-design",
+  "what": "A PostgreSQL superuser is exempt from row-level security. Connect as postgres and every policy silently does nothing.",
+  "why_invisible": "No error, no warning. Policies simply do not apply, so every access-control test passes for the wrong reason.",
+  "corrupts": [
+    "Every published security result"
+  ],
+  "detection": "The application role is NOSUPERUSER NOBYPASSRLS, verified rolsuper=f and rolbypassrls=f, and the connection string is fixed in configuration.",
+  "evidence": "Verified directly against the running database before any security measurement was taken.",
+  "figure": null,
+  "metrics": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": "max-tokens-truncation",
+  "title": "MAX_TOKENS truncation parsed as a record",
+  "status": "observed",
+  "what": "A model that reasons before answering charges those tokens against the output budget. The budget runs out mid-JSON and the response arrives truncated but syntactically parseable up to the cut.",
+  "why_invisible": "The call returns 200 with content. Only finishReason says anything, and nothing checks it.",
+  "corrupts": [
+    "faithfulness",
+    "citation_accuracy",
+    "citation_coverage",
+    "answer_correctness"
+  ],
+  "detection": "finishReason == MAX_TOKENS is raised as an error and retried; thinking level is pinned so the budget is spent on output.",
+  "evidence": "Caught by a test asserting the client retries rather than returns: the truncated payload was a half-written question object that would have been saved as a real golden-set record.",
+  "figure": null,
+  "metrics": []
+}

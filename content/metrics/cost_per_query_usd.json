@@ -1,0 +1,42 @@
+{
+  "id": "cost_per_query_usd",
+  "name": "Cost per query",
+  "family": "cost",
+  "tag": "CST",
+  "one_line": "Token counts multiplied by the rates in the run config. Local models cost zero, stated openly.",
+  "formula": {
+    "notation": "cost = (in_tokens * rate_in + out_tokens * rate_out) / 1e6",
+    "terms": [
+      {
+        "symbol": "rate",
+        "meaning": "from configs/pricing.yaml, recorded per run"
+      },
+      {
+        "symbol": "local models",
+        "meaning": "0.00 by definition; hardware cost is not amortised into this number"
+      }
+    ]
+  },
+  "range": {
+    "min": 0,
+    "max": null,
+    "unit": "USD",
+    "note": "US dollars per query. Zero for fully local runs, which is stated rather than hidden."
+  },
+  "computed_by": {
+    "file": "harness/eval/cost.py",
+    "symbol": "cost_per_query",
+    "phase": 4
+  },
+  "ci": null,
+  "worked_example": {
+    "requires": "human_verified",
+    "state": "unavailable"
+  },
+  "failure_modes": [
+    "unpinned-model"
+  ],
+  "related": [
+    "latency_p95_s"
+  ]
+}

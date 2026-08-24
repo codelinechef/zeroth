@@ -1,37 +1,66 @@
 @import "tailwindcss";
 
-/* ---------------------------------------------------------------------------
-   Zeroth design tokens — brief §7.
-   Six colours. Colour always carries meaning, never decoration.
-   No dark mode: explicitly out of scope (§12).
-   --------------------------------------------------------------------------- */
+/* ===========================================================================
+   ZEROTH — research-paper direction.
+   Evolution of the specification direction, not a replacement: colour still
+   always carries meaning, and nothing here renders a number.
+   =========================================================================== */
+
 :root {
-  --paper:      #EDEFF2;
-  --ink:        #14161A;
-  --ink-muted:  #5C636E;
-  --rule:       #C8CDD4;
-  --signal:     #1E4FD8;
-  --regress:    #A33A2A;
+  /* --- surface and ink ---------------------------------------------------- */
+  --paper:      #EDEFF2;   /* cool grey-blue, printed stock                   */
+  --ink:        #14161A;   /* 15.72:1 on paper — AAA                          */
+  --ink-muted:  #5C636E;   /*  5.26:1 — AA                                    */
+  --rule:       #C8CDD4;   /*  1.39:1 — hairlines only, never text            */
 
-  /* Type scale. Nothing outside it. */
-  --t-75:   0.75rem;
-  --t-875:  0.875rem;
-  --t-100:  1rem;
-  --t-125:  1.25rem;
-  --t-150:  1.5rem;
-  --t-200:  2rem;
-  --t-275:  2.75rem;
+  /* --- deltas, reserved ---------------------------------------------------
+     Used ONLY for better/worse than baseline. Never assigned to a metric
+     family, or a delta becomes ambiguous. */
+  --signal:     #1E4FD8;   /*  5.76:1 — AA                                    */
+  --regress:    #A33A2A;   /*  5.70:1 — AA                                    */
 
-  /* The dot-leader grid. One monospace text run, so alignment is exact by
-     construction at every breakpoint rather than by arithmetic we maintain. */
-  --leader-cols: 52;
+  /* --- metric families ----------------------------------------------------
+     All AA on paper. Hue is REINFORCEMENT, not the identification channel:
+     under deuteranopia retrieval and cost collapse to ΔE 1.9 (effectively
+     identical), and spreading lightness enough to separate them pushes two
+     families below AA. The mono family tag (RET/GRD/ABS/PRF/CST) is what a
+     reader actually identifies a family by; colour reinforces it for those
+     who can see it and costs nothing to those who cannot. */
+  --fam-retrieval:   #0F6E68;  /* 5.28:1  RET */
+  --fam-grounding:   #6A3FA0;  /* 6.44:1  GRD */
+  --fam-abstention:  #8A5A00;  /* 5.15:1  ABS */
+  --fam-performance: #42525E;  /* 7.01:1  PRF */
+  --fam-cost:        #9B2C6F;  /* 6.11:1  CST */
+
+  /* --- type scale ---------------------------------------------------------
+     Existing rungs, extended upward for display. 1.0625 exists only for serif
+     body: 17px optically matches 16px sans. Nothing outside this scale. */
+  --t-75:    0.75rem;
+  --t-875:   0.875rem;
+  --t-100:   1rem;
+  --t-body:  1.0625rem;
+  --t-125:   1.25rem;
+  --t-150:   1.5rem;
+  --t-200:   2rem;
+  --t-275:   2.75rem;
+  --t-350:   3.5rem;
+  --t-450:   4.5rem;
+
+  /* --- measure ------------------------------------------------------------
+     66ch: mid-range of the 62-68 a paper direction wants.
+
+     The three-zone fold is at 1220px, NOT the 1100px first estimated. Measured
+     in the browser: rail 200 + page padding 128 + prose 594 + gutter 48 +
+     margin 240 = 1210px. The earlier figure under-counted the page padding and
+     overflowed by 61px at exactly 1100px — the one width where the float
+     engages but there is no room for it. Between 900 and 1220 the margin notes
+     render in flow, which is the same treatment they get on mobile. */
+  --measure: 66ch;
+  --rail: 12.5rem;
+  --margin-col: 15rem;
+  --gutter: 3rem;
 }
 
-/* NOTE: plain `@theme`, not `@theme inline`. With `inline` Tailwind resolves
-   these into utility classes but never emits them as custom properties, so a
-   hand-written `var(--font-mono)` silently resolves to nothing and every
-   monospace rule falls back to the preflight sans stack — which quietly breaks
-   dot-leader alignment while still looking plausible. */
 @theme {
   --color-paper:     var(--paper);
   --color-ink:       var(--ink);
@@ -39,77 +68,172 @@
   --color-rule:      var(--rule);
   --color-signal:    var(--signal);
   --color-regress:   var(--regress);
+  --color-fam-retrieval:   var(--fam-retrieval);
+  --color-fam-grounding:   var(--fam-grounding);
+  --color-fam-abstention:  var(--fam-abstention);
+  --color-fam-performance: var(--fam-performance);
+  --color-fam-cost:        var(--fam-cost);
 
+  /* NOTE: plain `@theme`, not `@theme inline`. With `inline` Tailwind resolves
+     these into utilities but never emits them as custom properties, so a
+     hand-written var(--font-mono) silently resolves to nothing and every
+     monospace rule falls back to the preflight sans stack. That broke
+     dot-leader alignment once already. */
   --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-mono:    var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
   --font-serif:   var(--font-source-serif), ui-serif, Georgia, serif;
+  --font-mono:    var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
 }
 
-html { -webkit-text-size-adjust: 100%; }
+/* Element defaults live in @layer base. Unlayered CSS beats layered CSS in
+   the cascade regardless of specificity, so a bare `a { text-decoration }`
+   rule silently overrides every Tailwind text utility — `no-underline` on the
+   contents rail had no effect at all until this was layered. */
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
 
-body {
-  background: var(--paper);
-  color: var(--ink);
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: var(--t-body);
+    line-height: 1.7;
+    text-rendering: optimizeLegibility;
+    font-synthesis-weight: none;
+  }
+
+  /* --- display and headings: Archivo -----------------------------------------
+     Sans display against serif body is what gives the hierarchy its contrast.
+     Two serifs muddle at heading sizes. */
+  h1, h2, h3, h4, .display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .display {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-size: clamp(var(--t-275), 7vw, var(--t-450));
+  }
+  h1 { font-size: clamp(var(--t-200), 5vw, var(--t-350)); }
+  h2 { font-size: var(--t-200); margin-block: 2.5rem 0.75rem; }
+  h3 { font-size: var(--t-125); margin-block: 2rem 0.5rem; }
+  h4 { font-size: var(--t-100); margin-block: 1.5rem 0.5rem; }
+
+  /* --- data, UI, captions: IBM Plex Mono ------------------------------------ */
+  .mono, table, code, kbd, figcaption, .eyebrow, .tag {
+    font-family: var(--font-mono);
+    font-variant-ligatures: none;
+  }
+  .eyebrow {
+    font-size: var(--t-75);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  /* family tag — the identification channel, not the hue */
+  .tag {
+    font-size: var(--t-75);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    padding-inline-end: 0.4em;
+  }
+  .tag-retrieval   { color: var(--fam-retrieval); }
+  .tag-grounding   { color: var(--fam-grounding); }
+  .tag-abstention  { color: var(--fam-abstention); }
+  .tag-performance { color: var(--fam-performance); }
+  .tag-cost        { color: var(--fam-cost); }
+
+  p { margin-block: 0 1.1em; }
+  .lede { font-size: var(--t-125); line-height: 1.6; color: var(--ink); }
+
+  a {
+    color: var(--signal);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 2px;
+    border-radius: 1px;
+  }
+
+  hr, .rule { border: 0; border-top: 1px solid var(--rule); }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+}
+
+/* ===========================================================================
+   Three-zone paper layout
+   =========================================================================== */
+
+.paper-grid { display: block; }
+@media (min-width: 900px) {
+  .paper-grid {
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.prose-measure { max-width: var(--measure); }
+
+/* Margin notes — Tufte-style float, so a note's top aligns with the point in
+   the text where it appears. Below 1100px the float is dropped and the note
+   becomes an indented aside in flow, which is what §3 asks for. */
+.margin-note {
+  display: block;
   font-family: var(--font-mono);
-  font-size: var(--t-875);
-  line-height: 1.6;
-  text-rendering: optimizeLegibility;
-}
-
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-}
-
-/* Uppercase eyebrow — §7 */
-.eyebrow {
-  font-family: var(--font-display);
   font-size: var(--t-75);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  line-height: 1.55;
   color: var(--ink-muted);
+  border-left: 2px solid var(--rule);
+  padding-left: 0.9rem;
+  margin-block: 0.4rem 1.2rem;
+}
+@media (min-width: 1220px) {
+  .margin-note {
+    float: right;
+    clear: right;
+    width: var(--margin-col);
+    margin-right: calc(-1 * (var(--margin-col) + var(--gutter)));
+    margin-bottom: 1.5rem;
+    border-left: 2px solid var(--rule);
+  }
 }
 
-/* Prose measure capped at 72 characters — the width RFCs are published at,
-   applied literally. */
-.prose-spec {
-  font-family: var(--font-serif);
-  font-size: var(--t-100);
-  line-height: 1.7;
-  max-width: 72ch;
+/* Full-bleed: figures, tables and diagrams break the measure. That contrast —
+   narrow prose, wide figures — is much of the effect. */
+.bleed {
+  width: min(100%, 64rem);
+  max-width: none;
 }
-.prose-spec p + p { margin-top: 1rem; }
-
-a {
-  color: var(--signal);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-  text-decoration-thickness: 1px;
+@media (min-width: 1220px) {
+  .bleed { width: calc(var(--measure) + var(--margin-col) + var(--gutter)); }
 }
+/* Wide content scrolls inside its own container; the page body never does. */
+.bleed-scroll { overflow-x: auto; }
 
-/* Visible keyboard focus everywhere — quality floor, §3.7 */
-:focus-visible {
-  outline: 2px solid var(--signal);
-  outline-offset: 2px;
-  border-radius: 1px;
+figure { margin: 2rem 0; }
+figcaption {
+  font-size: var(--t-75);
+  color: var(--ink-muted);
+  margin-top: 0.6rem;
+  line-height: 1.5;
 }
 
-.rule { border: 0; border-top: 1px solid var(--rule); }
-
-.sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-}
-
-/* ---------------------------------------------------------------------------
-   Dot leaders.
-   The whole line is a single pre-formatted monospace text run, so the label,
-   the dots and the value cannot drift out of alignment at any width. The line
-   is sized so the full 52-column grid always fits, down to 360px.
-   --------------------------------------------------------------------------- */
+/* ===========================================================================
+   Dot leaders — retained for metric rows. One pre-formatted monospace run, so
+   label, dots and value cannot drift apart at any width.
+   =========================================================================== */
 .leader-line {
   display: block;
   white-space: pre;
@@ -118,14 +242,11 @@ a {
   font-size: clamp(0.625rem, 2.35vw, var(--t-875));
   font-feature-settings: "tnum" 1;
 }
-@media (min-width: 900px) {
-  .leader-line { font-size: var(--t-875); }
-}
+@media (min-width: 900px) { .leader-line { font-size: var(--t-875); } }
 
-/* ---------------------------------------------------------------------------
-   Motion: one moment only. Table rows reveal top-to-bottom in a 40ms stagger
-   on first paint, as if being typeset. Under 500ms total. — §7
-   --------------------------------------------------------------------------- */
+/* ===========================================================================
+   Motion — one orchestrated moment per view, nothing ambient.
+   =========================================================================== */
 @keyframes typeset {
   from { opacity: 0; transform: translateY(-2px); }
   to   { opacity: 1; transform: none; }
@@ -143,4 +264,77 @@ a {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ===========================================================================
+   Metric disclosure — brief §5
+   =========================================================================== */
+
+/* Level 1: indicates interactivity without looking like navigation. A dotted
+   underline in the family hue, never the link colour. */
+.metric-ref {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--hue);
+}
+.metric-ref:hover { text-decoration-style: solid; }
+
+/* Level 2: hover OR focus. Positioned above the trigger so it never covers the
+   text being read. */
+.metric-pop {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 30;
+  width: min(22rem, calc(100vw - 2rem));
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  box-shadow: 0 2px 10px rgb(20 22 26 / 0.10);
+  padding: 0.75rem 0.9rem;
+  font-size: var(--t-75);
+  line-height: 1.5;
+  text-align: left;
+  animation: pop-in 120ms ease-out;
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Level 3: a side panel. Native <dialog> supplies the focus trap and Escape
+   dismissal, which hand-rolled panels routinely get wrong. */
+.metric-panel {
+  margin: 0 0 0 auto;
+  height: 100dvh;
+  max-height: 100dvh;
+  width: min(34rem, 100vw);
+  max-width: 100vw;
+  border: 0;
+  border-left: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  padding: 0;
+}
+.metric-panel::backdrop { background: rgb(20 22 26 / 0.28); }
+.metric-panel[open] { animation: sheet-in 220ms ease-out; }
+@keyframes sheet-in {
+  from { transform: translateX(1.5rem); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+.metric-panel-inner {
+  height: 100%;
+  overflow-y: auto;
+  padding: 1.75rem 1.5rem 3rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metric-pop, .metric-panel[open] { animation: none; }
 }

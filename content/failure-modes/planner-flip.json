@@ -1,0 +1,19 @@
+{
+  "id": "planner-flip",
+  "title": "The planner flip",
+  "status": "observed",
+  "what": "The same query can execute as an exact sequential scan or as an approximate index scan depending on table statistics. The planner has no model of ef_search, so its row estimate for the index scan is fiction.",
+  "why_invisible": "Recall moves upward when the plan flips to exact, so it never looks like a bug. A run simply scores higher on one machine than another.",
+  "corrupts": [
+    "recall_at_10",
+    "ndcg_at_10",
+    "mrr_at_10",
+    "latency_p95_s"
+  ],
+  "detection": "Pin the plan and assert the executed plan shape in the harness; record it in the results JSON and fail the run on mismatch. Not yet built.",
+  "evidence": "Observed while measuring RLS behaviour: the same query planned as a sequential scan on one table and an HNSW index scan on another, with no error in between.",
+  "figure": 4,
+  "metrics": [
+    "recall_at_10"
+  ]
+}

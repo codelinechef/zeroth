@@ -1,0 +1,21 @@
+{
+  "id": "ann-post-filtering",
+  "title": "ANN post-filtering under Row-Level Security",
+  "status": "observed",
+  "what": "An approximate nearest-neighbour index returns its ef_search closest vectors, and only then does the access policy discard the ones this role may not see. Nothing refills the discarded slots.",
+  "why_invisible": "The query succeeds. It returns fewer rows, or none, and an empty result is indistinguishable from 'no evidence exists'.",
+  "corrupts": [
+    "recall_at_10",
+    "recall_at_5",
+    "ndcg_at_10",
+    "mrr_at_10",
+    "abstention_correct"
+  ],
+  "detection": "Measured against exact search under the identical policy. Fixed by partitioning per tenant so the index holds only permitted rows; iterative scan recovers part of it but not all.",
+  "evidence": "Measured on 36,000 chunks across 40 tenants: recall fell from 0.905 unrestricted to 0.023 for a single-tenant role, with 39 of 40 queries returning nothing while exact search returned a full ten. Raising ef_search from 40 to 800 changed nothing.",
+  "figure": 2,
+  "metrics": [
+    "recall_at_10",
+    "abstention_correct"
+  ]
+}

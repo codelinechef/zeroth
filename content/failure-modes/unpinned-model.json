@@ -1,0 +1,17 @@
+{
+  "id": "unpinned-model",
+  "title": "Unpinned model reference",
+  "status": "prevented-by-design",
+  "what": "A floating alias such as a -latest tag resolves to whatever the provider currently serves. Re-running months later silently uses a different judge.",
+  "why_invisible": "Everything succeeds. The numbers simply move, and nothing in the output says why.",
+  "corrupts": [
+    "faithfulness",
+    "answer_correctness",
+    "answer_relevance",
+    "cost_per_query_usd"
+  ],
+  "detection": "Every run records the resolved dated snapshot, not the requested name, in the run config and on every record the run produces.",
+  "evidence": "Checked against the provider's model list: a -latest alias reports a floating label as its version, while a dated model reports the snapshot it is pinned to.",
+  "figure": null,
+  "metrics": []
+}

@@ -1,0 +1,45 @@
+{
+  "id": "mrr_at_10",
+  "name": "MRR@10",
+  "family": "retrieval",
+  "tag": "RET",
+  "one_line": "Mean reciprocal rank of the first relevant chunk. Rewards getting one right answer high.",
+  "formula": {
+    "notation": "MRR@k = (1/|Q|) * sum_q 1 / rank_first_relevant(q)",
+    "terms": [
+      {
+        "symbol": "rank_first_relevant(q)",
+        "meaning": "1-indexed rank of the first chunk graded >= 2, or 0 contribution if none"
+      }
+    ]
+  },
+  "range": {
+    "min": 0,
+    "max": 1,
+    "unit": null,
+    "note": "Mathematical range. No typical value is stated: it would be a number with no run behind it."
+  },
+  "computed_by": {
+    "file": "harness/eval/scorers.py",
+    "symbol": "mrr_at_k",
+    "phase": 4
+  },
+  "ci": {
+    "method": "bootstrap",
+    "resamples": 1000,
+    "level": 0.95,
+    "why": "A point estimate over a few hundred queries without an interval is the first thing a reviewer attacks."
+  },
+  "worked_example": {
+    "requires": "human_verified",
+    "state": "unavailable"
+  },
+  "failure_modes": [
+    "ann-post-filtering",
+    "planner-flip"
+  ],
+  "related": [
+    "recall_at_10",
+    "ndcg_at_10"
+  ]
+}

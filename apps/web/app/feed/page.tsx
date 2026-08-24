@@ -1,18 +1,23 @@
-import { EmptyState } from "@/components/EmptyState";
+import { Prose } from "@/components/Paper";
+import { InProgress } from "@/components/InProgress";
 
 export const metadata = { title: "Feed · Zeroth" };
 
 export default function FeedPage() {
   return (
     <>
-      <p className="eyebrow">Clause 7 · Feed</p>
-      <h1 className="mt-2 text-[length:var(--t-200)]">Feed</h1>
-      <hr className="rule my-8" />
-      <EmptyState>
-        Not started. This section opens after the writing section has real
-        content. Every digest will pass through a pull request before it
-        publishes; there is no automatic publishing path.
-      </EmptyState>
+      <p className="eyebrow">Feed</p>
+      <h1 className="mt-2">Feed</h1>
+      <Prose className="mt-6">
+        <p className="lede">
+          The site&apos;s third section.
+        </p>
+      </Prose>
+      <div className="mt-8">
+        <InProgress phase={7} blockedBy="the writing section having real content">
+          An automated digest of retrieval and evaluation research. Every issue passes through a pull request before it publishes; there is no automatic publishing path.
+        </InProgress>
+      </div>
     </>
   );
 }

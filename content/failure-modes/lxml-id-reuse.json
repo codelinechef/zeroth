@@ -1,0 +1,14 @@
+{
+  "id": "lxml-id-reuse",
+  "title": "Element identity reuse during parsing",
+  "status": "observed",
+  "what": "Some parsers create element objects on demand and free them. Identities collected during one traversal are reused by unrelated elements in the next, so an identity-based set matches the wrong nodes.",
+  "why_invisible": "Parsing succeeds and produces a plausible number, just a wrong one.",
+  "corrupts": [
+    "Corpus page count"
+  ],
+  "detection": "Elements are tested directly during a single traversal rather than pre-collecting identities, and page counts are re-derived independently and asserted.",
+  "evidence": "One filing recorded 535 pages against 162 actual page breaks \u2014 a fabricated figure reaching a published field through a bug rather than a decision.",
+  "figure": null,
+  "metrics": []
+}

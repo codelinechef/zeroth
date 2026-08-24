@@ -1,0 +1,14 @@
+{
+  "id": "table-owner-rls-bypass",
+  "title": "Table owner bypasses Row-Level Security",
+  "status": "prevented-by-design",
+  "what": "A table's owner is also exempt unless FORCE ROW LEVEL SECURITY is set. relforcerowsecurity defaults to false.",
+  "why_invisible": "Same silence as the superuser case, different cause. Migrations and ops queries running as the owner see everything.",
+  "corrupts": [
+    "Every published security result"
+  ],
+  "detection": "ALTER TABLE ... FORCE ROW LEVEL SECURITY on every table carrying a policy.",
+  "evidence": "Confirmed while building the RLS harness: running the probe as the table owner returned recall 0.95 with no restriction applied, because the owner is exempt.",
+  "figure": 3,
+  "metrics": []
+}

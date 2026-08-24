@@ -1,0 +1,45 @@
+{
+  "id": "recall_at_5",
+  "name": "Recall@5",
+  "family": "retrieval",
+  "tag": "RET",
+  "one_line": "The same measure at rank 5. Harder, and more sensitive to reranking.",
+  "formula": {
+    "notation": "R@5 = |{ q in Q : max grade(c) >= 2 for c in top_5(q) }| / |Q|",
+    "terms": [
+      {
+        "symbol": "top_5(q)",
+        "meaning": "the five chunks ranked highest for q"
+      }
+    ]
+  },
+  "range": {
+    "min": 0,
+    "max": 1,
+    "unit": null,
+    "note": "Mathematical range. No typical value is stated: it would be a number with no run behind it."
+  },
+  "computed_by": {
+    "file": "harness/eval/scorers.py",
+    "symbol": "recall_at_k",
+    "phase": 4
+  },
+  "ci": {
+    "method": "bootstrap",
+    "resamples": 1000,
+    "level": 0.95,
+    "why": "A point estimate over a few hundred queries without an interval is the first thing a reviewer attacks."
+  },
+  "worked_example": {
+    "requires": "human_verified",
+    "state": "unavailable"
+  },
+  "failure_modes": [
+    "ann-post-filtering",
+    "planner-flip"
+  ],
+  "related": [
+    "recall_at_10",
+    "ndcg_at_10"
+  ]
+}
