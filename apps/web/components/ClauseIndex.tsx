@@ -15,9 +15,9 @@ export const CLAUSES: Clause[] = [
   { num: "2", title: "Methodology", href: "/methodology" },
   { num: "3", title: "Corpus", href: "/corpus" },
   { num: "4", title: "Failure modes", href: "/failure-modes" },
-  { num: "5", title: "Explore", href: "/explore" },
+  { num: "5", title: "Walkthroughs", href: "/walkthroughs" },
   { num: "6", title: "Security", href: "/security" },
-  { num: "7", title: "Roadmap", href: "/roadmap" },
+  { num: "7", title: "Learn", href: "/learn" },
   { num: "8", title: "About", href: "/about" },
 ];
 

@@ -6,7 +6,11 @@ import { PostFilterDemo, type PostFilterData } from "@/components/demos/PostFilt
 import { RetrievalWalkthrough, type WalkthroughData } from "@/components/demos/RetrievalWalkthrough";
 import { ChunkingExplorer, type ChunkingData } from "@/components/demos/ChunkingExplorer";
 
-export const metadata = { title: "Explore · Zeroth" };
+export const metadata = {
+  title: "Walkthroughs · Zeroth",
+  description:
+    "Step through the real behaviour of the retrieval pipeline: access control, ranking and fusion, and where a document gets cut.",
+};
 
 export default function ExplorePage() {
   const rls = dataset<PostFilterData>("rls/postfilter.json");
@@ -21,7 +25,7 @@ export default function ExplorePage() {
   return (
     <>
       <p className="eyebrow">Section 5</p>
-      <h1 className="mt-2">Explore</h1>
+      <h1 className="mt-2">Walkthroughs</h1>
 
       <Prose className="mt-6">
         <p className="lede">

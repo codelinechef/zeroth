@@ -1,6 +1,6 @@
 import { getCorpusVersion } from "@/lib/content";
 
-const REPO = "https://github.com/anantsharma/zeroth";
+import { LINKS } from "@/lib/links";
 
 /**
  * Author block — brief §12. A paper's author block, not a marketing footer.
@@ -16,7 +16,7 @@ export function Footer() {
         <p>
           <span className="text-ink">Anant Sharma</span> · AI Engineer ·{" "}
           <a
-            href="https://anantsharma.co.in/"
+            href={LINKS.website}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -24,9 +24,13 @@ export function Footer() {
           </a>
         </p>
         <p>
-          <a href={REPO} target="_blank" rel="noopener noreferrer">
+          <a href={LINKS.repo} target="_blank" rel="noopener noreferrer">
             Source and data
           </a>{" "}
+          ·{" "}
+          <a href={LINKS.github} target="_blank" rel="noopener noreferrer">GitHub</a>{" "}
+          ·{" "}
+          <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>{" "}
           · Corpus {corpus ?? "not yet ingested"}
         </p>
       </div>

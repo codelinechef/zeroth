@@ -33,19 +33,37 @@ const HUE: Record<string, string> = {
 export function MetricRef({
   metric,
   children,
+  variant = "inline",
 }: {
   metric: Metric;
   children?: React.ReactNode;
+  /**
+   * "inline" — inside prose: the hover/focus popover is the whole point.
+   * "list"   — in a listing that already prints the definition beside the
+   *            name. A popover there repeats what is on screen and covers the
+   *            neighbouring rows, so it is suppressed and the trigger goes
+   *            straight to the panel.
+   */
+  variant?: "inline" | "list";
 }) {
   const [open, setOpen] = useState(false);
+  const [below, setBelow] = useState(false);
+  const wrapRef = useRef<HTMLSpanElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const popId = useId();
   const hue = HUE[metric.family];
   const panelId = panelDomId(metric.id);
 
   const show = () => {
+    if (variant === "list") return;
     if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => setOpen(true), 150);
+    timer.current = setTimeout(() => {
+      // Flip below when there is not enough room above, so the popover never
+      // sits over the text the reader was just looking at.
+      const r = wrapRef.current?.getBoundingClientRect();
+      setBelow(!!r && r.top < 220);
+      setOpen(true);
+    }, 150);
   };
   const hide = () => {
     if (timer.current) clearTimeout(timer.current);
@@ -66,7 +84,7 @@ export function MetricRef({
   };
 
   return (
-    <span className="relative inline-block">
+    <span className="relative inline-block" ref={wrapRef}>
       <button
         type="button"
         aria-describedby={open ? popId : undefined}
@@ -91,7 +109,8 @@ export function MetricRef({
 
       {/* Level 2. Spans only: this sits inside the paragraph. */}
       {open ? (
-        <span role="tooltip" id={popId} className="metric-pop mono">
+        <span role="tooltip" id={popId}
+          className={`metric-pop mono ${below ? "metric-pop-below" : ""}`}>
           <span className="block text-ink">{metric.one_line}</span>
           <span className="block mt-2 text-ink-muted whitespace-pre-wrap">
             {metric.formula.notation}

@@ -208,6 +208,10 @@
     margin-bottom: 1.5rem;
     border-left: 2px solid var(--rule);
   }
+  /* A float taller than the block it started in escapes and lands on whatever
+     follows. Headings clear it so a margin note can never sit on top of the
+     next section title. */
+  h1, h2, h3, figure, .bleed, table { clear: right; }
 }
 
 /* Full-bleed: figures, tables and diagrams break the measure. That contrast —
@@ -304,6 +308,11 @@ figcaption {
   text-align: left;
   animation: pop-in 120ms ease-out;
 }
+/* Flipped below the trigger when there is no room above. */
+.metric-pop-below {
+  bottom: auto;
+  top: calc(100% + 0.5rem);
+}
 @keyframes pop-in {
   from { opacity: 0; transform: translateY(3px); }
   to   { opacity: 1; transform: none; }
@@ -337,4 +346,218 @@ figcaption {
 
 @media (prefers-reduced-motion: reduce) {
   .metric-pop, .metric-panel[open] { animation: none; }
+}
+
+/* ===========================================================================
+   Learn — topic grid and modal
+   =========================================================================== */
+
+.topic-grid {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  list-style: none;
+  padding: 0;
+}
+
+.topic-trigger {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--rule);
+  background: none;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+}
+.topic-trigger:hover { border-color: var(--ink-muted); }
+.topic-trigger-title {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-100);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.topic-trigger-summary {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+/* Centred, with its own scroll area so long explanations stay usable. */
+.topic-modal {
+  margin: auto;
+  width: min(46rem, calc(100vw - 2rem));
+  max-width: calc(100vw - 2rem);
+  max-height: min(88dvh, 60rem);
+  padding: 0;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  overflow: hidden;
+}
+.topic-modal::backdrop { background: rgb(20 22 26 / 0.42); }
+.topic-modal[open] {
+  display: flex;
+  flex-direction: column;
+  animation: topic-in 180ms ease-out;
+}
+@keyframes topic-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+/* Stop the page behind the modal scrolling with it. */
+html.modal-open { overflow: hidden; }
+
+.topic-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+.topic-close {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  color: var(--signal);
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.topic-modal-body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  padding: 1.25rem 1.5rem 2.5rem;
+}
+
+.topic-lede {
+  font-size: var(--t-125);
+  line-height: 1.55;
+  margin-bottom: 0.5rem;
+}
+.topic-section { margin-top: 1.6rem; max-width: 62ch; }
+.topic-section p { margin-top: 0.35rem; }
+.topic-section ul { margin-top: 0.35rem; padding-left: 1.1rem; list-style: disc; }
+.topic-section li { margin-top: 0.2rem; }
+
+.topic-formula {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  border: 1px solid var(--rule);
+  padding: 0.85rem 1rem;
+  margin-top: 0.5rem;
+  overflow-x: auto;
+}
+.topic-terms { margin-top: 0.6rem; }
+.topic-terms > div { display: flex; gap: 0.75rem; margin-top: 0.25rem; }
+.topic-terms dt {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  flex-shrink: 0;
+  color: var(--ink);
+}
+.topic-terms dd { font-size: var(--t-75); color: var(--ink-muted); }
+
+.topic-flow { list-style: none; padding: 0; margin-top: 0.5rem; }
+.topic-flow li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.topic-flow-n { color: var(--ink-muted); }
+.topic-note {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  color: var(--ink-muted);
+  margin-top: 0.5rem;
+}
+
+.topic-compare {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  margin-top: 0.5rem;
+}
+.topic-compare-title {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.topic-table-wrap { overflow-x: auto; margin-top: 0.5rem; }
+.topic-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+}
+.topic-table th, .topic-table td {
+  text-align: left;
+  padding: 0.4rem 0.9rem 0.4rem 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.topic-table th { color: var(--ink-muted); font-weight: 500; }
+
+.topic-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; }
+.topic-chip {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  border: 1px solid var(--rule);
+  padding: 0.15rem 0.5rem;
+  color: var(--ink-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topic-modal[open] { animation: none; }
+  .topic-modal-body { scroll-behavior: auto; }
+}
+
+/* Link cards — author and project links (About). */
+.link-cards {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  list-style: none;
+  padding: 0;
+}
+.link-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--rule);
+  padding: 0.75rem 0.9rem;
+  text-decoration: none;
+  color: var(--ink);
+}
+.link-card:hover { border-color: var(--ink-muted); }
+.link-card-icon { display: inline-flex; color: var(--ink-muted); flex-shrink: 0; }
+.link-card:hover .link-card-icon { color: var(--ink); }
+.link-card-label {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-875);
+}
+.link-card-sub {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  color: var(--ink-muted);
+  margin-top: 0.1rem;
+  word-break: break-all;
 }

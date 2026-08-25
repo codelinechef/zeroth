@@ -49,7 +49,7 @@ export default function MethodologyPage() {
               <ul className="mt-2 space-y-2 prose-measure">
                 {metrics.map((m) => (
                   <li key={m.id}>
-                    <Metric id={m.id} />
+                    <Metric id={m.id} variant="list" />
                     <span className="text-ink-muted"> — {m.one_line}</span>
                   </li>
                 ))}
