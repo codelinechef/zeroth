@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3010",
-    "build": "next build && node scripts/csp.mjs",
+    "build": "next build && node scripts/csp.mjs && node scripts/check-nesting.mjs",
     "start": "npx serve out -l 3010",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "csp": "node scripts/csp.mjs"
+    "csp": "node scripts/csp.mjs",
+    "check:nesting": "node scripts/check-nesting.mjs"
   },
   "dependencies": {
     "next": "16.3.2",

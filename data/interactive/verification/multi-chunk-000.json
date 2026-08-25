@@ -1,0 +1,140 @@
+{
+ "describes": "One golden-set query through draft, blind judging and human verification.",
+ "generated_by": {
+  "script": "harness/interactive/verification.py",
+  "regenerate": "python3 harness/interactive/verification.py",
+  "commit": "341ea20",
+  "at": "2026-08-25T04:52:20Z"
+ },
+ "source": {
+  "corpus": "edgar-cuad-rfc-v1",
+  "query_id": "multi-chunk-000"
+ },
+ "query_id": "multi-chunk-000",
+ "category": "multi-chunk",
+ "question": "At what specific address is the Contractor, Redwater LLC, required to maintain original Subscription Agreements and Note Confirmations, absent a different location designated by the Company?",
+ "answerable": true,
+ "drafted_by": "gemini-3.6-flash",
+ "judged_by": "gemini-3.1-flash-lite",
+ "source_chunk_ids": [
+  "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00012",
+  "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00003",
+  "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00014",
+  "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00024"
+ ],
+ "judge_saw_source_labels": false,
+ "candidates": [
+  {
+   "chunk_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00012",
+   "model_grade": 2,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": false,
+   "model_reason": "States the location is the Contractor's principal place of business.",
+   "is_source": true,
+   "doc_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e",
+   "page": 8,
+   "section": "preamble",
+   "tenant": "cuad-services",
+   "excerpt": "the Notes and the Note Portfolio, with full and correct  entries of all transactions or modifications in a reasonably secure, up-to-date manner and in accordance with the following:     (a) Location. All Note and Note Portfolio files and records shall be stored and maintained at the Contractor's principal place of  bus"
+  },
+  {
+   "chunk_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00011",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Discusses investor questions and website development, not document storage locations.",
+   "is_source": false,
+   "doc_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e",
+   "page": 7,
+   "section": "preamble",
+   "tenant": "cuad-services",
+   "excerpt": "Investors and Holders relating to the Notes regarding  topics that are not addressed in the Prospectus or its supplements, including without limitation questions relating to the Company's finances and  business, the Company's performance and practices with regard to the Notes, and substantive matters regarding an inves"
+  },
+  {
+   "chunk_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00001",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Contains contract definitions and parties, but not document storage requirements.",
+   "is_source": false,
+   "doc_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e",
+   "page": 1,
+   "section": "preamble",
+   "tenant": "cuad-services",
+   "excerpt": "of Law; Venue    39   Section 9.08 Rights to Investor Lists    39   Section 9.09 Waiver; Subsequent Modification    40   Section 9.10 Severability    40   Section 9.11 Joint Preparation    40   Section 9.12 Captions    40   Section 9.13 Counterparts    40   Section 9.14 Third Party Contractors    40\nOUTSOURCING AGREEME"
+  },
+  {
+   "chunk_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00026",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Contains signature pages and exhibit descriptions, not document storage requirements.",
+   "is_source": false,
+   "doc_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e",
+   "page": 14,
+   "section": "preamble",
+   "tenant": "cuad-services",
+   "excerpt": "of such engagement, the Contractor shall thereafter be relieved of any such obligations for which the  third party was engaged.     [Remainder of page intentionally left blank]     20\nIN WITNESS WHEREOF, this Outsourcing Agreement is hereby entered into by the undersigned parties as of the date first set forth  above.\n"
+  },
+  {
+   "chunk_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00013",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Discusses termination and data security, not document storage locations.",
+   "is_source": false,
+   "doc_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e",
+   "page": 9,
+   "section": "preamble",
+   "tenant": "cuad-services",
+   "excerpt": "its own account and at its own expense. The Contractor shall maintain the privacy of the  Investors and Holders in accordance with all applicable Governmental Rules.     (e) Return. If this Agreement is terminated, or otherwise at the instruction of the Company, the Contractor shall promptly  deliver to the Company or "
+  },
+  {
+   "chunk_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00000",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Contains only the table of contents, not the requested address.",
+   "is_source": false,
+   "doc_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e",
+   "page": 1,
+   "section": "preamble",
+   "tenant": "cuad-services",
+   "excerpt": "Exhibit 10.6\nOUTSOURCING AGREEMENT        dated as of , 2012        TWIN CITIES POWER HOLDINGS, LLC        and        REDWATER LLC\n$50,000,000.00        Renewable Unsecured Subordinated Notes\nTABLE OF CONTENTS                                                                                                               "
+  },
+  {
+   "chunk_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00028",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Discusses termination and geographical limitations, not record maintenance addresses.",
+   "is_source": false,
+   "doc_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e",
+   "page": 15,
+   "section": "preamble",
+   "tenant": "cuad-services",
+   "excerpt": "development and production of all direct marketing and promotional  materials.     5. Termination.     \u00b7 Period of Services: The services described herein to be provided by Agency shall begin upon execution and delivery of the  Outsourcing Agreement and shall continue until termination of Contractor's activities to adm"
+  },
+  {
+   "chunk_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00009",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Discusses subscription handling but does not specify a maintenance address.",
+   "is_source": false,
+   "doc_id": "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e",
+   "page": 6,
+   "section": "preamble",
+   "tenant": "cuad-services",
+   "excerpt": ", trademarks, trade names, fonts, and other aspects of corporate identity in  advertisements and marketing materials related to the Notes and on the Contractor's website, subject to the Company's  prior written approval of the specific use of these items in writing in each instance (which shall not be unreasonably  wit"
+  }
+ ]
+}

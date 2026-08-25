@@ -1,0 +1,139 @@
+{
+ "describes": "One golden-set query through draft, blind judging and human verification.",
+ "generated_by": {
+  "script": "harness/interactive/verification.py",
+  "regenerate": "python3 harness/interactive/verification.py",
+  "commit": "341ea20",
+  "at": "2026-08-25T04:52:20Z"
+ },
+ "source": {
+  "corpus": "edgar-cuad-rfc-v1",
+  "query_id": "tenant-scoped-000"
+ },
+ "query_id": "tenant-scoped-000",
+ "category": "tenant-scoped",
+ "question": "How much did Comcast spend on customer premise equipment capital expenditures in 2024?",
+ "answerable": true,
+ "drafted_by": "gemini-3.6-flash",
+ "judged_by": "gemini-3.1-flash-lite",
+ "source_chunk_ids": [
+  "edgar-0001166691-000116669125000011::fixed-512::00116",
+  "edgar-0001166691-000162828026004994::fixed-512::00074",
+  "edgar-0001166691-000162828026004994::fixed-512::00061"
+ ],
+ "judge_saw_source_labels": false,
+ "candidates": [
+  {
+   "chunk_id": "edgar-0001166691-000116669125000011::fixed-512::00116",
+   "model_grade": 3,
+   "human_grade": 3,
+   "diverged": false,
+   "crosses_relevance_boundary": false,
+   "model_reason": "Provides the exact 2024 expenditure figure for customer premise equipment.",
+   "is_source": true,
+   "doc_id": "edgar-0001166691-000116669125000011",
+   "page": 50,
+   "section": "Item 7",
+   "tenant": "edgar-cmcsa",
+   "excerpt": "statements of cash flows. See Note 7.\nOur most significant capital expenditures are within the Connectivity & Platforms business, and we expect that this will continue in the future. Connectivity & Platforms\u2019 capital expenditures remained consistent in 2024 compared to 2023 primarily due to increased spending on line e"
+  },
+  {
+   "chunk_id": "edgar-0001166691-000162828026004994::fixed-512::00119",
+   "model_grade": 3,
+   "human_grade": 3,
+   "diverged": false,
+   "crosses_relevance_boundary": false,
+   "model_reason": "Provides the exact 2024 expenditure figure for customer premise equipment.",
+   "is_source": false,
+   "doc_id": "edgar-0001166691-000162828026004994",
+   "page": 52,
+   "section": "Item 7",
+   "tenant": "edgar-cmcsa",
+   "excerpt": ". The sale is expected to close in 2028 subject to various conditions and approvals.\nCapital Expenditures\nCapital expenditures decreased in 2025 primarily due to decreased spending on Epic Universe driven by the opening in May 2025, partially offset by increased spending by the Connectivity & Platforms businesses. The "
+  },
+  {
+   "chunk_id": "edgar-0001166691-000162828026004994::fixed-512::00176",
+   "model_grade": 3,
+   "human_grade": 3,
+   "diverged": false,
+   "crosses_relevance_boundary": false,
+   "model_reason": "Provides the specific 2024 dollar amount for customer premise equipment.",
+   "is_source": false,
+   "doc_id": "edgar-0001166691-000162828026004994",
+   "page": 87,
+   "section": "Item 8",
+   "tenant": "edgar-cmcsa",
+   "excerpt": "basis, we reduce the carrying amount of the investment to its quoted or estimated fair value, as applicable, and establish a new cost basis for the investment. For our nonmarketable equity securities, we record the impairment to realized and unrealized gains (losses) on equity securities, net. For our equity method inv"
+  },
+  {
+   "chunk_id": "edgar-0001166691-000162828026004994::fixed-512::00177",
+   "model_grade": 1,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Explains accounting policies for equipment but lacks the specific expenditure amount.",
+   "is_source": false,
+   "doc_id": "edgar-0001166691-000162828026004994",
+   "page": 88,
+   "section": "Item 8",
+   "tenant": "edgar-cmcsa",
+   "excerpt": ".6\nOther\n9.8\n10.0\nProperty and equipment, net\n$\n65.7\n$\n62.5\nProperty and equipment are stated at cost. We capitalize improvements that extend asset lives and expense repairs and maintenance costs as incurred. We record depreciation using the straight-line method over the asset\u2019s estimated useful life. For assets that a"
+  },
+  {
+   "chunk_id": "edgar-0001166691-000116669124000011::fixed-512::00129",
+   "model_grade": 1,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Discusses 2024 expectations but provides no specific 2024 expenditure amount.",
+   "is_source": false,
+   "doc_id": "edgar-0001166691-000116669124000011",
+   "page": 54,
+   "section": "Item 7",
+   "tenant": "edgar-cmcsa",
+   "excerpt": "primarily due to increased spending on line extensions and scalable infrastructure, partially offset by decreased spending on customer premise equipment and support capital. The table below summarizes the capital expenditures we incurred in our segments in the Connectivity & Platforms business in 2023, 2022 and 2021.\nY"
+  },
+  {
+   "chunk_id": "edgar-0001166691-000162828026004994::fixed-512::00093",
+   "model_grade": 1,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Mentions spending on customer premise equipment but lacks the specific amount.",
+   "is_source": false,
+   "doc_id": "edgar-0001166691-000162828026004994",
+   "page": 36,
+   "section": "Item 7",
+   "tenant": "edgar-cmcsa",
+   "excerpt": "offset by increases in domestic wireless and international connectivity revenue.\n\u2022\nAdjusted EBITDA decreased primarily due to a decrease in revenue and an increase in other costs and expenses, partially offset by a decrease in programming expenses.\n\u2022\nAdjusted EBITDA margin decreased from 38.2% to 37.7%.\nBusiness Servic"
+  },
+  {
+   "chunk_id": "edgar-0001166691-000116669124000011::fixed-512::00182",
+   "model_grade": 1,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Mentions customer premise equipment capitalization policy but provides no 2024 figures.",
+   "is_source": false,
+   "doc_id": "edgar-0001166691-000116669124000011",
+   "page": 87,
+   "section": "Item 8",
+   "tenant": "edgar-cmcsa",
+   "excerpt": ".7\nProperty and equipment, at cost\n118.4\n112.4\nLess: Accumulated depreciation\n58.7\n56.9\nProperty and equipment, net\n$\n59.7\n$\n55.5\nThe table below summarizes our property and equipment by geographic location.\nDecember 31 (in billions)\n2023\n2022\nUnited States\n$\n48.7\n$\n44.2\nOther\n11.0\n11.3\nProperty and equipment, net\n$\n59"
+  },
+  {
+   "chunk_id": "edgar-0001166691-000116669125000011::fixed-512::00042",
+   "model_grade": 1,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Mentions customer premise equipment but lacks specific 2024 expenditure data.",
+   "is_source": false,
+   "doc_id": "edgar-0001166691-000116669125000011",
+   "page": 7,
+   "section": "Item 1",
+   "tenant": "edgar-cmcsa",
+   "excerpt": "Stream Box, and our NOW and NOW TV streaming services.\nComcast 2024 Annual Report on Form 10-K\n4\nTable of Contents\nThe programming on our Sky-branded entertainment television networks includes content licensed from third parties and from our Studios segment, including certain original content. Our most significant agre"
+  }
+ ]
+}

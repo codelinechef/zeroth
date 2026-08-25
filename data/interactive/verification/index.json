@@ -1,0 +1,59 @@
+{
+ "describes": "Index of verified queries. Agreement is withheld until the human sample is large enough and actually discriminates.",
+ "generated_by": {
+  "script": "harness/interactive/verification.py",
+  "regenerate": "python3 harness/interactive/verification.py",
+  "commit": "341ea20",
+  "at": "2026-08-25T04:52:20Z"
+ },
+ "source": {
+  "corpus": "edgar-cuad-rfc-v1"
+ },
+ "state": "available",
+ "queries": [
+  {
+   "query_id": "cross-document-000",
+   "category": "cross-document",
+   "question": "What was the total operating income for the North America segment in fiscal 2023, and which XBRL financial taxonomy members are associated w",
+   "verified": 8,
+   "diverged": 7
+  },
+  {
+   "query_id": "multi-chunk-000",
+   "category": "multi-chunk",
+   "question": "At what specific address is the Contractor, Redwater LLC, required to maintain original Subscription Agreements and Note Confirmations, abse",
+   "verified": 8,
+   "diverged": 8
+  },
+  {
+   "query_id": "tenant-scoped-000",
+   "category": "tenant-scoped",
+   "question": "How much did Comcast spend on customer premise equipment capital expenditures in 2024?",
+   "verified": 8,
+   "diverged": 5
+  },
+  {
+   "query_id": "unanswerable-000",
+   "category": "unanswerable",
+   "question": "How many business days does TouchStar have to review and approve non-English marketing materials submitted by the Reseller?",
+   "verified": 8,
+   "diverged": 8
+  }
+ ],
+ "agreement_publishable": false,
+ "agreement_withheld_because": [
+  "only 32 judgments verified, below the 60 minimum",
+  "94% of human grades are the single value 3, so the sample does not discriminate between relevant and irrelevant passages and cannot measure a judge either way"
+ ],
+ "observed": {
+  "judgments_compared": 32,
+  "human_grade_distribution": {
+   "2": 2,
+   "3": 30
+  },
+  "exact_matches": 4,
+  "relevance_boundary_matches": 6
+ },
+ "caveat": "Verification is in progress. Nothing here is the published agreement rate; the figures above are raw counts of what has been graded so far.",
+ "code": "harness/golden/verify.py"
+}

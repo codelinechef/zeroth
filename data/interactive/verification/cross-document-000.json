@@ -1,0 +1,139 @@
+{
+ "describes": "One golden-set query through draft, blind judging and human verification.",
+ "generated_by": {
+  "script": "harness/interactive/verification.py",
+  "regenerate": "python3 harness/interactive/verification.py",
+  "commit": "341ea20",
+  "at": "2026-08-25T04:52:20Z"
+ },
+ "source": {
+  "corpus": "edgar-cuad-rfc-v1",
+  "query_id": "cross-document-000"
+ },
+ "query_id": "cross-document-000",
+ "category": "cross-document",
+ "question": "What was the total operating income for the North America segment in fiscal 2023, and which XBRL financial taxonomy members are associated with cash flow hedging using foreign exchange contracts during the same fiscal period?",
+ "answerable": true,
+ "drafted_by": "gemini-3.6-flash",
+ "judged_by": "gemini-3.1-flash-lite",
+ "source_chunk_ids": [
+  "edgar-0000829224-000082922423000058::fixed-512::00116",
+  "edgar-0000829224-000082922425000114::fixed-512::00052",
+  "edgar-0000829224-000082922424000057::fixed-512::00015"
+ ],
+ "judge_saw_source_labels": false,
+ "candidates": [
+  {
+   "chunk_id": "edgar-0000829224-000082922424000057::fixed-512::00015",
+   "model_grade": 2,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": false,
+   "model_reason": "Identifies relevant XBRL hedging members but lacks North America operating income.",
+   "is_source": true,
+   "doc_id": "edgar-0000829224-000082922424000057",
+   "page": 1,
+   "section": "front-matter",
+   "tenant": "edgar-sbux",
+   "excerpt": "sbux:ProductAndDistributionCostsMember\n2022-10-03\n2023-10-01\n0000829224\nus-gaap:ForeignExchangeContractMember\nus-gaap:CashFlowHedgingMember\nus-gaap:DesignatedAsHedgingInstrumentMember\nsbux:ProductAndDistributionCostsMember\n2021-10-04\n2022-10-02\n0000829224\nus-gaap:ForeignExchangeContractMember\nus-gaap:CashFlowHedgingMem"
+  },
+  {
+   "chunk_id": "edgar-0000796343-000079634324000006::fixed-512::00108",
+   "model_grade": 1,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Contains revenue data but lacks operating income and XBRL taxonomy members.",
+   "is_source": false,
+   "doc_id": "edgar-0000796343-000079634324000006",
+   "page": 41,
+   "section": "Item 7",
+   "tenant": "edgar-adbe",
+   "excerpt": "in millions)\n2023\n2022\n2021\n%\u00a0Change\nAmericas\n$\n11,654\n$\n10,251\n$\n8,996\n14\n%\nPercentage of total revenue\n60\n%\n58\n%\n57\n%\nEMEA\n4,881\n4,593\n4,252\n6\n%\nPercentage of total revenue\n25\n%\n26\n%\n27\n%\nAPAC\n2,874\n2,762\n2,537\n4\n%\nPercentage of total revenue\n15\n%\n16\n%\n16\n%\nTotal revenue\n$\n19,409\n$\n17,606\n$\n15,785\n10\n%\n41\nTable of Co"
+  },
+  {
+   "chunk_id": "edgar-0000320187-000032018725000047::fixed-512::00183",
+   "model_grade": 1,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Contains hedging gain/loss data but lacks operating income and taxonomy.",
+   "is_source": false,
+   "doc_id": "edgar-0000320187-000032018725000047",
+   "page": 82,
+   "section": "Item 8",
+   "tenant": "edgar-nke",
+   "excerpt": ", 2025, 2024 and 2023:\n(Dollars in millions)\nAMOUNT OF GAIN (LOSS)\n(1)\nAMOUNT OF GAIN (LOSS)\n(1)\nYEAR ENDED MAY 31,\nLOCATION OF GAIN (LOSS)\nYEAR ENDED MAY 31,\n2025\n2024\n2023\n2025\n2024\n2023\nDerivatives designated as\ncash flow hedges:\nForeign exchange forwards\nand options\n$\n(\n67\n$\n(\n66\n$\n16\nRevenues\n$\n(\n93\n$\n(\n24\n$\n26\nFo"
+  },
+  {
+   "chunk_id": "edgar-0000320187-000032018724000044::fixed-512::00185",
+   "model_grade": 1,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Contains hedging gain/loss data but lacks operating income and taxonomy.",
+   "is_source": false,
+   "doc_id": "edgar-0000320187-000032018724000044",
+   "page": 84,
+   "section": "Item 8",
+   "tenant": "edgar-nke",
+   "excerpt": "(\n5\n1\nForeign exchange forwards\nand options\n102\n207\n492\nOther (income) expense, net\n204\n338\n130\nInterest rate swaps\n(2)\n\u2014\n\u2014\n\u2014\nInterest expense (income), net\n(\n8\n(\n8\n(\n7\nTotal designated cash\nflow hedges\n$\n270\n$\n527\n$\n1,336\n$\n468\n$\n932\n$\n19\n(1)\nFor the fiscal years ended\nMay\u00a031, 2024, 2023, and 2022,\nthe amounts recorde"
+  },
+  {
+   "chunk_id": "edgar-0000796343-000079634324000006::fixed-512::00150",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Does not contain operating income or XBRL taxonomy member information.",
+   "is_source": false,
+   "doc_id": "edgar-0000796343-000079634324000006",
+   "page": 72,
+   "section": "Item 8",
+   "tenant": "edgar-adbe",
+   "excerpt": "to revenue, operating expense or interest expense, as applicable.\u00a0In the event the underlying forecasted transaction does not occur, or it becomes probable that it will not occur, we reclassify the gain or loss on the related cash flow hedge from accumulated other comprehensive income (loss) to the same income statemen"
+  },
+  {
+   "chunk_id": "edgar-0000796343-000079634325000004::fixed-512::00152",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Does not contain operating income or XBRL taxonomy member information.",
+   "is_source": false,
+   "doc_id": "edgar-0000796343-000079634325000004",
+   "page": 73,
+   "section": "Item 8",
+   "tenant": "edgar-adbe",
+   "excerpt": "to period are recorded in the same income statement line item as the hedged item.\nFor fiscal 2024, 2023 and 2022, there were no net gains or losses recognized in income relating to hedges of forecasted transactions that did not occur.\nNon-Designated Hedges\nOur derivatives not designated as hedging instruments consist o"
+  },
+  {
+   "chunk_id": "edgar-0000829224-000082922423000058::fixed-512::00116",
+   "model_grade": 2,
+   "human_grade": 2,
+   "diverged": false,
+   "crosses_relevance_boundary": false,
+   "model_reason": "Provides North America operating income but lacks XBRL hedging taxonomy members.",
+   "is_source": true,
+   "doc_id": "edgar-0000829224-000082922423000058",
+   "page": 34,
+   "section": "Item 7",
+   "tenant": "edgar-sbux",
+   "excerpt": "-provision adjustment related to the divestiture of certain joint venture operations (approximately 50 basis points) and a year-over-year decrease in beneficial valuation allowance activity related to international jurisdictions (approximately 40 basis points). See\nNote 14\n, Income Taxes, for further discussion.\n31\nTab"
+  },
+  {
+   "chunk_id": "edgar-0000796343-000079634326000003::fixed-512::00140",
+   "model_grade": 1,
+   "human_grade": 2,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Contains hedging data but lacks operating income and XBRL taxonomy members.",
+   "is_source": false,
+   "doc_id": "edgar-0000796343-000079634326000003",
+   "page": 68,
+   "section": "Item 8",
+   "tenant": "edgar-adbe",
+   "excerpt": ", 2024 and 2023 were as follows:\n(in millions)\nFinancial Statement Classification\n2025\n2024\n2023\nDerivatives in cash flow hedging relationships:\nForeign exchange contracts\nNet gain (loss) reclassified from accumulated OCI into income\nRevenue\n$\n2\n$\n(\n20\n$\n41\nNet gain (loss) reclassified from accumulated OCI into income\n"
+  }
+ ]
+}

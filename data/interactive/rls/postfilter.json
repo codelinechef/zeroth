@@ -1,0 +1,563 @@
+{
+ "describes": "ANN recall under row-level security on the real corpus, with an ef_search sweep showing that widening the search does not recover the lost candidates.",
+ "generated_by": {
+  "script": "harness/interactive/rls_demo.py",
+  "regenerate": "python3 harness/interactive/rls_demo.py",
+  "commit": "341ea20",
+  "at": "2026-08-25T04:59:25Z"
+ },
+ "source": {
+  "corpus": "edgar-cuad-rfc-v1",
+  "chunks": 51310,
+  "tenants": 47,
+  "embedding_model": "BAAI/bge-small-en-v1.5"
+ },
+ "k": 10,
+ "ef_sweep": [
+  40,
+  100,
+  200,
+  400,
+  800
+ ],
+ "index": {
+  "type": "hnsw",
+  "m": 16,
+  "ef_construction": 64,
+  "build_seconds": 7.7
+ },
+ "roles": {
+  "all_tenants": {
+   "tenants_visible": 47,
+   "tenants_total": 47,
+   "queries": 12,
+   "empty_results": 0,
+   "recall_at_10": 0.85,
+   "per_query": [
+    {
+     "query_id": "cross-document-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 8
+    },
+    {
+     "query_id": "multi-chunk-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 9
+    },
+    {
+     "query_id": "single-chunk-001",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-002",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-003",
+     "exact": 10,
+     "returned": 10,
+     "hit": 8
+    },
+    {
+     "query_id": "single-chunk-004",
+     "exact": 10,
+     "returned": 10,
+     "hit": 9
+    },
+    {
+     "query_id": "single-chunk-005",
+     "exact": 10,
+     "returned": 10,
+     "hit": 9
+    },
+    {
+     "query_id": "single-chunk-006",
+     "exact": 10,
+     "returned": 10,
+     "hit": 4
+    },
+    {
+     "query_id": "single-chunk-007",
+     "exact": 10,
+     "returned": 10,
+     "hit": 5
+    },
+    {
+     "query_id": "tenant-scoped-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "unanswerable-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    }
+   ]
+  },
+  "analyst_broad": {
+   "tenants_visible": 35,
+   "tenants_total": 47,
+   "queries": 12,
+   "empty_results": 0,
+   "recall_at_10": 0.8417,
+   "per_query": [
+    {
+     "query_id": "cross-document-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 7
+    },
+    {
+     "query_id": "multi-chunk-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 9
+    },
+    {
+     "query_id": "single-chunk-001",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-002",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-003",
+     "exact": 10,
+     "returned": 10,
+     "hit": 8
+    },
+    {
+     "query_id": "single-chunk-004",
+     "exact": 10,
+     "returned": 10,
+     "hit": 9
+    },
+    {
+     "query_id": "single-chunk-005",
+     "exact": 10,
+     "returned": 10,
+     "hit": 9
+    },
+    {
+     "query_id": "single-chunk-006",
+     "exact": 10,
+     "returned": 10,
+     "hit": 4
+    },
+    {
+     "query_id": "single-chunk-007",
+     "exact": 10,
+     "returned": 10,
+     "hit": 5
+    },
+    {
+     "query_id": "tenant-scoped-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "unanswerable-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    }
+   ]
+  },
+  "analyst_mid": {
+   "tenants_visible": 12,
+   "tenants_total": 47,
+   "queries": 12,
+   "empty_results": 2,
+   "recall_at_10": 0.6667,
+   "per_query": [
+    {
+     "query_id": "cross-document-000",
+     "exact": 10,
+     "returned": 9,
+     "hit": 9
+    },
+    {
+     "query_id": "multi-chunk-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 9
+    },
+    {
+     "query_id": "single-chunk-001",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-002",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-003",
+     "exact": 10,
+     "returned": 10,
+     "hit": 8
+    },
+    {
+     "query_id": "single-chunk-004",
+     "exact": 10,
+     "returned": 2,
+     "hit": 2
+    },
+    {
+     "query_id": "single-chunk-005",
+     "exact": 10,
+     "returned": 10,
+     "hit": 9
+    },
+    {
+     "query_id": "single-chunk-006",
+     "exact": 10,
+     "returned": 10,
+     "hit": 3
+    },
+    {
+     "query_id": "single-chunk-007",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "tenant-scoped-000",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "unanswerable-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    }
+   ]
+  },
+  "analyst_narrow": {
+   "tenants_visible": 3,
+   "tenants_total": 47,
+   "queries": 12,
+   "empty_results": 5,
+   "recall_at_10": 0.5,
+   "per_query": [
+    {
+     "query_id": "cross-document-000",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "multi-chunk-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 8
+    },
+    {
+     "query_id": "single-chunk-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 7
+    },
+    {
+     "query_id": "single-chunk-001",
+     "exact": 10,
+     "returned": 7,
+     "hit": 7
+    },
+    {
+     "query_id": "single-chunk-002",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-003",
+     "exact": 10,
+     "returned": 10,
+     "hit": 8
+    },
+    {
+     "query_id": "single-chunk-004",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "single-chunk-005",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-006",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "single-chunk-007",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "tenant-scoped-000",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "unanswerable-000",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    }
+   ]
+  },
+  "single_tenant": {
+   "tenants_visible": 1,
+   "tenants_total": 47,
+   "queries": 12,
+   "empty_results": 6,
+   "recall_at_10": 0.3,
+   "per_query": [
+    {
+     "query_id": "cross-document-000",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "multi-chunk-000",
+     "exact": 10,
+     "returned": 1,
+     "hit": 1
+    },
+    {
+     "query_id": "single-chunk-000",
+     "exact": 10,
+     "returned": 4,
+     "hit": 4
+    },
+    {
+     "query_id": "single-chunk-001",
+     "exact": 10,
+     "returned": 4,
+     "hit": 4
+    },
+    {
+     "query_id": "single-chunk-002",
+     "exact": 10,
+     "returned": 9,
+     "hit": 9
+    },
+    {
+     "query_id": "single-chunk-003",
+     "exact": 10,
+     "returned": 8,
+     "hit": 8
+    },
+    {
+     "query_id": "single-chunk-004",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "single-chunk-005",
+     "exact": 10,
+     "returned": 10,
+     "hit": 10
+    },
+    {
+     "query_id": "single-chunk-006",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "single-chunk-007",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "tenant-scoped-000",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    },
+    {
+     "query_id": "unanswerable-000",
+     "exact": 10,
+     "returned": 0,
+     "hit": 0
+    }
+   ]
+  }
+ },
+ "sweep": {
+  "all_tenants": {
+   "40": {
+    "recall_at_10": 0.85,
+    "empty_results": 0
+   },
+   "100": {
+    "recall_at_10": 0.9417,
+    "empty_results": 0
+   },
+   "200": {
+    "recall_at_10": 0.9667,
+    "empty_results": 0
+   },
+   "400": {
+    "recall_at_10": 0.9667,
+    "empty_results": 0
+   },
+   "800": {
+    "recall_at_10": 0.975,
+    "empty_results": 0
+   }
+  },
+  "analyst_broad": {
+   "40": {
+    "recall_at_10": 0.8417,
+    "empty_results": 0
+   },
+   "100": {
+    "recall_at_10": 0.9333,
+    "empty_results": 0
+   },
+   "200": {
+    "recall_at_10": 0.95,
+    "empty_results": 0
+   },
+   "400": {
+    "recall_at_10": 0.95,
+    "empty_results": 0
+   },
+   "800": {
+    "recall_at_10": 0.975,
+    "empty_results": 0
+   }
+  },
+  "analyst_mid": {
+   "40": {
+    "recall_at_10": 0.6667,
+    "empty_results": 2
+   },
+   "100": {
+    "recall_at_10": 0.8417,
+    "empty_results": 0
+   },
+   "200": {
+    "recall_at_10": 0.8917,
+    "empty_results": 0
+   },
+   "400": {
+    "recall_at_10": 0.9583,
+    "empty_results": 0
+   },
+   "800": {
+    "recall_at_10": 0.9583,
+    "empty_results": 0
+   }
+  },
+  "analyst_narrow": {
+   "40": {
+    "recall_at_10": 0.5,
+    "empty_results": 5
+   },
+   "100": {
+    "recall_at_10": 0.6333,
+    "empty_results": 4
+   },
+   "200": {
+    "recall_at_10": 0.6667,
+    "empty_results": 4
+   },
+   "400": {
+    "recall_at_10": 0.6667,
+    "empty_results": 4
+   },
+   "800": {
+    "recall_at_10": 0.6667,
+    "empty_results": 4
+   }
+  },
+  "single_tenant": {
+   "40": {
+    "recall_at_10": 0.3,
+    "empty_results": 6
+   },
+   "100": {
+    "recall_at_10": 0.6083,
+    "empty_results": 4
+   },
+   "200": {
+    "recall_at_10": 0.65,
+    "empty_results": 4
+   },
+   "400": {
+    "recall_at_10": 0.6583,
+    "empty_results": 4
+   },
+   "800": {
+    "recall_at_10": 0.6667,
+    "empty_results": 4
+   }
+  }
+ },
+ "measured_as": "zeroth_app (NOSUPERUSER, NOBYPASSRLS)",
+ "code": "harness/interactive/rls_demo.py",
+ "finding": {
+  "holds": [
+   "Post-filtering costs recall in proportion to how restrictive the role is: at the default ef_search=40, recall falls from 0.850 with all 47 tenants visible to 0.300 with one.",
+   "Restricted roles return nothing at all for 6 of 12 queries even though exact search under the identical policy returns a full result set.",
+   "Widening the search plateaus below the unrestricted ceiling. A single-tenant role tops out at 0.667 where an unrestricted one reaches 0.975, and 4 queries still return nothing at ef_search=800."
+  ],
+  "does_not_hold": [
+   "An earlier measurement on a SYNTHETIC corpus found that raising ef_search from 40 to 800 changed nothing at all. That does not replicate here: recall for a single-tenant role moves from 0.300 to 0.667 and empty results fall from 6 to 4."
+  ],
+  "why_they_differ": "The synthetic corpus used generated tenant clusters that were almost perfectly separated (inter-tenant cosine 0.014), so a restricted role's nearest neighbours were entirely other tenants at any search width. Real documents share vocabulary, boilerplate and structure, so tenant regions overlap and a wider search does reach permitted rows. The separated case was the worst case, not the typical one.",
+  "still_the_argument_for_partitioning": "Widening the search buys recall back only up to a plateau, and costs latency to do it. Partitioning removes the problem rather than mitigating it: the index contains only permitted rows, so there is nothing to post-filter away.",
+  "reproducibility_note": "HNSW graph construction is not deterministic. Re-running this script moves these figures by a few points; the shape of the result is stable, the third decimal is not."
+ }
+}

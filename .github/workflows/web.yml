@@ -24,4 +24,7 @@ jobs:
       # The content layer validates every committed run against the §10
       # contract at build time, so a malformed run breaks the build rather
       # than rendering as a partial result.
+      # `npm run build` runs the CSP hashing and the nesting guard. The guard
+      # fails the build on flow content inside a <p>, which is what caused the
+      # hydration mismatch that discarded and re-rendered every page.
       - run: npm run build

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Archivo, IBM_Plex_Mono, Source_Serif_4 } from "next/font/google";
 import { ClauseIndex } from "@/components/ClauseIndex";
 import { Footer } from "@/components/Footer";
+import { MetricPanels } from "@/components/MetricPanels";
 import "./globals.css";
 
 // Three families. Archivo carries display and headings, Source Serif 4 the
@@ -53,6 +54,9 @@ export default function RootLayout({
             </div>
           </div>
         </div>
+        {/* Level 3 panels: once per page, outside the prose tree, so nothing
+            block-level is ever rendered inside a paragraph. */}
+        <MetricPanels />
       </body>
     </html>
   );

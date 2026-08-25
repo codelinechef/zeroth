@@ -48,14 +48,25 @@ export function Defs() {
 export function Svg({ w, h, title, desc, children }: {
   w: number; h: number; title: string; desc: string; children: React.ReactNode;
 }) {
+  const id = `${title}-desc`;
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} width="100%" role="img"
-      aria-labelledby={`${title}-t ${title}-d`}
-      style={{ display: "block", minWidth: `${Math.min(w, 560)}px` }}>
-      <title id={`${title}-t`}>{title}</title>
-      <desc id={`${title}-d`}>{desc}</desc>
-      <Defs />
-      {children}
-    </svg>
+    <div className="relative">
+      {/* An SVG <title> is rendered by browsers as a native tooltip on hover,
+          which floated a dark "Figure3" label over the diagram and obscured it.
+          A visually-hidden description referenced by aria-labelledby gives
+          screen readers the same information with no tooltip, and carries far
+          more than a short title could. */}
+      <span id={id} className="sr-only">{desc}</span>
+      <svg
+        viewBox={`0 0 ${w} ${h}`}
+        width="100%"
+        role="img"
+        aria-labelledby={id}
+        style={{ display: "block", minWidth: `${Math.min(w, 560)}px` }}
+      >
+        <Defs />
+        {children}
+      </svg>
+    </div>
   );
 }

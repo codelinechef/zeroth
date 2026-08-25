@@ -57,7 +57,8 @@ pins the Content-Security-Policy hashes — see below.
 | `/roadmap` | Eight phases with status |
 | `/security` | Figure 3, red-team in-progress block |
 | `/about` | Reconstruction statement |
-| `/writing`, `/feed`, `/runs` | In-progress blocks, no numbers |
+| `/explore` | Three demos: post-filtering slider, retrieval walkthrough, chunking explorer |
+| `/runs` | In-progress block, no numbers |
 | `/does-not-exist` | The 404 page, not a server error |
 
 Refresh directly on a deep route (not via client navigation). That is the
@@ -114,6 +115,7 @@ No component changes required for any of these:
 | Roadmap phases | `apps/web/lib/phases.ts` |
 | Run results | `content/board/<run-id>.json` |
 | Corpus figures | `data/corpus/corpus_manifest.json` (generated, not hand-edited) |
+| Interactive demo data | `data/interactive/` — see its README for the regeneration commands |
 
 To add a metric: drop in a JSON file with the same shape as an existing one and
 reference it as `<Metric id="your_id" />`. An unknown id fails the build rather

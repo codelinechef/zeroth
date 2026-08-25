@@ -2,18 +2,24 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import type { Metric } from "@/lib/metrics";
+import { panelDomId } from "@/lib/metricIds";
 
 /**
- * Progressive disclosure for a metric name — brief §5.
+ * Inline metric trigger — Levels 1 and 2 of the disclosure in brief §5.
  *
- *   Level 1  inline trigger, dotted underline in the family hue
- *   Level 2  popover on hover OR focus after 150ms
- *   Level 3  side panel on click
+ * IMPORTANT: this component may return PHRASING CONTENT ONLY.
  *
- * The trigger is a real <button>, so everything reachable by mouse is
- * reachable by keyboard — the standard failure of hover UIs. Level 3 uses a
- * native <dialog>, which gives focus trapping and Escape dismissal from the
- * platform rather than from hand-written key handlers.
+ * References sit inside <p> in the prose. HTML does not permit flow content
+ * (<div>, <section>, <dialog>, <h2>, <pre>, <ul>, ...) inside a paragraph: the
+ * parser auto-closes the <p> at the first block child, so the DOM the browser
+ * builds does not match the tree React rendered on the server, and React
+ * discards the server HTML and re-renders the whole page on the client.
+ *
+ * The Level 3 panel therefore lives in <MetricPanels>, rendered once per page
+ * outside the prose tree. This trigger opens it by id.
+ *
+ * Anything added here must be a <span>, <button>, <a>, <code>, <em> or similar.
+ * If you need a block element, put it in the panel.
  */
 
 const HUE: Record<string, string> = {
@@ -27,18 +33,15 @@ const HUE: Record<string, string> = {
 export function MetricRef({
   metric,
   children,
-  panel,
 }: {
   metric: Metric;
   children?: React.ReactNode;
-  /** Level 3 content, rendered on the server and passed in. */
-  panel: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const popId = useId();
   const hue = HUE[metric.family];
+  const panelId = panelDomId(metric.id);
 
   const show = () => {
     if (timer.current) clearTimeout(timer.current);
@@ -54,8 +57,13 @@ export function MetricRef({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, []);
-
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+
+  const openPanel = () => {
+    hide();
+    const el = document.getElementById(panelId);
+    if (el instanceof HTMLDialogElement) el.showModal();
+  };
 
   return (
     <span className="relative inline-block">
@@ -63,11 +71,12 @@ export function MetricRef({
         type="button"
         aria-describedby={open ? popId : undefined}
         aria-haspopup="dialog"
+        aria-controls={panelId}
         onMouseEnter={show}
         onMouseLeave={hide}
         onFocus={show}
         onBlur={hide}
-        onClick={() => { hide(); dialogRef.current?.showModal(); }}
+        onClick={openPanel}
         className="metric-ref"
         style={{ ["--hue" as string]: hue }}
       >
@@ -75,9 +84,12 @@ export function MetricRef({
           {metric.tag}
         </span>
         {children ?? metric.name}
-        <span className="sr-only"> — {metric.one_line} Activate for the full definition.</span>
+        <span className="sr-only">
+          {" "}— {metric.one_line} Activate for the full definition.
+        </span>
       </button>
 
+      {/* Level 2. Spans only: this sits inside the paragraph. */}
       {open ? (
         <span role="tooltip" id={popId} className="metric-pop mono">
           <span className="block text-ink">{metric.one_line}</span>
@@ -91,27 +103,6 @@ export function MetricRef({
           </span>
         </span>
       ) : null}
-
-      <dialog ref={dialogRef} className="metric-panel" aria-label={`${metric.name} — full definition`}>
-        <div className="metric-panel-inner">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="eyebrow">
-                <span style={{ color: hue }}>{metric.tag}</span> {metric.family}
-              </p>
-              <h2 className="mt-1 text-[length:var(--t-150)]">{metric.name}</h2>
-            </div>
-            <button
-              type="button"
-              onClick={() => dialogRef.current?.close()}
-              className="mono text-[length:var(--t-75)] underline text-signal shrink-0"
-            >
-              Close
-            </button>
-          </div>
-          {panel}
-        </div>
-      </dialog>
     </span>
   );
 }

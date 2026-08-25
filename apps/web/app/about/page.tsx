@@ -5,7 +5,7 @@ export const metadata = { title: "About · Zeroth" };
 export default function AboutPage() {
   return (
     <>
-      <p className="eyebrow">Section 9</p>
+      <p className="eyebrow">Section 8</p>
       <h1 className="mt-2">About</h1>
 
       <Prose className="mt-8">

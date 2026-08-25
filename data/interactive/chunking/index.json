@@ -1,0 +1,44 @@
+{
+ "describes": "Which document represents each source in the chunking explorer.",
+ "generated_by": {
+  "script": "harness/interactive/chunking.py",
+  "regenerate": "python3 harness/interactive/chunking.py",
+  "commit": "341ea20",
+  "at": "2026-08-25T04:50:33Z"
+ },
+ "source": {
+  "corpus": "edgar-cuad-rfc-v1"
+ },
+ "documents": [
+  {
+   "source": "cuad",
+   "doc_id": "cuad-allisontransmissionholdingsinc-12-15-201-728b7aca",
+   "fixed": 16,
+   "section_aware": 17,
+   "fixed_crossing": 4,
+   "section_crossing": 0,
+   "fixed_mid_sentence": 15,
+   "section_mid_sentence": 13
+  },
+  {
+   "source": "edgar",
+   "doc_id": "edgar-0000732717-000073271724000009",
+   "fixed": 277,
+   "section_aware": 285,
+   "fixed_crossing": 17,
+   "section_crossing": 0,
+   "fixed_mid_sentence": 260,
+   "section_mid_sentence": 266
+  },
+  {
+   "source": "rfc",
+   "doc_id": "rfc-9002",
+   "fixed": 48,
+   "section_aware": 94,
+   "fixed_crossing": 32,
+   "section_crossing": 0,
+   "fixed_mid_sentence": 43,
+   "section_mid_sentence": 47
+  }
+ ]
+}

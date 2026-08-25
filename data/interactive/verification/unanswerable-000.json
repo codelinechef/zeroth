@@ -1,0 +1,138 @@
+{
+ "describes": "One golden-set query through draft, blind judging and human verification.",
+ "generated_by": {
+  "script": "harness/interactive/verification.py",
+  "regenerate": "python3 harness/interactive/verification.py",
+  "commit": "341ea20",
+  "at": "2026-08-25T04:52:20Z"
+ },
+ "source": {
+  "corpus": "edgar-cuad-rfc-v1",
+  "query_id": "unanswerable-000"
+ },
+ "query_id": "unanswerable-000",
+ "category": "unanswerable",
+ "question": "How many business days does TouchStar have to review and approve non-English marketing materials submitted by the Reseller?",
+ "answerable": false,
+ "drafted_by": "gemini-3.6-flash",
+ "judged_by": "gemini-3.1-flash-lite",
+ "source_chunk_ids": [
+  "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00011",
+  "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00017"
+ ],
+ "judge_saw_source_labels": false,
+ "candidates": [
+  {
+   "chunk_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00011",
+   "model_grade": 1,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Mentions approval requirement for non-English materials but lacks a specific timeframe.",
+   "is_source": true,
+   "doc_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438",
+   "page": 9,
+   "section": "4 RESELLER'S DUTIES.",
+   "tenant": "cuad-distribution",
+   "excerpt": "LITERATURE. Subject to the provisions of Section 3.2, Reseller        &bbsp;  shall have the right to use and distribute the Marketing Literature to           Customers. In the event Reseller desires to use, in connection with           sales of the Support Services, any literature, technical data, price           list"
+  },
+  {
+   "chunk_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00008",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Discusses software code and leads, not marketing material approval timelines.",
+   "is_source": false,
+   "doc_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438",
+   "page": 6,
+   "section": "2.5 USE OF TOUCHSTAR SOFTWARE.",
+   "tenant": "cuad-distribution",
+   "excerpt": "any TouchStar Software.\n(b) TouchStar reserves the absolute right, without providing notice                 to Reseller, to include software code or other markings in the                 TouchStar Software (and the Private Label Software) to assist                 TouchStar in monitoring the compliance by Reseller and "
+  },
+  {
+   "chunk_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00010",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Discusses marketing plans and technical capabilities, not material approval timelines.",
+   "is_source": false,
+   "doc_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438",
+   "page": 8,
+   "section": "3.4 INSTALLATION.",
+   "tenant": "cuad-distribution",
+   "excerpt": "installation of the call center                 system, (ii) the delay or failure by the Customer\n8\nto provide the Technical prerequisites, and (iii) any change                 orders requested with regard to the call center system.\n4. RESELLER'S DUTIES.\n4.1  TECHNICAL AND SALES CAPABILITIES. Reseller acknowledges that"
+  },
+  {
+   "chunk_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00009",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Discusses marketing materials and installation, not approval timelines.",
+   "is_source": false,
+   "doc_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438",
+   "page": 7,
+   "section": "3 TOUCHSTAR'S DUTIES.",
+   "tenant": "cuad-distribution",
+   "excerpt": "provide to           Reseller marketing presentations and other literature prepared by           TouchStar in the ordinary course of business describing the TouchStar           Software and Support Services in order to assist Reseller in the           marketing of the Support Services in the Territory (the \"Marketing  "
+  },
+  {
+   "chunk_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00013",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Discusses insurance and ancillary software, not marketing material approval timelines.",
+   "is_source": false,
+   "doc_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438",
+   "page": 10,
+   "section": "4.7 SOFTWARE LICENSE AGREEMENT. Reseller and each Other Reseller shall",
+   "tenant": "cuad-distribution",
+   "excerpt": "s reasonable opinion,           Reseller will not meet the Quotas during the Term or any extension           thereof.\n4.12 INSURANCE. At a minimum, Reseller will subscribe for and maintain           during the Term and for a period of two (2) years thereafter,           commercial general liability insurance and errors"
+  },
+  {
+   "chunk_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00014",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Passage discusses employee non-solicitation and technical assistance, not marketing materials.",
+   "is_source": false,
+   "doc_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438",
+   "page": 11,
+   "section": "4.7 SOFTWARE LICENSE AGREEMENT. Reseller and each Other Reseller shall",
+   "tenant": "cuad-distribution",
+   "excerpt": "employee of TouchStar or otherwise encourage or solicit any           current employee of TouchStar to leave the employ of TouchStar for any           reason, or to devote less than all of such employee's efforts to the           affairs of TouchStar, without (a) the prior written agreement of           TouchStar, whic"
+  },
+  {
+   "chunk_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00025",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Passage discusses termination, customer agreements, and fee payments.",
+   "is_source": false,
+   "doc_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438",
+   "page": 19,
+   "section": "9.1 CUSTOMER AGREEMENTS.",
+   "tenant": "cuad-distribution",
+   "excerpt": "Section 8.1, all Customer Agreements with                 Customers shall be transferred by Reseller to TouchStar.\n(b) In the event that (i) TouchStar elects not to enter into a new                 agreement with Reseller pursuant to Section 8.2 or (ii) Reseller                 terminates this Agreement in accordance w"
+  },
+  {
+   "chunk_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00022",
+   "model_grade": 0,
+   "human_grade": 3,
+   "diverged": true,
+   "crosses_relevance_boundary": true,
+   "model_reason": "Passage discusses confidentiality and agreement termination terms.",
+   "is_source": false,
+   "doc_id": "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438",
+   "page": 16,
+   "section": "7.1 OWNERSHIP OF INTELLECTUAL PROPERTY.",
+   "tenant": "cuad-distribution",
+   "excerpt": "TouchStar will not be           irreparably harmed by a breach or that TouchStar has available to it           an adequate remedy for damages.\n7.8  RESELLER'S OBLIGATIONS AS TO CONFIDENTIAL INFORMATION AFTER           TERMINATION. All obligations of Reseller relating to TouchStar           Confidential Information shal"
+  }
+ ]
+}

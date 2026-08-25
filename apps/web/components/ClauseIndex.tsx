@@ -15,11 +15,10 @@ export const CLAUSES: Clause[] = [
   { num: "2", title: "Methodology", href: "/methodology" },
   { num: "3", title: "Corpus", href: "/corpus" },
   { num: "4", title: "Failure modes", href: "/failure-modes" },
-  { num: "5", title: "Security", href: "/security" },
-  { num: "6", title: "Roadmap", href: "/roadmap" },
-  { num: "7", title: "Writing", href: "/writing" },
-  { num: "8", title: "Feed", href: "/feed" },
-  { num: "9", title: "About", href: "/about" },
+  { num: "5", title: "Explore", href: "/explore" },
+  { num: "6", title: "Security", href: "/security" },
+  { num: "7", title: "Roadmap", href: "/roadmap" },
+  { num: "8", title: "About", href: "/about" },
 ];
 
 function List({ pathname }: { pathname: string }) {

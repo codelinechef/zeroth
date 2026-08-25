@@ -1,0 +1,112 @@
+{
+ "describes": "Index of precomputed retrieval walkthroughs.",
+ "generated_by": {
+  "script": "harness/interactive/retrieval.py",
+  "regenerate": "python3 harness/interactive/retrieval.py",
+  "commit": "341ea20",
+  "at": "2026-08-25T04:55:24Z"
+ },
+ "source": {
+  "corpus": "edgar-cuad-rfc-v1"
+ },
+ "queries": [
+  {
+   "query_id": "cross-document-000",
+   "category": "cross-document",
+   "question": "What was the total operating income for the North America segment in fiscal 2023, and which XBRL financial taxonomy members are associated with cash f",
+   "lexical_only": 17,
+   "dense_only": 17,
+   "both": 3
+  },
+  {
+   "query_id": "multi-chunk-000",
+   "category": "multi-chunk",
+   "question": "At what specific address is the Contractor, Redwater LLC, required to maintain original Subscription Agreements and Note Confirmations, absent a diffe",
+   "lexical_only": 13,
+   "dense_only": 13,
+   "both": 7
+  },
+  {
+   "query_id": "single-chunk-000",
+   "category": "single-chunk",
+   "question": "Under Section 11.2 of the agreement in the Verizon ABS LLC filing, what are the presumptive discovery limits placed on each party regarding witness de",
+   "lexical_only": 17,
+   "dense_only": 17,
+   "both": 3
+  },
+  {
+   "query_id": "single-chunk-001",
+   "category": "single-chunk",
+   "question": "For how long after a Note is fully paid must the Contractor retain all related records, files, and documents under section (d) Retention?",
+   "lexical_only": 15,
+   "dense_only": 15,
+   "both": 5
+  },
+  {
+   "query_id": "single-chunk-002",
+   "category": "single-chunk",
+   "question": "Under Section 15.2.1 of the agreement, how long does a breaching party have to cure a material breach after receiving written notice before the other ",
+   "lexical_only": 13,
+   "dense_only": 13,
+   "both": 7
+  },
+  {
+   "query_id": "single-chunk-003",
+   "category": "single-chunk",
+   "question": "In this agreement, which specific section is referenced to define the term 'Ancillary Software'?",
+   "lexical_only": 17,
+   "dense_only": 17,
+   "both": 3
+  },
+  {
+   "query_id": "single-chunk-004",
+   "category": "single-chunk",
+   "question": "Which entity ID (CIK 0000886982) member tags specify the applicability of Standardized versus Advanced Approaches for Total Credit RWAs as of 2024-12-",
+   "lexical_only": 20,
+   "dense_only": 20,
+   "both": 0
+  },
+  {
+   "query_id": "single-chunk-005",
+   "category": "single-chunk",
+   "question": "According to the agreement between Todos Medical Ltd. and Care G. B. Plus Ltd., which entity has the authority to appoint a single arbitrator if the p",
+   "lexical_only": 15,
+   "dense_only": 15,
+   "both": 5
+  },
+  {
+   "query_id": "single-chunk-006",
+   "category": "single-chunk",
+   "question": "What is the annual production capacity specified for pure Astaxanthin at the MANUFACTURING FACILITY to be constructed by Parent?",
+   "lexical_only": 18,
+   "dense_only": 18,
+   "both": 2
+  },
+  {
+   "query_id": "single-chunk-007",
+   "category": "single-chunk",
+   "question": "Which specific tax jurisdiction member is listed for CIK 0001099219 for the period 2023-01-01 to 2023-12-31 related to tax legislation in Bermuda?",
+   "lexical_only": 18,
+   "dense_only": 18,
+   "both": 2
+  },
+  {
+   "query_id": "tenant-scoped-000",
+   "category": "tenant-scoped",
+   "question": "How much did Comcast spend on customer premise equipment capital expenditures in 2024?",
+   "lexical_only": 13,
+   "dense_only": 13,
+   "both": 7
+  },
+  {
+   "query_id": "unanswerable-000",
+   "category": "unanswerable",
+   "question": "How many business days does TouchStar have to review and approve non-English marketing materials submitted by the Reseller?",
+   "lexical_only": 4,
+   "dense_only": 4,
+   "both": 16
+  }
+ ],
+ "note": "The retrieval platform is Phase 2. These captures were produced by running the real embedder, BM25 index and cross-encoder over the committed corpus offline.",
+ "code": "harness/interactive/retrieval.py"
+}

@@ -10,7 +10,7 @@ const STATUS: Record<string, string> = {
 export default function RoadmapPage() {
   return (
     <>
-      <p className="eyebrow">Section 6</p>
+      <p className="eyebrow">Section 7</p>
       <h1 className="mt-2">Roadmap</h1>
 
       <Prose className="mt-6">

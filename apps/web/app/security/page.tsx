@@ -9,7 +9,7 @@ export default function SecurityPage() {
   const withSecurity = getRuns().filter((r) => r.security);
   return (
     <>
-      <p className="eyebrow">Section 5</p>
+      <p className="eyebrow">Section 6</p>
       <h1 className="mt-2">Security</h1>
 
       <Prose className="mt-6">
