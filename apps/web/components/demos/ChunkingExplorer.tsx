@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { datasetUrl } from "@/lib/dataUrl";
 
 type Span = {
   ordinal: number; page: number; section: string; n_tokens: number;
@@ -35,11 +36,54 @@ function describe(x: Span): string {
   );
 }
 
-export function ChunkingExplorer({ docs }: { docs: ChunkingData[] }) {
-  const [di, setDi] = useState(0);
+/** What the page inlines per document: enough to fill the picker. */
+export type ChunkingMeta = { source: string; doc_id: string };
+
+export function ChunkingExplorer({
+  sources,
+  initial,
+}: {
+  sources: ChunkingMeta[];
+  /** The first document, inlined so the demo renders without a round trip. */
+  initial: ChunkingData;
+}) {
+  const [src, setSrc] = useState(initial.source);
+  const [d, setD] = useState<ChunkingData>(initial);
   const [strat, setStrat] = useState<(typeof STRATS)[number]>("fixed-512");
   const [hot, setHot] = useState<Span | null>(null);
-  const d = docs[di];
+  const [loading, setLoading] = useState(false);
+  const [failed, setFailed] = useState<string | null>(null);
+
+  // edgar.json alone is 320 KB; inlining all three was a third of this page.
+  const cache = useRef<Map<string, ChunkingData>>(
+    new Map([[initial.source, initial]])
+  );
+  const wanted = useRef(initial.source);
+
+  const select = useCallback(async (next: string) => {
+    setSrc(next);
+    setHot(null);
+    setFailed(null);
+    wanted.current = next;
+
+    const seen = cache.current.get(next);
+    if (seen) { setD(seen); setLoading(false); return; }
+
+    setLoading(true);
+    try {
+      const res = await fetch(datasetUrl(`chunking/${next}.json`));
+      if (!res.ok) throw new Error(String(res.status));
+      const json = (await res.json()) as ChunkingData;
+      cache.current.set(next, json);
+      if (wanted.current !== next) return;
+      setD(json);
+    } catch {
+      if (wanted.current !== next) return;
+      setFailed(next);
+    } finally {
+      if (wanted.current === next) setLoading(false);
+    }
+  }, []);
   const s = d.strategies[strat];
   const other = d.strategies[strat === "fixed-512" ? "section-aware" : "fixed-512"];
   const inExcerpt = s.spans.filter((x) => x.char_start < d.excerpt.length);
@@ -52,12 +96,17 @@ export function ChunkingExplorer({ docs }: { docs: ChunkingData[] }) {
             shrink; the full id is shown below rather than inside an option. */}
         <div className="min-w-0 flex-1 basis-56">
           <label htmlFor="ch-doc" className="eyebrow block mb-2">Document</label>
-          <select id="ch-doc" value={di} onChange={(e) => { setDi(Number(e.target.value)); setHot(null); }}
+          <select id="ch-doc" value={src} onChange={(e) => select(e.target.value)}
             className="mono text-[length:var(--t-75)] border border-rule bg-paper px-2 py-1 w-full max-w-full">
-            {docs.map((x, i) => (
-              <option key={x.doc_id} value={i}>{x.source}</option>
+            {sources.map((x) => (
+              <option key={x.source} value={x.source}>{x.source}</option>
             ))}
           </select>
+          {/* Reserved row so a fetch cannot shift the controls below it. */}
+          <p className="mono text-[length:var(--t-75)] text-ink-muted mt-1 min-h-[1.4em]" aria-live="polite">
+            {failed ? `Could not load ${failed}. Select it again to retry.`
+              : loading ? "Loading document…" : ""}
+          </p>
         </div>
         <fieldset>
           <legend className="eyebrow mb-2">Strategy</legend>

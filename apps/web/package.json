@@ -3,15 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prepare:data": "node scripts/prepare-data.mjs",
+    "predev": "npm run prepare:data",
     "dev": "next dev -p 8000",
-    "build": "next build && node scripts/csp.mjs && node scripts/check-nesting.mjs",
+    "prebuild": "npm run prepare:data",
+    "build": "node scripts/check-refs.mjs && next build && node scripts/csp.mjs && node scripts/check-nesting.mjs && node scripts/check-overflow.mjs",
     "preview": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy",
     "start": "npx serve out -l 8000",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "csp": "node scripts/csp.mjs",
-    "check:nesting": "node scripts/check-nesting.mjs"
+    "check:nesting": "node scripts/check-nesting.mjs",
+    "check:refs": "node scripts/check-refs.mjs",
+    "check:overflow": "node scripts/check-overflow.mjs"
   },
   "dependencies": {
     "next": "16.3.2",

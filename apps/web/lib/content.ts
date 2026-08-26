@@ -138,3 +138,26 @@ export function getCorpusStats(): CorpusStats | null {
     return null;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Corpus documents — the staged index, for the explorer's server-rendered
+   first rows. The client fetches the full file; this is only the head of it,
+   so the table is populated before JavaScript runs.
+--------------------------------------------------------------------------- */
+export type CorpusDocument = {
+  doc_id: string; source: string; tenant: string;
+  pages: number | null; bytes: number; licence: string;
+  identifier: string; url: string | null; checksum: string | null;
+  dedup: unknown;
+};
+
+export function getCorpusDocuments(limit?: number): CorpusDocument[] {
+  const p = path.join(process.cwd(), "public", "data", "corpus", "documents.json");
+  if (!fs.existsSync(p)) return [];
+  try {
+    const m = JSON.parse(fs.readFileSync(p, "utf8")) as { documents: CorpusDocument[] };
+    return limit ? m.documents.slice(0, limit) : m.documents;
+  } catch {
+    return [];
+  }
+}

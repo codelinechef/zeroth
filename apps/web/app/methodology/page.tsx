@@ -1,3 +1,4 @@
+import { SectionLabel } from "@/components/SectionLabel";
 import { Prose, MarginNote, Figure } from "@/components/Paper";
 import { Metric } from "@/components/Metric";
 import { metricsByFamily, FAMILY_LABEL } from "@/lib/metrics";
@@ -12,7 +13,7 @@ export default function MethodologyPage() {
 
   return (
     <>
-      <p className="eyebrow">Section 2</p>
+      <SectionLabel href="/methodology" />
       <h1 className="mt-2">Methodology</h1>
 
       <Prose className="mt-6">

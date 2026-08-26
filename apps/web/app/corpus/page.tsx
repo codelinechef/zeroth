@@ -1,15 +1,20 @@
+import { SectionLabel } from "@/components/SectionLabel";
 import { Prose, MarginNote, Figure } from "@/components/Paper";
 import { CorpusComposition } from "@/components/figures/CorpusComposition";
-import { getCorpusStats } from "@/lib/content";
+import { getCorpusStats, getCorpusDocuments } from "@/lib/content";
+import { Bleed } from "@/components/Paper";
+import { CorpusExplorer } from "@/components/corpus/CorpusExplorer";
 import { Abbr } from "@/components/Abbr";
 
 export const metadata = { title: "Corpus · Zeroth" };
 
 export default function CorpusPage() {
   const s = getCorpusStats();
+  const docHead = getCorpusDocuments(25);
+  const docTotal = getCorpusDocuments().length;
   return (
     <>
-      <p className="eyebrow">Section 3</p>
+      <SectionLabel href="/corpus" />
       <h1 className="mt-2">Corpus</h1>
 
       <Prose className="mt-6">
@@ -74,6 +79,26 @@ export default function CorpusPage() {
           </p>
         ) : null}
       </Prose>
+
+      <h2 className="mt-16">3.3 Every document</h2>
+      <Prose>
+        <p>
+          The manifest, not a summary of it. Each row is one document as it was
+          acquired: its identifier at the source, the tenant it was assigned to,
+          its page count, its licence, and the checksum that pins the bytes.
+          Raw documents are not redistributed — this is what makes the corpus
+          reproducible without them.
+        </p>
+      </Prose>
+      <Bleed className="mt-6">
+        {docTotal ? (
+          <CorpusExplorer initial={docHead} total={docTotal} />
+        ) : (
+          <p className="mono text-[length:var(--t-75)] text-ink-muted">
+            No corpus manifest has been committed yet.
+          </p>
+        )}
+      </Bleed>
     </>
   );
 }

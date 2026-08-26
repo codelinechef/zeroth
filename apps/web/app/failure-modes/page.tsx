@@ -1,3 +1,4 @@
+import { SectionLabel } from "@/components/SectionLabel";
 import { Prose, MarginNote, Figure } from "@/components/Paper";
 import { getFailureModes, STATUS_LABEL } from "@/lib/failureModes";
 import { PostFilter } from "@/components/figures/PostFilter";
@@ -20,7 +21,7 @@ export default function FailureModesPage() {
 
   return (
     <>
-      <p className="eyebrow">Section 4</p>
+      <SectionLabel href="/failure-modes" />
       <h1 className="mt-2">Failure modes</h1>
 
       <Prose className="mt-6">

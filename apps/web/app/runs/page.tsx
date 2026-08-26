@@ -3,6 +3,7 @@ import { ResultsTable } from "@/components/ResultsTable";
 import { Prose } from "@/components/Paper";
 import { InProgress } from "@/components/InProgress";
 import { CostFrontier } from "@/components/figures/CostFrontier";
+import { RunCompare } from "@/components/RunCompare";
 import { Figure } from "@/components/Paper";
 
 export const metadata = { title: "Runs · Zeroth" };
@@ -34,6 +35,20 @@ export default function RunsPage() {
           <div className="bleed bleed-scroll"><ResultsTable runs={runs} /></div>
         )}
       </div>
+      {runs.length >= 2 ? (
+        <>
+          <h2 className="mt-16">Compare two runs</h2>
+          <Prose>
+            <p>
+              Each variant differs from the baseline by exactly one factor. This
+              shows which factor, and whether the metric it moved actually
+              separated from the baseline or sits inside the noise.
+            </p>
+          </Prose>
+          <div className="bleed mt-6"><RunCompare runs={runs} /></div>
+        </>
+      ) : null}
+
       <Figure n={9} caption="Cost per query against answer quality, once runs exist to plot.">
         <div className="p-4"><CostFrontier /></div>
       </Figure>

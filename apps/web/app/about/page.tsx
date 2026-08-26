@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { SectionLabel } from "@/components/SectionLabel";
 import { Prose, MarginNote, Bleed } from "@/components/Paper";
 import { getCorpusStats } from "@/lib/content";
 import { Pipeline } from "@/components/figures/Pipeline";
@@ -6,6 +8,7 @@ import { LINKS } from "@/lib/links";
 import { LinkedInIcon, GlobeIcon } from "@/components/Icons";
 import { Abbr } from "@/components/Abbr";
 import { Glossary } from "@/components/Glossary";
+import { Cite } from "@/components/Cite";
 
 export const metadata = {
   title: "About · Zeroth",
@@ -18,7 +21,7 @@ export default function AboutPage() {
 
   return (
     <>
-      <p className="eyebrow">Section 8</p>
+      <SectionLabel href="/about" />
       <h1 className="mt-2">About</h1>
 
       <Prose className="mt-6">
@@ -29,8 +32,8 @@ export default function AboutPage() {
         </p>
         <MarginNote label="Reading this page">
           Concepts are explained in depth under{" "}
-          <a href="/learn/">Learn</a>; the behaviour behind the claims is
-          steppable under <a href="/walkthroughs/">Walkthroughs</a>.
+          <Link href="/learn/">Learn</Link>; the behaviour behind the claims is
+          steppable under <Link href="/walkthroughs/">Walkthroughs</Link>.
         </MarginNote>
       </Prose>
 
@@ -212,7 +215,10 @@ export default function AboutPage() {
       </Prose>
       <Glossary />
 
-      <h2 className="mt-14">9 · Author and links</h2>
+      <h2 className="mt-14">9 · Citation</h2>
+      <Cite corpusId={c?.corpusId ?? null} year={2026} />
+
+      <h2 className="mt-14">10 · Author and links</h2>
       <Prose>
         <p>
           Built by Anant Sharma. AI Engineer who builds production Python

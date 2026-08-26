@@ -1,7 +1,8 @@
+import { SectionLabel } from "@/components/SectionLabel";
+import Link from "next/link";
+import { ConceptIndex } from "@/components/ConceptIndex";
 import { Prose, MarginNote } from "@/components/Paper";
 import { topicsByCategory, getTopics, CATEGORY_BLURB } from "@/lib/learn";
-import { TopicModal, TopicTrigger } from "@/components/learn/TopicModal";
-import { TopicBody } from "@/components/learn/TopicBody";
 
 export const metadata = {
   title: "Learn · Zeroth",
@@ -15,7 +16,7 @@ export default function LearnPage() {
 
   return (
     <>
-      <p className="eyebrow">Section 7</p>
+      <SectionLabel href="/learn" />
       <h1 className="mt-2">Learn</h1>
 
       <Prose className="mt-6">
@@ -31,9 +32,10 @@ export default function LearnPage() {
         </MarginNote>
         <p>
           {all.length} topics across {groups.length} areas. Each opens in place
-          with the concept, why it exists, how it works, how it is used here,
-          the trade-offs, and the mistakes that are easy to make. Nothing is
-          included that this project does not actually use.
+          Each has its own page covering the concept, why it exists, how it
+          works, how it is used here, the trade-offs, and the mistakes that are
+          easy to make. Nothing is included that this project does not actually
+          use.
         </p>
       </Prose>
 
@@ -44,21 +46,29 @@ export default function LearnPage() {
             <p className="text-ink-muted prose-measure">{CATEGORY_BLURB[category]}</p>
             <ul className="topic-grid mt-4">
               {topics.map((t) => (
-                <li key={t.id}><TopicTrigger topic={t} /></li>
+                <li key={t.id}>
+                  <Link href={`/learn/${t.id}/`} className="topic-trigger block no-underline">
+                    <span className="topic-trigger-title">{t.title}</span>
+                    <span className="topic-trigger-summary">{t.summary}</span>
+                  </Link>
+                </li>
               ))}
             </ul>
           </section>
         ))}
       </div>
 
-      {/* One modal per topic, outside the prose tree. Content is server
-          rendered, so every explanation is in the static HTML and readable
-          without JavaScript. */}
-      {all.map((t) => (
-        <TopicModal key={t.id} topic={t}>
-          <TopicBody topic={t} all={all} />
-        </TopicModal>
-      ))}
+
+      <h2 className="mt-16">Cross-reference index</h2>
+      <Prose>
+        <p>
+          What connects to what, across metrics, failure modes and concepts.
+          Every relationship here is one the content already declares — nothing
+          is inferred, and a reference that does not resolve fails the build.
+        </p>
+      </Prose>
+      <ConceptIndex />
     </>
+
   );
 }

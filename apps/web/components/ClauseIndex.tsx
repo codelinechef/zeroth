@@ -3,24 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SectionSpy } from "./SectionSpy";
+import { CLAUSES } from "@/lib/clauses";
 
 /**
  * The numbered contents rail — brief §3.
  * Sticky at >=900px, a native <details> drawer below it, so it works without
  * JavaScript and is keyboard-operable for free.
  */
-export type Clause = { num: string; title: string; href: string };
-
-export const CLAUSES: Clause[] = [
-  { num: "1", title: "Board", href: "/" },
-  { num: "2", title: "Methodology", href: "/methodology" },
-  { num: "3", title: "Corpus", href: "/corpus" },
-  { num: "4", title: "Failure modes", href: "/failure-modes" },
-  { num: "5", title: "Walkthroughs", href: "/walkthroughs" },
-  { num: "6", title: "Security", href: "/security" },
-  { num: "7", title: "Learn", href: "/learn" },
-  { num: "8", title: "About", href: "/about" },
-];
+export { CLAUSES, type Clause } from "@/lib/clauses";
 
 function List({ pathname, spy = false }: { pathname: string; spy?: boolean }) {
   return (

@@ -349,7 +349,7 @@ figcaption {
 }
 
 /* ===========================================================================
-   Learn — topic grid and modal
+   Learn — topic grid and topic-page content
    =========================================================================== */
 
 .topic-grid {
@@ -385,55 +385,6 @@ figcaption {
   font-size: var(--t-75);
   line-height: 1.5;
   color: var(--ink-muted);
-}
-
-/* Centred, with its own scroll area so long explanations stay usable. */
-.topic-modal {
-  margin: auto;
-  width: min(46rem, calc(100vw - 2rem));
-  max-width: calc(100vw - 2rem);
-  max-height: min(88dvh, 60rem);
-  padding: 0;
-  border: 1px solid var(--rule);
-  background: var(--paper);
-  color: var(--ink);
-  overflow: hidden;
-}
-.topic-modal::backdrop { background: rgb(20 22 26 / 0.42); }
-.topic-modal[open] {
-  display: flex;
-  flex-direction: column;
-  animation: topic-in 180ms ease-out;
-}
-@keyframes topic-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: none; }
-}
-/* Stop the page behind the modal scrolling with it. */
-html.modal-open { overflow: hidden; }
-
-.topic-modal-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem 1rem;
-  border-bottom: 1px solid var(--rule);
-}
-.topic-close {
-  font-family: var(--font-mono);
-  font-size: var(--t-75);
-  color: var(--signal);
-  text-decoration: underline;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-.topic-modal-body {
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scroll-behavior: smooth;
-  padding: 1.25rem 1.5rem 2.5rem;
 }
 
 .topic-lede {
@@ -522,10 +473,6 @@ html.modal-open { overflow: hidden; }
   color: var(--ink-muted);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .topic-modal[open] { animation: none; }
-  .topic-modal-body { scroll-behavior: auto; }
-}
 
 /* Link cards — author and project links (About). */
 .link-cards {
@@ -877,3 +824,263 @@ svg:has(.fig-hot.is-active) .fig-hot:not(.is-active) { opacity: 0.45; }
 
 .chunk-tick.is-active::before { border-left-width: 3px; left: 3px; }
 .chunk-tick:focus-visible { outline: 2px solid var(--signal); outline-offset: 0; }
+
+/* ===========================================================================
+   Retrieval replay — a chunk's rank at every stage
+   =========================================================================== */
+
+/* Four cells, one per pipeline stage. Reading one row across is the argument
+   for a hybrid pipeline: which stage found this chunk, and which nearly lost
+   it. Wraps rather than scrolls — four cells always fit a phone. */
+.journey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.journey li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  border: 1px solid var(--rule);
+  padding: 0.3rem 0.55rem;
+  min-width: 4.25rem;
+}
+/* The stage currently on screen, so the row is anchored to what is being read. */
+.journey li.is-current { border-color: var(--ink); }
+
+.journey-stage {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.journey-rank {
+  font-family: var(--font-mono);
+  font-size: var(--t-875);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+/* Absent is a finding, not a gap — a stage that never returned the chunk. */
+.journey-rank.is-absent { color: var(--ink-muted); }
+
+/* ===========================================================================
+   Topic pages — the modal body, now standing on its own route
+   =========================================================================== */
+
+/* TopicBody was written for a modal with its own padding and scroll container.
+   On a page it needs the measure the rest of the prose uses, and its first
+   section must not carry the modal's top gap. */
+.topic-page .topic-section { max-width: var(--measure); }
+.topic-page .topic-section:first-child { margin-top: 0; }
+
+/* ===========================================================================
+   Golden set
+   =========================================================================== */
+
+/* Headline counts. Three across at reading widths, stacked on a phone. */
+.stat-row {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+  margin: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 1.25rem 0;
+}
+@media (min-width: 640px) { .stat-row { grid-template-columns: repeat(3, 1fr); } }
+.stat-row dt { margin-bottom: 0.35rem; }
+.stat-row dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-275);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.stat-note {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  color: var(--ink-muted);
+  margin: 0.4rem 0 0;
+  line-height: 1.5;
+}
+
+/* Rubric and category lists: a figure against a phrase. */
+.rubric { margin: 0; max-width: var(--measure); }
+.rubric-row {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr;
+  gap: 0.9rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.rubric-row dt {
+  font-family: var(--font-mono);
+  font-size: var(--t-125);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.rubric-row dd { margin: 0; font-size: var(--t-875); line-height: 1.5; }
+.rubric-count {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  color: var(--ink-muted);
+  margin-top: 0.15rem;
+}
+
+/* The query list. */
+.golden-list { list-style: none; margin: 1rem 0 0; padding: 0; }
+.golden-item { border: 1px solid var(--rule); margin-bottom: 0.4rem; }
+
+.golden-head {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 0.75rem 0.9rem;
+  cursor: pointer;
+}
+.golden-head:hover { background: var(--paper); }
+
+.golden-meta { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+.golden-cat {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.golden-flag {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.05em;
+  border: 1px solid var(--rule);
+  padding: 0.05rem 0.35rem;
+  color: var(--ink-muted);
+}
+/* Reserved delta colours, used in their documented sense: a disagreement is
+   the finding this page exists to report, not decoration. */
+.golden-flag.is-warn { color: var(--regress); border-color: var(--regress); }
+.golden-flag.is-ok   { color: var(--fam-retrieval); border-color: var(--fam-retrieval); }
+.golden-flag.is-muted { opacity: 0.75; }
+
+.golden-q {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: var(--t-875);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.golden-body { padding: 0 0.9rem 1rem; border-top: 1px solid var(--rule); }
+
+.golden-facts {
+  display: grid;
+  gap: 0.15rem 1rem;
+  grid-template-columns: 1fr;
+  margin: 0.9rem 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+}
+@media (min-width: 640px) { .golden-facts { grid-template-columns: repeat(2, 1fr); } }
+.golden-facts dt { color: var(--ink-muted); }
+.golden-facts dd { margin: 0 0 0.4rem; color: var(--ink); }
+
+.golden-judgments { list-style: none; margin: 0; padding: 0; }
+.golden-judgments li {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: var(--t-75);
+  line-height: 1.5;
+}
+.golden-grade {
+  flex-shrink: 0;
+  width: 1.5rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--rule);
+  color: var(--ink-muted);
+}
+/* A graded-relevant candidate is rare enough to be worth finding by eye. */
+.golden-grade.g3, .golden-grade.g2 { color: var(--ink); border-color: var(--ink); }
+
+/* ===========================================================================
+   Cross-reference index
+   =========================================================================== */
+
+.concept-index { margin-top: 1.5rem; max-width: var(--measure); }
+.concept-index section + section { margin-top: 2rem; }
+.concept-index dl { margin: 0.5rem 0 0; }
+
+.concept-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.1rem 1.1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+@media (min-width: 700px) {
+  .concept-row { grid-template-columns: 13rem 1fr; gap: 1.1rem; }
+}
+.concept-row dt {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  color: var(--ink);
+  line-height: 1.5;
+}
+.concept-row dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+/* Links go to a page; the rest name a concept that lives inside another page,
+   so they are set as text rather than pretending to be navigable. */
+.concept-link.is-metric { color: var(--ink); }
+.concept-link.is-failure { color: var(--regress); }
+
+/* ===========================================================================
+   Citation export
+   =========================================================================== */
+
+.cite {
+  border: 1px solid var(--rule);
+  padding: 1.1rem 1.25rem;
+  max-width: var(--measure);
+  margin-top: 1.5rem;
+}
+.cite-plain {
+  font-size: var(--t-875);
+  line-height: 1.55;
+  margin: 0.6rem 0 0;
+}
+.cite-bibtex {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  line-height: 1.55;
+  background: none;
+  border: 1px solid var(--rule);
+  padding: 0.75rem 0.9rem;
+  margin: 0.9rem 0 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+.cite-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.75rem 0;
+}

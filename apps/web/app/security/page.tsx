@@ -1,3 +1,4 @@
+import { SectionLabel } from "@/components/SectionLabel";
 import { Prose, MarginNote, Figure } from "@/components/Paper";
 import { InProgress } from "@/components/InProgress";
 import { Partitioned } from "@/components/figures/Partitioned";
@@ -9,7 +10,7 @@ export default function SecurityPage() {
   const withSecurity = getRuns().filter((r) => r.security);
   return (
     <>
-      <p className="eyebrow">Section 6</p>
+      <SectionLabel href="/security" />
       <h1 className="mt-2">Security</h1>
 
       <Prose className="mt-6">

@@ -1,10 +1,11 @@
+import { SectionLabel } from "@/components/SectionLabel";
 import { Prose, MarginNote, Bleed } from "@/components/Paper";
 import { Provenance } from "@/components/Provenance";
 import { InProgress } from "@/components/InProgress";
 import { dataset, datasetList } from "@/lib/interactive";
 import { PostFilterDemo, type PostFilterData } from "@/components/demos/PostFilterDemo";
-import { RetrievalWalkthrough, type WalkthroughData } from "@/components/demos/RetrievalWalkthrough";
-import { ChunkingExplorer, type ChunkingData } from "@/components/demos/ChunkingExplorer";
+import { RetrievalWalkthrough, type WalkthroughData, type QueryMeta } from "@/components/demos/RetrievalWalkthrough";
+import { ChunkingExplorer, type ChunkingData, type ChunkingMeta } from "@/components/demos/ChunkingExplorer";
 
 export const metadata = {
   title: "Walkthroughs · Zeroth",
@@ -14,17 +15,37 @@ export const metadata = {
 
 export default function ExplorePage() {
   const rls = dataset<PostFilterData>("rls/postfilter.json");
-  const walk = datasetList("retrieval")
-    .map((f) => dataset<WalkthroughData>(`retrieval/${f}`))
-    .filter((x): x is NonNullable<typeof x> => !!x)
+  // Only the FIRST trace is inlined. The rest are fetched from /data on
+  // selection — see scripts/prepare-data.mjs. Inlining all eight was most of
+  // the megabyte this page used to ship.
+  const walkIds = datasetList("retrieval")
+    .map((f) => f.replace(/\.json$/, ""))
+    .sort()
     .slice(0, 8);
-  const chunking = ["edgar", "cuad", "rfc"]
+  const walkAll = walkIds
+    .map((id) => dataset<WalkthroughData>(`retrieval/${id}.json`))
+    .filter((x): x is NonNullable<typeof x> => !!x);
+  const walkIndex: QueryMeta[] = walkAll.map((w) => ({
+    query_id: w.query_id, category: w.category, question: w.question,
+  }));
+  const walkFirst = walkAll[0] ?? null;
+  // Same treatment: only the first document is inlined. edgar.json is 320 KB
+  // on its own, and most readers never switch away from the default.
+  // Smallest first, deliberately: the head of this list is what gets inlined,
+  // and edgar.json is 272 KB against cuad's 24 KB. The demo makes the same
+  // point on any of the three, so the default is the one that costs least to
+  // ship; the other two are one fetch away.
+  const chunkAll = ["cuad", "rfc", "edgar"]
     .map((s) => dataset<ChunkingData>(`chunking/${s}.json`))
     .filter((x): x is NonNullable<typeof x> => !!x);
+  const chunkIndex: ChunkingMeta[] = chunkAll.map((c) => ({
+    source: c.source, doc_id: c.doc_id,
+  }));
+  const chunkFirst = chunkAll[0] ?? null;
 
   return (
     <>
-      <p className="eyebrow">Section 5</p>
+      <SectionLabel href="/walkthroughs" />
       <h1 className="mt-2">Walkthroughs</h1>
 
       <Prose className="mt-6">
@@ -139,10 +160,10 @@ export default function ExplorePage() {
         </p>
       </Prose>
       <Bleed className="mt-6">
-        {walk.length ? (
+        {walkFirst ? (
           <>
-            <RetrievalWalkthrough queries={walk} />
-            <Provenance {...walk[0].generated_by} />
+            <RetrievalWalkthrough queries={walkIndex} initial={walkFirst} />
+            <Provenance {...walkFirst.generated_by} />
           </>
         ) : (
           <InProgress phase={2}>
@@ -163,10 +184,10 @@ export default function ExplorePage() {
         </p>
       </Prose>
       <Bleed className="mt-6">
-        {chunking.length ? (
+        {chunkFirst ? (
           <>
-            <ChunkingExplorer docs={chunking} />
-            <Provenance {...chunking[0].generated_by} />
+            <ChunkingExplorer sources={chunkIndex} initial={chunkFirst} />
+            <Provenance {...chunkFirst.generated_by} />
           </>
         ) : (
           <InProgress phase={1}>

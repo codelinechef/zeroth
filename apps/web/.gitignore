@@ -43,3 +43,6 @@ next-env.d.ts
 # cloudflare
 /.wrangler/
 /.open-next/
+
+# staged by scripts/prepare-data.mjs on every build
+/public/data/
