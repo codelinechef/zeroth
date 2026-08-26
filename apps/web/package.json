@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 8000",
-    "build": "next build",
+    "build": "opennextjs-cloudflare",
     "start": "npx serve out -l 8000",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
