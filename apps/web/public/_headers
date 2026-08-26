@@ -3,7 +3,13 @@
   Referrer-Policy: no-referrer
   X-Frame-Options: DENY
   Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
-  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+
+# Content-Security-Policy is deliberately NOT set here. Cloudflare combines
+# every matching rule rather than letting the most specific one win, so a CSP
+# on /* plus a CSP on /about/ ships two headers and the browser enforces their
+# intersection — which blocks the inline scripts the per-route hashes exist to
+# allow. scripts/csp.mjs appends one CSP rule per route below this, so exactly
+# one ever matches. Run `npm run build`, never edit out/_headers by hand.
 
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable

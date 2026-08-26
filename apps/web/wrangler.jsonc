@@ -1,20 +1,17 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "zeroth",
-  "main": ".open-next/worker.js",
   "compatibility_date": "2026-08-26",
-  "compatibility_flags": ["nodejs_compat"],
+  // No "main": the site is a fully prerendered static export. Uploading `out/`
+  // as static assets with no Worker script means there is no request-time
+  // render, which is what broke before — the content layer reads content/ and
+  // data/ off the filesystem, and that filesystem only exists at build time.
   "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS"
+    "directory": "out",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
   },
   "observability": {
     "enabled": true
-  },
-  "services": [
-    {
-      "binding": "WORKER_SELF_REFERENCE",
-      "service": "zeroth"
-    }
-  ]
+  }
 }

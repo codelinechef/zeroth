@@ -17,3 +17,6 @@ data/golden/.gen_state.json
 data/golden/.verify_state.json
 *.log
 .DS_Store
+
+# wrangler local state (dev cache, tmp bundles, account cache)
+.wrangler/
