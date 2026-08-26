@@ -5,7 +5,8 @@ import { Pipeline } from "@/components/figures/Pipeline";
 import { CorpusComposition } from "@/components/figures/CorpusComposition";
 import { InProgress } from "@/components/InProgress";
 import { Metric } from "@/components/Metric";
-import { Wordmark } from "@/components/Wordmark";
+import { NthLabs, Zeroth } from "@/components/Wordmark";
+import { MarkSteps } from "@/components/Logo";
 import { Abbr } from "@/components/Abbr";
 
 export default function BoardPage() {
@@ -14,13 +15,17 @@ export default function BoardPage() {
   return (
     <>
       <header>
-        {/* Imprint. Centred over the full column while the title stays flush
-            left — the asymmetry is what makes it read as a masthead rather
-            than a heading of its own. */}
+        {/* Publisher masthead. NthLabs is the parent; Zeroth is one project
+            under it, so the company sits above the paper and is banded by
+            rules the way a journal masthead is. The band is what carries the
+            hierarchy — at this size an unruled wordmark would just read as a
+            second title competing with the first. */}
         <div className="masthead">
-          <Wordmark />
+          <MarkSteps size={30} className="masthead-mark" />
+          <p className="masthead-name"><NthLabs /></p>
+          <p className="masthead-sub">Applied AI systems · a research project</p>
         </div>
-        <h1 className="display">Zeroth</h1>
+        <h1 className="display"><Zeroth /></h1>
         <p className="mt-4 text-[length:var(--t-125)] text-ink-muted prose-measure">
           A reproducible benchmark of end-to-end <Abbr id="rag" expand /> pipeline
           quality, measured on a public corpus.

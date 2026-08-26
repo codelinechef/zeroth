@@ -215,8 +215,12 @@ export default function AboutPage() {
       <h2 className="mt-14">9 · Author and links</h2>
       <Prose>
         <p>
-          Built by Anant Sharma, AI Engineer, at nthlabs. The project carries
-          the platform, the harness, the corpus manifest and this site.
+          Built by Anant Sharma. AI Engineer who builds production Python
+          systems that think in steps — agentic workflows, retrieval pipelines,
+          and orchestration middleware where every output is gated by automated
+          evals before it ships. A year and more turning generative AI research
+          into shipped infrastructure. The project carries the platform, the
+          harness, the corpus manifest and this site.
         </p>
       </Prose>
       <ul className="link-cards mt-5">

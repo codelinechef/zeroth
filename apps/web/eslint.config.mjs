@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Wrangler writes throwaway middleware bundles under .wrangler/tmp on every
+    // `wrangler dev`. They are generated, they are gitignored, and linting them
+    // reports unused-variable warnings against code nobody wrote.
+    ".wrangler/**",
   ]),
 ]);
 

@@ -1,26 +1,45 @@
 /**
- * nthlabs imprint.
+ * The two ordinal wordmarks.
  *
- * Set in the display face at caption size, letterspaced, in muted ink — a
- * journal imprint above the paper title, not a logo competing with it. The
- * page title is the loudest thing in the header and stays that way.
+ * NthLabs and Zeroth are the same joke twice: both are ordinals, and both set
+ * their "th" as a raised suffix — N<sup>th</sup> Labs, Zero<sup>th</sup>. That
+ * shared device is the identity. It is also why they must be built from one
+ * file: if the superscript metrics drift apart the pair stops reading as a
+ * system and starts reading as two typos.
  *
- * The "th" is a real <sup>, so it reads as an ordinal (n-th) rather than a
- * brand stylisation. `font-variant-position` would be cleaner typographically
- * but Archivo carries no synthesised superior figures, so the browser would
- * silently fall back to full-size text. Explicit sizing is the reliable route.
+ * Both return phrasing content only, so either is safe inside a <p>.
  *
- * Returns phrasing content only, so it is safe inside a <p>.
+ * `font-variant-position: super` would be the correct typographic route and is
+ * deliberately not used: Archivo ships no superior glyphs, so browsers fall
+ * back to full-size text with no warning. The raise is done with explicit
+ * metrics in globals.css instead.
  */
-export function Wordmark({ className = "" }: { className?: string }) {
+
+/** Parent company. The mark that sits above the paper. */
+export function NthLabs({ className = "" }: { className?: string }) {
   return (
-    <span className={`wordmark ${className}`}>
-      {/* One accessible name for the whole mark: a screen reader that walks the
-          <sup> reads "n th labs" as three fragments. */}
+    <span className={`ord-mark nthlabs ${className}`}>
+      {/* One accessible name for the whole mark: walking the <sup> otherwise
+          reads it out as three separate fragments. */}
       <span aria-hidden="true">
-        n<sup>th</sup>labs
+        N<sup>th</sup>Labs
       </span>
-      <span className="sr-only">nthlabs</span>
+      <span className="sr-only">NthLabs</span>
+    </span>
+  );
+}
+
+/**
+ * The project. "Zero" carries the weight and "th" rides on the shoulder of the
+ * final o, the way an ordinal is set — 0<sup>th</sup>.
+ */
+export function Zeroth({ className = "" }: { className?: string }) {
+  return (
+    <span className={`ord-mark zeroth ${className}`}>
+      <span aria-hidden="true">
+        Zero<sup>th</sup>
+      </span>
+      <span className="sr-only">Zeroth</span>
     </span>
   );
 }
