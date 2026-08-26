@@ -1,0 +1,149 @@
+{
+  "describes": "The engineering substrate: what runs, what it was measured at, and why each choice was made rather than defaulted.",
+  "note": "Every figure here is either read from a committed file or recorded in the build log. Nothing is projected, rounded up, or copied from a vendor benchmark. Where a number has not been measured yet the entry says so instead of estimating one.",
+  "hardware": {
+    "gpu": "NVIDIA RTX 5060 Laptop, 8 GB VRAM",
+    "why": "The constraint is the point. Every decision below — fp16, batch size, model choice, co-residency — was forced by an 8 GB budget rather than chosen on a machine where it did not matter."
+  },
+  "decisions": [
+    {
+      "id": "hnsw-params",
+      "area": "Vector index",
+      "decision": "HNSW at m=32, ef_construction=200, ef_search=200",
+      "alternative": "pgvector defaults (m=16, ef_construction=64, ef_search=40)",
+      "evidence": "Measured on a tuning sweep: defaults reached 0.836 overall recall, the tuned parameters reached 0.998.",
+      "cost": "Index build cost roughly triples. Paid once per ingest, never on the query path.",
+      "why": "A vector index shipped on defaults is an untested assumption. The sweep turned it into a number with a price attached.",
+      "measured": true
+    },
+    {
+      "id": "rrf-fusion",
+      "area": "Fusion",
+      "decision": "Reciprocal rank fusion over ranks, k=60",
+      "alternative": "Normalising and summing BM25 and cosine scores",
+      "evidence": "BM25 scores and cosine similarities are not on comparable scales; any normalisation encodes an assumption that is wrong differently for every query.",
+      "cost": "Discards score magnitude, keeping only order.",
+      "why": "Fusing by position needs no assumption about either scale. It is the cheaper claim to defend.",
+      "measured": false
+    },
+    {
+      "id": "passage-budget",
+      "area": "Generation",
+      "decision": "5 passages of 700 characters, max 2,048 output tokens, temperature 0",
+      "alternative": "Ten passages of 1,200 characters",
+      "evidence": "A 3B model given ten 1,200-character passages produced no claims at all. Fewer, shorter passages left it enough attention to copy a quote accurately.",
+      "cost": "Less context per answer, so recall of the retriever matters more.",
+      "why": "Verbatim quoting is what the citation check verifies. A context budget that defeats quoting defeats the verification.",
+      "measured": true
+    },
+    {
+      "id": "constrained-decoding",
+      "area": "Generation",
+      "decision": "Schema-constrained decoding via XGrammar under vLLM",
+      "alternative": "Asking for JSON in the prompt and parsing what comes back",
+      "evidence": "The answer schema becomes a decoding constraint rather than a request, so citations are parseable by construction.",
+      "cost": "Ties generation to a serving stack that supports grammars.",
+      "why": "A citation format that depends on the model's goodwill is not a format.",
+      "measured": false
+    },
+    {
+      "id": "fp16-batch",
+      "area": "Embedding",
+      "decision": "fp16, batch 64, on bge-small-en-v1.5 (384-dimension)",
+      "alternative": "fp32, or a larger embedding model",
+      "evidence": "51,310 chunks embedded in 1.5 minutes at 558 chunks/s, producing 79 MB of vectors. 6.87 GB of the 8 GB budget remained free with the embedder loaded.",
+      "cost": "A smaller embedding model than the leaderboards favour.",
+      "why": "Headroom was the requirement: the embedder and the generator have to be co-resident on one 8 GB card.",
+      "measured": true
+    },
+    {
+      "id": "rls-in-query",
+      "area": "Access control",
+      "decision": "PostgreSQL row-level security inside the retrieval query, under a NOSUPERUSER NOBYPASSRLS role",
+      "alternative": "Filtering results in application code after retrieval",
+      "evidence": "The application connection asserts rolsuper=false and rolbypassrls=false before it is handed to a caller. A superuser is exempt from RLS silently — no error, no warning.",
+      "cost": "Post-filtering an approximate index costs recall, which is measured and reported separately rather than folded into headline numbers.",
+      "why": "Access control enforced in application code is a control that a bug can skip. Enforced in the query, it is a control the database applies.",
+      "measured": true
+    },
+    {
+      "id": "partitioned-indexes",
+      "area": "Access control",
+      "decision": "One partition and one index per tenant",
+      "alternative": "A single index across all tenants on the parent table",
+      "evidence": "A partitioned index on the parent is built across every tenant, which loses the property that makes partitioning useful.",
+      "cost": "More indexes to build and maintain.",
+      "why": "A tenant's data being in its own partition is what makes isolation structural rather than a WHERE clause.",
+      "measured": false
+    }
+  ],
+  "evaluation": [
+    {
+      "id": "one-factor",
+      "practice": "One factor per variant",
+      "detail": "Each published run differs from the baseline by exactly one configuration key, so any difference is attributable to that key. The comparison view flags it when more than one differs."
+    },
+    {
+      "id": "intervals",
+      "practice": "Bootstrapped 95% confidence intervals",
+      "detail": "1,000 resamples of the query set on every quality metric. A delta whose intervals overlap is reported as not separated rather than given a number that looks decisive."
+    },
+    {
+      "id": "judge-verification",
+      "practice": "The judge is measured, not trusted",
+      "detail": "Relevance grades are drafted by a pinned model and a stratified sample is re-graded by hand. Of 32 judgments checked so far the human and the model agreed on 4. No retrieval score is published until that is understood."
+    },
+    {
+      "id": "failure-modes",
+      "practice": "Failure modes are published, not hidden",
+      "detail": "Nine documented failure modes, each marked observed or prevented-by-design, each naming the metrics it corrupts and how it was detected."
+    },
+    {
+      "id": "provenance",
+      "practice": "Every figure carries its provenance",
+      "detail": "Script, regenerate command, commit and corpus id sit beside each figure, so a number can be traced to the code that produced it."
+    },
+    {
+      "id": "empty-states",
+      "practice": "Absent numbers stay absent",
+      "detail": "No placeholder figures and no illustrative values anywhere. A run that has not happened renders as an empty state naming the phase that delivers it."
+    }
+  ],
+  "guardrails": [
+    {
+      "id": "ingest-sanitise",
+      "control": "Instruction stripping at ingestion",
+      "detail": "Six narrow pattern classes — override, role reassignment, chat-role markers, tag injection, exfiltration, answer override. Removals are counted and marked in the chunk, never silent, and the patterns are deliberately narrow so ordinary contract and standards prose survives."
+    },
+    {
+      "id": "prompt-fence",
+      "control": "Retrieved text cannot forge prompt structure",
+      "detail": "Each passage is fenced and the fence literal is stripped from the body first, so a document cannot impersonate the header of a passage that was never retrieved."
+    },
+    {
+      "id": "citation-resolution",
+      "control": "Citations must resolve to passages actually shown",
+      "detail": "A cited chunk id is checked against the set the model was given. A citation to anything else fails rather than being displayed."
+    },
+    {
+      "id": "quote-verification",
+      "control": "Quotes are checked character by character",
+      "detail": "Each quoted span is matched against the source text, with the longest verbatim run recorded so an altered quote is distinguishable from an invented one."
+    },
+    {
+      "id": "abstention",
+      "control": "Abstention is a measured outcome",
+      "detail": "The system declines when the evidence does not support an answer, and how often it declines correctly is one of the reported metric families rather than a footnote."
+    }
+  ],
+  "stack": [
+    { "layer": "Embedding", "choice": "BAAI/bge-small-en-v1.5, 384-dim, fp16", "pinned": true },
+    { "layer": "Reranking", "choice": "BAAI/bge-reranker-base cross-encoder", "pinned": true },
+    { "layer": "Vector index", "choice": "PostgreSQL 16 with pgvector 0.8.6, HNSW", "pinned": true },
+    { "layer": "Lexical index", "choice": "Postgres GIN over tsvector, BM25-style scoring", "pinned": true },
+    { "layer": "Serving", "choice": "vLLM 0.27.1 with XGrammar constrained decoding", "pinned": true },
+    { "layer": "Access control", "choice": "Row-level security, non-superuser role, per-tenant partitions", "pinned": true },
+    { "layer": "Golden set", "choice": "Gemini, pinned to dated snapshots, human-verified sample", "pinned": true },
+    { "layer": "Site", "choice": "Next.js static export, no runtime, no backend", "pinned": true }
+  ]
+}

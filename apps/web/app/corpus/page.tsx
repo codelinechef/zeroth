@@ -1,4 +1,5 @@
 import { SectionLabel } from "@/components/SectionLabel";
+import { Subsection } from "@/components/Subsection";
 import { Prose, MarginNote, Figure } from "@/components/Paper";
 import { CorpusComposition } from "@/components/figures/CorpusComposition";
 import { getCorpusStats, getCorpusDocuments } from "@/lib/content";
@@ -37,7 +38,7 @@ export default function CorpusPage() {
         <div className="p-4"><CorpusComposition /></div>
       </Figure>
 
-      <h2 className="mt-14">3.1 Sources</h2>
+      <Subsection href="/corpus" n={1} className="mt-14">Sources</Subsection>
       <Prose>
         <h3>SEC EDGAR 10-K filings</h3>
         <p>
@@ -63,11 +64,12 @@ export default function CorpusPage() {
         </p>
       </Prose>
 
-      <h2 className="mt-14">3.2 Attribution</h2>
+      <Subsection href="/corpus" n={2} className="mt-14">Attribution</Subsection>
       <Prose>
         <p className="text-ink-muted">
-          <Abbr id="cuad" />: Hendrycks et al., NeurIPS 2021; The Atticus
-          Project. Licensed <Abbr id="ccby" /> 4.0. Chunking and re-indexing
+          <Abbr id="cuad" />:{" "}
+          <a href="/about/#ref-hendrycks-cuad-2021">Hendrycks et al., NeurIPS 2021</a>;
+          The Atticus Project. Licensed <Abbr id="ccby" /> 4.0. Chunking and re-indexing
           constitute modification and are indicated as such.{" "}
           <Abbr id="edgar" /> filings are published by the US Securities and
           Exchange Commission. <Abbr id="rfc" />s are published by the{" "}
@@ -80,7 +82,7 @@ export default function CorpusPage() {
         ) : null}
       </Prose>
 
-      <h2 className="mt-16">3.3 Every document</h2>
+      <Subsection href="/corpus" n={3} className="mt-16">Every document</Subsection>
       <Prose>
         <p>
           The manifest, not a summary of it. Each row is one document as it was

@@ -1084,3 +1084,117 @@ svg:has(.fig-hot.is-active) .fig-hot:not(.is-active) { opacity: 0.45; }
   gap: 0.4rem;
   margin: 0.75rem 0;
 }
+
+/* ===========================================================================
+   References — About §9
+   =========================================================================== */
+
+.refs { margin-top: 1.5rem; max-width: var(--measure); }
+.refs section + section { margin-top: 2rem; }
+
+/* Numbered within each group. A hanging indent is what makes a bibliography
+   scannable: the citation body sits clear of its marker. */
+.refs-list {
+  margin: 0.6rem 0 0;
+  padding-left: 1.6rem;
+  list-style: decimal;
+}
+.refs-list li { margin-bottom: 0.9rem; }
+.refs-list li::marker {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  color: var(--ink-muted);
+}
+
+.refs-cite {
+  margin: 0;
+  font-size: var(--t-875);
+  line-height: 1.55;
+}
+.refs-year { font-family: var(--font-mono); font-size: var(--t-75); color: var(--ink-muted); }
+.refs-venue { color: var(--ink-muted); font-style: italic; }
+
+.refs-note {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+/* Which part of the paper leans on this work — the trace back into the text. */
+.refs-where { color: var(--ink); }
+
+/* ===========================================================================
+   Engineering — decisions, practices, stack
+   =========================================================================== */
+
+.decisions { display: flex; flex-direction: column; gap: 0.5rem; max-width: var(--measure); }
+
+.decision { border: 1px solid var(--rule); padding: 1rem 1.1rem; }
+.decision header { margin-bottom: 0.7rem; }
+.decision h3 {
+  font-size: var(--t-100);
+  margin: 0.2rem 0 0;
+  letter-spacing: -0.01em;
+}
+
+/* Whether the evidence is a measurement or an argument. This is the honest
+   half of the page: a decision defended by reasoning is not the same claim as
+   one defended by a number, and collapsing the two is how a portfolio starts
+   overstating itself. */
+.decision-flag {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin: 0.4rem 0 0;
+}
+.decision-flag.is-measured { color: var(--fam-retrieval); }
+
+.decision dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.1rem 1rem;
+  margin: 0;
+}
+@media (min-width: 640px) {
+  .decision dl { grid-template-columns: 6rem 1fr; gap: 0.35rem 1rem; }
+}
+.decision dt {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  color: var(--ink-muted);
+}
+.decision dd {
+  margin: 0 0 0.5rem;
+  font-size: var(--t-875);
+  line-height: 1.55;
+}
+@media (min-width: 640px) { .decision dd { margin-bottom: 0; } }
+
+/* Practice and guardrail lists: a name against an explanation. */
+.practice-list { margin: 0; max-width: var(--measure); }
+.practice-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.15rem 1.25rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+@media (min-width: 700px) {
+  .practice-row { grid-template-columns: 13rem 1fr; gap: 1.25rem; }
+}
+.practice-row dt {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-875);
+  color: var(--ink);
+  line-height: 1.4;
+}
+.practice-row dd {
+  margin: 0;
+  font-size: var(--t-875);
+  line-height: 1.55;
+  color: var(--ink-muted);
+}

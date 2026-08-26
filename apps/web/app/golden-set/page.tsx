@@ -1,4 +1,5 @@
 import { SectionLabel } from "@/components/SectionLabel";
+import { Subsection } from "@/components/Subsection";
 import { Prose, MarginNote, Bleed } from "@/components/Paper";
 import { InProgress } from "@/components/InProgress";
 import { GoldenQueries } from "@/components/golden/GoldenQueries";
@@ -64,7 +65,7 @@ export default function GoldenSetPage() {
       </Prose>
 
       {/* ---------------- state of the set ---------------- */}
-      <h2 className="mt-14">State of the set</h2>
+      <Subsection href="/golden-set" n={1}>State of the set</Subsection>
       <Bleed className="mt-4">
         <dl className="stat-row">
           <div>
@@ -100,7 +101,7 @@ export default function GoldenSetPage() {
       </Prose>
 
       {/* ---------------- the finding ---------------- */}
-      <h2 className="mt-14">Where the human and the model disagree</h2>
+      <Subsection href="/golden-set" n={2}>Where the human and the model disagree</Subsection>
       <Prose>
         <MarginNote label="Read this before any score">
           No retrieval metric is published on this site yet. This is the reason.
@@ -188,7 +189,7 @@ export default function GoldenSetPage() {
       </Prose>
 
       {/* ---------------- rubric and grades ---------------- */}
-      <h2 className="mt-14">The rubric</h2>
+      <Subsection href="/golden-set" n={3}>The rubric</Subsection>
       <Prose>
         <p>
           The same four grades are given to the model and to the human verifier.
@@ -218,7 +219,7 @@ export default function GoldenSetPage() {
       </p>
 
       {/* ---------------- categories ---------------- */}
-      <h2 className="mt-14">Query categories</h2>
+      <Subsection href="/golden-set" n={4}>Query categories</Subsection>
       <Prose>
         <p>
           Categories are not decoration — the set is sampled and the agreement
@@ -236,7 +237,7 @@ export default function GoldenSetPage() {
       </dl>
 
       {/* ---------------- the queries themselves ---------------- */}
-      <h2 className="mt-14">Every query</h2>
+      <Subsection href="/golden-set" n={5}>Every query</Subsection>
       <Prose>
         <p>
           The full set, with each query&apos;s candidate grades and the

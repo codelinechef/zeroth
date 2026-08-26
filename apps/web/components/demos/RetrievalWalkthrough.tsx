@@ -109,10 +109,16 @@ export function RetrievalWalkthrough({
     const idle = window.requestIdleCallback?.bind(window) ??
       ((cb: () => void) => window.setTimeout(cb, 1200));
     const handle = idle(() => {
-      fetch(datasetUrl(`retrieval/${next}.json`))
-        .then((r) => (r.ok ? r.json() : null))
-        .then((j) => { if (j) cache.current.set(next, j); })
-        .catch(() => { /* prefetch is best-effort; selection re-fetches */ });
+      // datasetUrl throws on a path that fails validation, and this runs
+      // outside the fetch's own catch, so it is guarded here too. A prefetch
+      // is best-effort by definition: on any failure the real selection
+      // re-fetches and reports properly.
+      try {
+        fetch(datasetUrl(`retrieval/${next}.json`))
+          .then((r) => (r.ok ? r.json() : null))
+          .then((j) => { if (j) cache.current.set(next, j); })
+          .catch(() => {});
+      } catch { /* invalid id — selection will surface it */ }
     });
     return () => window.cancelIdleCallback?.(handle as number);
   }, [qid, queries]);

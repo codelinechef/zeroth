@@ -47,20 +47,36 @@ def ensure_role() -> None:
     result meaningless while every test still passes.
     """
     import re
+    from psycopg import sql
+
     m = re.match(r"postgresql://([^:]+):([^@]+)@", APP_DSN)
     user, password = (m.group(1), m.group(2)) if m else ("zeroth_app", "local_dev_only")
+
+    # The role name comes from ZEROTH_APP_DSN, so it is configuration rather
+    # than a constant, and it lands in three statements that cannot take a bind
+    # parameter — CREATE ROLE, ALTER ROLE and GRANT all want an identifier.
+    # sql.Identifier quotes and escapes it properly. Whoever sets that variable
+    # already runs this as the owner, so this is not a privilege boundary; it
+    # is the difference between a typo failing cleanly and a typo executing.
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,62}", user):
+        raise ValueError(
+            f"refusing to create role {user!r}: ZEROTH_APP_DSN must name a "
+            f"plain SQL identifier")
+    ident = sql.Identifier(user)
+
     with owner_connection(autocommit=True) as conn:
         cur = conn.cursor()
         cur.execute("SELECT 1 FROM pg_roles WHERE rolname = %s", (user,))
         if not cur.fetchone():
-            cur.execute(
-                f"CREATE ROLE {user} LOGIN NOSUPERUSER NOBYPASSRLS "
-                f"NOCREATEDB NOCREATEROLE PASSWORD %s", (password,))
+            cur.execute(sql.SQL(
+                "CREATE ROLE {} LOGIN NOSUPERUSER NOBYPASSRLS "
+                "NOCREATEDB NOCREATEROLE PASSWORD %s").format(ident), (password,))
             log(f"  created role {user} (NOSUPERUSER NOBYPASSRLS)")
         else:
-            cur.execute(
-                f"ALTER ROLE {user} NOSUPERUSER NOBYPASSRLS NOCREATEDB NOCREATEROLE")
-        cur.execute("GRANT CONNECT ON DATABASE zeroth TO " + user)
+            cur.execute(sql.SQL(
+                "ALTER ROLE {} NOSUPERUSER NOBYPASSRLS NOCREATEDB NOCREATEROLE"
+            ).format(ident))
+        cur.execute(sql.SQL("GRANT CONNECT ON DATABASE zeroth TO {}").format(ident))
 
 
 def applied(cur) -> dict[str, str]:

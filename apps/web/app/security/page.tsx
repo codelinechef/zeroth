@@ -1,4 +1,5 @@
 import { SectionLabel } from "@/components/SectionLabel";
+import { Subsection } from "@/components/Subsection";
 import { Prose, MarginNote, Figure } from "@/components/Paper";
 import { InProgress } from "@/components/InProgress";
 import { Partitioned } from "@/components/figures/Partitioned";
@@ -35,7 +36,7 @@ export default function SecurityPage() {
         <div className="p-4"><Partitioned /></div>
       </Figure>
 
-      <h2 className="mt-14">5.1 Red-team results</h2>
+      <Subsection href="/security" n={1} className="mt-14">Red-team results</Subsection>
       <div className="mt-4">
         {withSecurity.length === 0 ? (
           <InProgress phase={3} blockedBy="the retrieval platform (Phase 2)">
@@ -55,7 +56,7 @@ export default function SecurityPage() {
         )}
       </div>
 
-      <h2 className="mt-14">5.2 What will be reported</h2>
+      <Subsection href="/security" n={2} className="mt-14">What will be reported</Subsection>
       <Prose>
         <p>
           The pass rate as measured, including failures. A security section

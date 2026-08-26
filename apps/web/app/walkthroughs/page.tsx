@@ -1,4 +1,5 @@
 import { SectionLabel } from "@/components/SectionLabel";
+import { Subsection } from "@/components/Subsection";
 import { Prose, MarginNote, Bleed } from "@/components/Paper";
 import { Provenance } from "@/components/Provenance";
 import { InProgress } from "@/components/InProgress";
@@ -67,7 +68,7 @@ export default function ExplorePage() {
       </Prose>
 
       {/* ---------------- 1. access control vs approximate search ---------- */}
-      <h2 className="mt-14">5.1 What access control does to approximate search</h2>
+      <Subsection href="/walkthroughs" n={1} className="mt-14">What access control does to approximate search</Subsection>
       <Prose>
         <p>
           An approximate index returns its nearest neighbours by distance, and
@@ -150,13 +151,14 @@ export default function ExplorePage() {
       ) : null}
 
       {/* ---------------- 2. retrieval walkthrough ------------------------- */}
-      <h2 className="mt-16">5.2 How a query becomes a ranked list</h2>
+      <Subsection href="/walkthroughs" n={2} className="mt-16">How a query becomes a ranked list</Subsection>
       <Prose>
         <p>
           Four stages, each with its real output. The stage most people get
-          wrong is fusion: reciprocal rank fusion combines the two lists by
-          rank position, never by raw score, because BM25 scores and cosine
-          similarities are not on comparable scales.
+          wrong is fusion:{" "}
+          <a href="/about/#ref-cormack-rrf-2009">reciprocal rank fusion</a>{" "}
+          combines the two lists by rank position, never by raw score, because
+          BM25 scores and cosine similarities are not on comparable scales.
         </p>
       </Prose>
       <Bleed className="mt-6">
@@ -174,7 +176,7 @@ export default function ExplorePage() {
       </Bleed>
 
       {/* ---------------- 3. chunking ------------------------------------- */}
-      <h2 className="mt-16">5.3 Where a document gets cut</h2>
+      <Subsection href="/walkthroughs" n={3} className="mt-16">Where a document gets cut</Subsection>
       <Prose>
         <p>
           Two strategies over the same document. What section-aware chunking

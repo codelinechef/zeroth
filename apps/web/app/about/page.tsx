@@ -9,6 +9,7 @@ import { LinkedInIcon, GlobeIcon } from "@/components/Icons";
 import { Abbr } from "@/components/Abbr";
 import { Glossary } from "@/components/Glossary";
 import { Cite } from "@/components/Cite";
+import { References } from "@/components/References";
 
 export const metadata = {
   title: "About · Zeroth",
@@ -215,10 +216,22 @@ export default function AboutPage() {
       </Prose>
       <Glossary />
 
-      <h2 className="mt-14">9 · Citation</h2>
+      <h2 className="mt-14">9 · References</h2>
+      <Prose>
+        <p>
+          The works this project is built on and measured against. Each entry
+          names the part of the paper that relies on it. Where a claim here
+          rests on someone else&apos;s result rather than on a measurement of
+          this system, the citation is the difference between an argument and
+          an assertion.
+        </p>
+      </Prose>
+      <References />
+
+      <h2 className="mt-14">10 · Citation</h2>
       <Cite corpusId={c?.corpusId ?? null} year={2026} />
 
-      <h2 className="mt-14">10 · Author and links</h2>
+      <h2 className="mt-14">11 · Author and links</h2>
       <Prose>
         <p>
           Built by Anant Sharma. AI Engineer who builds production Python

@@ -1,4 +1,5 @@
 import { SectionLabel } from "@/components/SectionLabel";
+import { Subsection } from "@/components/Subsection";
 import { Prose, MarginNote, Figure } from "@/components/Paper";
 import { Metric } from "@/components/Metric";
 import { metricsByFamily, FAMILY_LABEL } from "@/lib/metrics";
@@ -34,7 +35,7 @@ export default function MethodologyPage() {
         </p>
       </Prose>
 
-      <h2 className="mt-14">2.1 Metrics</h2>
+      <Subsection href="/methodology" n={1} className="mt-14">Metrics</Subsection>
       <Prose>
         <p>
           Grouped by family. The three-letter tag before each name is the
@@ -64,7 +65,7 @@ export default function MethodologyPage() {
         <div className="p-4"><MetricGraph /></div>
       </Figure>
 
-      <h2 className="mt-14">2.2 Confidence intervals</h2>
+      <Subsection href="/methodology" n={2} className="mt-14">Confidence intervals</Subsection>
       <Prose>
         <p>
           Every quality metric carries a bootstrapped 95% confidence interval
@@ -74,7 +75,7 @@ export default function MethodologyPage() {
         </p>
       </Prose>
 
-      <h2 className="mt-14">2.3 One factor at a time</h2>
+      <Subsection href="/methodology" n={3} className="mt-14">One factor at a time</Subsection>
       <Prose>
         <p>
           Each published variant changes exactly one factor from the baseline,
@@ -83,7 +84,7 @@ export default function MethodologyPage() {
         </p>
       </Prose>
 
-      <h2 className="mt-14">2.4 Chunking</h2>
+      <Subsection href="/methodology" n={4} className="mt-14">Chunking</Subsection>
       <Prose>
         <p>
           Two strategies behind one interface, so the comparison is a run
@@ -96,7 +97,7 @@ export default function MethodologyPage() {
         <div className="p-4"><Chunking /></div>
       </Figure>
 
-      <h2 className="mt-14">2.5 How the golden set is built</h2>
+      <Subsection href="/methodology" n={5} className="mt-14">How the golden set is built</Subsection>
       <Prose>
         <p>
           The query set is model-drafted and partially human-verified. It is not
@@ -114,7 +115,7 @@ export default function MethodologyPage() {
         <div className="p-4"><VerificationChain /></div>
       </Figure>
 
-      <h2 className="mt-14">2.6 Known limitations</h2>
+      <Subsection href="/methodology" n={6} className="mt-14">Known limitations</Subsection>
       <Prose>
         <p>
           Stated here rather than discovered by readers. Each is added as it is

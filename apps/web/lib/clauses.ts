@@ -19,6 +19,7 @@ const ORDER: { title: string; href: string }[] = [
   { title: "Failure modes", href: "/failure-modes" },
   { title: "Walkthroughs", href: "/walkthroughs" },
   { title: "Security", href: "/security" },
+  { title: "Engineering", href: "/engineering" },
   { title: "Learn", href: "/learn" },
   { title: "About", href: "/about" },
 ];

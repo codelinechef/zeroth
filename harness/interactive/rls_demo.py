@@ -21,6 +21,7 @@ every measurement would be wrong in the flattering direction.
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
 from collections import defaultdict
@@ -33,8 +34,32 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from _provenance import ROOT, write  # noqa: E402
 
-DSN_OWNER = "postgresql://postgres:local_dev_only@localhost:5433/zeroth"
-DSN_APP = "postgresql://zeroth_app:local_dev_only@localhost:5433/zeroth"
+# Read from the environment, with the local defaults as the fallback, so this
+# demo cannot silently point somewhere else than the platform does. The
+# credentials are the documented local-dev values; nothing here is a secret.
+#
+# The app DSN matters most: this script measures what row-level security does
+# to recall, and connecting as a superuser would bypass RLS silently and
+# produce a clean-looking result that means nothing. assert_no_rls_bypass()
+# below is the same check platform/db/connection.py makes.
+DSN_OWNER = os.environ.get(
+    "ZEROTH_OWNER_DSN", "postgresql://postgres:local_dev_only@localhost:5433/zeroth")
+DSN_APP = os.environ.get(
+    "ZEROTH_APP_DSN", "postgresql://zeroth_app:local_dev_only@localhost:5433/zeroth")
+
+
+def assert_no_rls_bypass(conn) -> None:
+    """Refuse to measure RLS through a connection that is exempt from it."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT current_user, rolsuper, rolbypassrls "
+            "FROM pg_roles WHERE rolname = current_user")
+        user, is_super, bypasses = cur.fetchone()
+    if is_super or bypasses:
+        raise RuntimeError(
+            f"connected as {user!r} with rolsuper={is_super}, "
+            f"rolbypassrls={bypasses}. Row-level security would not apply and "
+            f"every number this script produces would be meaningless.")
 CHUNKS = ROOT / "data" / "corpus" / "chunks" / "fixed-512.jsonl"
 EMB = ROOT / "data" / "corpus" / "embeddings"
 QUERIES = ROOT / "data" / "golden" / "queries.jsonl"
@@ -115,6 +140,7 @@ def main() -> int:
 
     results, sweep = {}, defaultdict(dict)
     with psycopg.connect(DSN_APP, autocommit=False) as conn:
+        assert_no_rls_bypass(conn)
         cur = conn.cursor()
         cur.execute("SELECT current_user, "
                     "(SELECT rolbypassrls FROM pg_roles WHERE rolname=current_user)")
