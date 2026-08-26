@@ -1,0 +1,61 @@
+{
+ "id": "bootstrap",
+ "title": "Bootstrap confidence intervals",
+ "category": "Evaluation",
+ "summary": "Estimating how much a measured score would move if you had drawn a different query set of the same size.",
+ "what": "Resample the query set with replacement many times, recompute the metric on each resample, and take the middle 95% of the resulting distribution.",
+ "why": "A score over 200 queries is one draw from a distribution. Reporting it as a fact invites a reviewer to point out that a different 200 queries would have given a different number.",
+ "how": "No assumption of normality is needed. The resampling distribution stands in for the sampling distribution directly.",
+ "in_this_project": "Every quality metric carries a bootstrapped 95% interval over 1,000 resamples. A point estimate over a few hundred queries without an interval is the first thing a reviewer attacks, and rightly.",
+ "sections": [],
+ "formula": {
+  "notation": "for b = 1..B:\n    Q*_b = sample |Q| queries from Q, with replacement\n    theta*_b = metric(Q*_b)\n\nCI95 = [ percentile(theta*, 2.5), percentile(theta*, 97.5) ]\n\nB = 1000",
+  "terms": [
+   {
+    "symbol": "with replacement",
+    "meaning": "a query can appear twice in a resample; that is the point"
+   },
+   {
+    "symbol": "B = 1000",
+    "meaning": "resamples; more narrows the estimate of the interval, not the interval"
+   }
+  ]
+ },
+ "table": null,
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "No distributional assumptions",
+   "Works for any metric you can compute",
+   "Simple to implement correctly"
+  ],
+  "limitations": [
+   "Cannot fix a query set that is too small or unrepresentative",
+   "Costly if the metric is expensive to recompute"
+  ]
+ },
+ "pitfalls": [
+  "Resampling judgments instead of queries \u2014 the query is the sampling unit",
+  "Reporting an interval as if it covered corpus differences too"
+ ],
+ "when": {
+  "use": [
+   "Every published quality metric"
+  ],
+  "avoid": [
+   "Deterministic quantities of a single run, such as index build time"
+  ]
+ },
+ "interacts_with": [
+  "recall",
+  "ndcg",
+  "golden-set"
+ ],
+ "code": null,
+ "related": [
+  "recall",
+  "ndcg"
+ ]
+}

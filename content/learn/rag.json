@@ -1,0 +1,67 @@
+{
+ "id": "rag",
+ "title": "Retrieval-Augmented Generation",
+ "category": "Retrieval",
+ "summary": "Answer questions from a document corpus by retrieving relevant passages first, then generating an answer grounded in them.",
+ "what": "RAG splits question answering into two jobs: find the right passages, then write an answer using only those passages. The model is never asked to recall facts from its weights.",
+ "why": "A language model trained months ago cannot know your documents, and asking it to recall specifics produces fluent, confident, wrong answers. Retrieval puts the actual source text in front of it, and makes every claim checkable against a citation.",
+ "how": "A query is embedded and searched against an index. The top passages are re-ranked, then passed to the model as context with instructions to answer only from that context. Citations are resolved back to the passages, quotes are verified against source text, and the system abstains when the evidence is insufficient.",
+ "in_this_project": "This project is a full RAG pipeline measured end to end rather than a retriever measured in isolation. The corpus is 662 public documents \u2014 SEC 10-K filings, commercial contracts and IETF RFCs \u2014 chunked to 51,310 passages. Retrieval, grounding, abstention, latency and cost are all measured, because a system that retrieves perfectly and then hallucinates is not a working system.",
+ "sections": [
+  {
+   "heading": "Why measure the whole pipeline",
+   "body": "Retrieval quality and answer quality are different things. A reranker that improves Recall@10 can still produce worse answers if it promotes passages the generator misreads. Measuring only retrieval hides that; measuring only answers hides which stage caused the failure."
+  },
+  {
+   "heading": "Where RAG systems actually fail",
+   "body": "In practice the failures cluster in three places: the retriever never surfaces the passage (a recall failure), the generator ignores the passage it was given (a grounding failure), or the system answers confidently when nothing relevant was retrieved (an abstention failure). Each has its own metric family here."
+  }
+ ],
+ "formula": null,
+ "table": null,
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Answers cite sources, so claims are checkable",
+   "Corpus updates without retraining",
+   "Access control can be enforced at retrieval time"
+  ],
+  "limitations": [
+   "Answer quality is capped by retrieval quality",
+   "Adds latency and a second failure surface",
+   "Chunking decisions silently shape what is findable"
+  ]
+ },
+ "pitfalls": [
+  "Measuring retrieval alone and assuming answers follow",
+  "Treating an empty retrieval result as evidence of absence",
+  "Assuming metrics from one corpus transfer to another"
+ ],
+ "when": {
+  "use": [
+   "The answer must be traceable to a source",
+   "The corpus changes faster than a model can be retrained"
+  ],
+  "avoid": [
+   "General reasoning with no document dependency",
+   "Corpora small enough to fit in context entirely"
+  ]
+ },
+ "interacts_with": [
+  "chunking",
+  "embeddings",
+  "bm25",
+  "rrf",
+  "reranking",
+  "abstention",
+  "citation-verification"
+ ],
+ "code": null,
+ "related": [
+  "hybrid-retrieval",
+  "abstention",
+  "citation-verification"
+ ]
+}

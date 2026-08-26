@@ -1,0 +1,47 @@
+{
+ "id": "citation-verification",
+ "title": "Citation resolution and quote verification",
+ "category": "Generation",
+ "summary": "Checking that every citation points at a real passage and that every quoted span actually appears in it.",
+ "what": "Two mechanical checks after generation: does the cited chunk id exist in the index for this run, and does the quoted text appear verbatim in that chunk.",
+ "why": "Models invent citations. They also paraphrase a quotation while presenting it as verbatim. Both are checkable without a model, and both should fail the response rather than reach a reader.",
+ "how": "Citation resolution is a lookup. Quote verification is string containment first, with a model judge only where containment fails \u2014 because a legitimate quote can differ by whitespace or an ellipsis.",
+ "in_this_project": "Planned for Phase 2 as part of the generation graph. Citation accuracy and citation coverage are defined in the metric content and reported separately: accuracy asks whether citations point at supporting passages, coverage asks whether factual claims carry a citation at all. A system can score well on one and badly on the other.",
+ "sections": [],
+ "formula": null,
+ "table": null,
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Deterministic and cheap for the common case",
+   "Catches fabricated citations outright",
+   "No model needed for the containment check"
+  ],
+  "limitations": [
+   "Containment misses legitimate paraphrase",
+   "Cannot tell whether a resolved citation actually supports the claim without a judge"
+  ]
+ },
+ "pitfalls": [
+  "Checking the citation resolves but not that it supports the claim",
+  "Measuring accuracy without coverage, so a system citing almost nothing scores well"
+ ],
+ "when": {
+  "use": [
+   "Any system whose answers are acted on"
+  ],
+  "avoid": []
+ },
+ "interacts_with": [
+  "constrained-decoding",
+  "abstention",
+  "rag"
+ ],
+ "code": null,
+ "related": [
+  "constrained-decoding",
+  "abstention"
+ ]
+}

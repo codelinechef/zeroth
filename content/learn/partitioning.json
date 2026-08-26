@@ -1,0 +1,72 @@
+{
+ "id": "partitioning",
+ "title": "Partitioning by tenant",
+ "category": "Security",
+ "summary": "Splitting a table so each tenant's rows live in their own partition with their own index, removing the post-filtering problem rather than mitigating it.",
+ "what": "A LIST partition on tenant keeps each tenant's rows physically separate, and each partition carries its own vector index.",
+ "why": "If an index contains only rows this role may see, there is nothing to post-filter away. The recall cliff disappears because the cause disappears.",
+ "how": "The planner prunes partitions the query cannot match, so only permitted partitions are scanned. Passing the permitted tenant list as an explicit predicate enables that pruning at plan time.",
+ "in_this_project": "Recommended for Phase 2 after the post-filtering measurements. Two things do different jobs here and it is worth being precise: row-level security is the correctness boundary, and the explicit tenant predicate is purely a performance hint. In the earlier synthetic measurement recall was identical with and without the predicate \u2014 the predicate never widened access \u2014 but plan-time pruning cut latency from 38.5 ms to 1.03 ms. The security test suite must therefore drop the predicate and still pass; that is what proves it is an optimisation and not the boundary.",
+ "sections": [],
+ "formula": null,
+ "table": null,
+ "diagram": {
+  "type": "compare",
+  "left": {
+   "title": "Monolithic index",
+   "points": [
+    "one index over every tenant",
+    "index chooses first",
+    "policy filters after",
+    "permitted rows may never be reached"
+   ]
+  },
+  "right": {
+   "title": "Partitioned by tenant",
+   "points": [
+    "one index per tenant",
+    "only permitted partitions scanned",
+    "nothing to post-filter away",
+    "pruning happens at plan time"
+   ]
+  }
+ },
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Removes post-filtering recall loss",
+   "Smaller indexes build faster",
+   "Plan-time pruning cuts latency sharply"
+  ],
+  "limitations": [
+   "Many partitions add planning overhead",
+   "Small tenants make per-partition indexes meaningless",
+   "Cross-tenant queries must touch many partitions"
+  ]
+ },
+ "pitfalls": [
+  "Treating the explicit predicate as the security boundary",
+  "Partitioning so finely that a partition holds fewer rows than ef_search"
+ ],
+ "when": {
+  "use": [
+   "Tenant isolation matters and tenants are reasonably sized"
+  ],
+  "avoid": [
+   "Hundreds of tiny tenants; merge them into semantic groups first"
+  ]
+ },
+ "interacts_with": [
+  "rls",
+  "ann-post-filtering",
+  "tenancy",
+  "hnsw"
+ ],
+ "code": null,
+ "related": [
+  "rls",
+  "ann-post-filtering",
+  "tenancy"
+ ]
+}

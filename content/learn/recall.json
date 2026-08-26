@@ -1,0 +1,68 @@
+{
+ "id": "recall",
+ "title": "Recall@k and retrieval metrics",
+ "category": "Evaluation",
+ "summary": "Whether the passages needed to answer a query made it into the top k results.",
+ "what": "Recall@k is the proportion of queries for which at least one sufficiently relevant passage appears in the top k.",
+ "why": "It is the ceiling on everything downstream. A passage the retriever never returns cannot be reranked, cited or quoted.",
+ "how": "For each query, look at the top k, ask whether any of them is graded 2 or higher, and average that across the query set.",
+ "in_this_project": "Measured at k=5 and k=10. Reported with a bootstrapped 95% confidence interval, and always labelled with the corpus it was measured on, because retrieval metrics are properties of a corpus-and-query-set pair rather than of an architecture.",
+ "sections": [],
+ "formula": {
+  "notation": "Recall@k = |{ q in Q : max grade(c) >= 2 for c in top_k(q) }| / |Q|\n\nMRR@k = (1/|Q|) * sum over q of 1 / rank of first relevant\n\nContext precision = |{ c in top_k : grade(c) >= 2 }| / k",
+  "terms": [
+   {
+    "symbol": "Q",
+    "meaning": "the answerable subset of the query set"
+   },
+   {
+    "symbol": "grade(c)",
+    "meaning": "graded relevance 0-3 from the golden set"
+   },
+   {
+    "symbol": ">= 2",
+    "meaning": "the relevance boundary: contains a substantial part of the answer"
+   }
+  ]
+ },
+ "table": null,
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Directly measures the thing that caps the pipeline",
+   "Easy to interpret"
+  ],
+  "limitations": [
+   "Binary at the threshold: a 3 and a 2 count the same",
+   "Says nothing about ordering within the top k",
+   "Depends entirely on grade quality"
+  ]
+ },
+ "pitfalls": [
+  "Measuring as an unrestricted role when the real system is access-controlled",
+  "Publishing a point estimate with no interval",
+  "Comparing across corpora"
+ ],
+ "when": {
+  "use": [
+   "Whenever retrieval changes"
+  ],
+  "avoid": [
+   "As the only metric \u2014 it ignores ranking and grounding"
+  ]
+ },
+ "interacts_with": [
+  "golden-set",
+  "ndcg",
+  "bootstrap",
+  "ann-post-filtering"
+ ],
+ "code": null,
+ "related": [
+  "ndcg",
+  "golden-set",
+  "bootstrap"
+ ]
+}

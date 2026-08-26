@@ -1,0 +1,62 @@
+{
+ "id": "ndcg",
+ "title": "NDCG and rank-aware scoring",
+ "category": "Evaluation",
+ "summary": "A metric that rewards putting the most relevant passages highest, not merely including them somewhere.",
+ "what": "Normalised Discounted Cumulative Gain sums the relevance of each result, discounted by how far down the list it sits, then divides by the best possible ordering.",
+ "why": "Recall treats rank 1 and rank 10 identically. For a generator given only the top few passages, that difference decides whether the answer is grounded.",
+ "how": "Gain grows exponentially with grade, so a 3 counts seven times a 1. The discount is logarithmic in rank. Dividing by the ideal ordering puts the result on a 0-1 scale.",
+ "in_this_project": "Reported at k=10 alongside Recall@10 and MRR@10. Using graded relevance rather than binary is why the golden set grades 0-3 instead of relevant/not.",
+ "sections": [],
+ "formula": {
+  "notation": "DCG@k = sum over i=1..k of  ( 2^grade(c_i) - 1 ) / log2(i + 1)\n\nNDCG@k = DCG@k / IDCG@k\n\nGain by grade:   0 -> 0    1 -> 1    2 -> 3    3 -> 7\nDiscount by rank: 1 -> 1.00  2 -> 0.63  3 -> 0.50  10 -> 0.29",
+  "terms": [
+   {
+    "symbol": "c_i",
+    "meaning": "the passage at rank i"
+   },
+   {
+    "symbol": "IDCG@k",
+    "meaning": "DCG of the best ordering possible for this query"
+   }
+  ]
+ },
+ "table": null,
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Rank-aware",
+   "Uses the full grade scale",
+   "Bounded 0-1 and comparable across queries"
+  ],
+  "limitations": [
+   "The exponential gain is a convention, not a derivation",
+   "Needs graded judgments",
+   "Harder to explain than recall"
+  ]
+ },
+ "pitfalls": [
+  "Comparing NDCG across different grading scales",
+  "Forgetting that IDCG depends on how many relevant passages exist"
+ ],
+ "when": {
+  "use": [
+   "Ordering matters, which for RAG it always does"
+  ],
+  "avoid": [
+   "Only binary judgments are available"
+  ]
+ },
+ "interacts_with": [
+  "golden-set",
+  "recall",
+  "reranking"
+ ],
+ "code": null,
+ "related": [
+  "recall",
+  "golden-set"
+ ]
+}

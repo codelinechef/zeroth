@@ -1,0 +1,60 @@
+{
+ "id": "constrained-decoding",
+ "title": "Constrained decoding and structured output",
+ "category": "Generation",
+ "summary": "Forcing a model's output to match a schema during generation by masking invalid tokens, rather than validating and retrying afterwards.",
+ "what": "A grammar compiled from the schema restricts which tokens may be sampled at each step, so the output cannot leave the grammar.",
+ "why": "A retry loop wastes tokens and latency and can loop forever. Constraining at the sampler makes malformed output impossible rather than unlikely.",
+ "how": "The schema is compiled to a state machine. At each decoding step, tokens that would leave the grammar are masked to negative infinity before sampling.",
+ "in_this_project": "vLLM 0.27.1 supports xgrammar, guidance, outlines and lm-format-enforcer, with enforcement at the sampler rather than a retry loop. Three findings shaped the design: the backend is process-wide and not per-request; auto silently cascades xgrammar to guidance to outlines, so two runs could use different decoders with no signal in the output, and the backend should be pinned explicitly; and constrained decoding guarantees grammar conformance, not full JSON Schema validity.",
+ "sections": [
+  {
+   "heading": "What it does not guarantee",
+   "body": "Keywords a grammar cannot express \u2014 numeric minimum and maximum, minLength, minItems \u2014 are not enforced at the sampler. The output is guaranteed to parse and to match the structural grammar. It is not guaranteed to satisfy every assertion in the schema. The design consequence is to keep the contract structural and put semantic assertions in a validation pass afterwards."
+  },
+  {
+   "heading": "Thinking tokens are charged against the output budget",
+   "body": "On models that reason before answering, thought tokens count toward maxOutputTokens. The budget runs out mid-JSON and the response arrives truncated but parseable up to the cut, with only finishReason indicating anything is wrong. Pinning the thinking level low removed the truncation and halved latency."
+  }
+ ],
+ "formula": null,
+ "table": null,
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Malformed output is impossible, not merely unlikely",
+   "No retry loop",
+   "Lower latency than validate-and-retry"
+  ],
+  "limitations": [
+   "Grammar compilation has a cost",
+   "Not all schema keywords are expressible",
+   "Over-constraining can degrade answer quality"
+  ]
+ },
+ "pitfalls": [
+  "Assuming schema-valid means semantically valid",
+  "Leaving the backend on auto and getting a silent fallback",
+  "Ignoring finishReason and parsing truncated JSON into a real-looking record"
+ ],
+ "when": {
+  "use": [
+   "Downstream code depends on the shape of the output"
+  ],
+  "avoid": [
+   "Free-form prose"
+  ]
+ },
+ "interacts_with": [
+  "citation-verification",
+  "model-pinning",
+  "rag"
+ ],
+ "code": null,
+ "related": [
+  "citation-verification",
+  "model-pinning"
+ ]
+}

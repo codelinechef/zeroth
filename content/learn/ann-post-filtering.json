@@ -1,0 +1,99 @@
+{
+ "id": "ann-post-filtering",
+ "title": "ANN post-filtering under access control",
+ "category": "Security",
+ "summary": "An approximate index picks its nearest neighbours first and the access policy removes forbidden ones afterwards \u2014 leaving gaps nothing refills.",
+ "what": "The index has no knowledge of who is asking. It returns its ef_search nearest vectors by distance. Only then does the row-level security policy discard the rows this role may not see. The discarded slots stay empty.",
+ "why": "This is the most valuable finding in the project and it is almost invisible. The query succeeds. It returns fewer rows, or none. An empty result is indistinguishable from 'no evidence exists', which is exactly the conclusion an abstention gate will draw.",
+ "how": "Filtering happens as a Filter node above the index scan in the query plan. The planner has no model of ef_search, so its row estimate for that node is fiction, and no error is raised at any point.",
+ "in_this_project": "Measured on the real corpus \u2014 51,310 chunks, 47 tenants, real embeddings, PostgreSQL RLS, connected as a non-superuser role. At ef_search=40 recall falls from 0.850 unrestricted to 0.300 for a single-tenant role, and 6 of 12 queries return nothing at all while exact search under the identical policy returns a full result set. Widening the search recovers some of it and then plateaus at 0.667 against a 0.975 ceiling, with 4 queries still empty at ef_search=800.",
+ "sections": [
+  {
+   "heading": "A correction worth stating",
+   "body": "An earlier measurement of this project on a SYNTHETIC corpus found that raising ef_search changed nothing at all. That does not replicate on real data. The synthetic corpus used generated tenant clusters with inter-tenant cosine of 0.014 \u2014 near-perfect separation \u2014 so a restricted role's neighbours were entirely other tenants at any search width. Real documents share vocabulary, boilerplate and structure, so tenant regions overlap and a wider search does reach permitted rows. The separated case was the worst case, not the typical one."
+  },
+  {
+   "heading": "Why the lexical path does not have this problem",
+   "body": "Full-text search applies the policy before ranking: the plan is a sort over an already-filtered scan, so ts_rank only ever orders permitted rows and no recall is lost. The two retrieval paths are both correct under the policy, but they are not affected identically \u2014 which matters when comparing them."
+  }
+ ],
+ "formula": null,
+ "table": {
+  "headers": [
+   "Role",
+   "Tenants visible",
+   "recall@10 at ef=40",
+   "Empty results"
+  ],
+  "rows": [
+   [
+    "Unrestricted",
+    "47 of 47",
+    "0.850",
+    "0 of 12"
+   ],
+   [
+    "Broad",
+    "35 of 47",
+    "0.842",
+    "0 of 12"
+   ],
+   [
+    "Mid",
+    "12 of 47",
+    "0.667",
+    "2 of 12"
+   ],
+   [
+    "Narrow",
+    "3 of 47",
+    "0.500",
+    "5 of 12"
+   ],
+   [
+    "Single tenant",
+    "1 of 47",
+    "0.300",
+    "6 of 12"
+   ]
+  ]
+ },
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [],
+  "limitations": [
+   "Recall degrades with how restrictive the role is",
+   "Empty results are indistinguishable from genuine absence",
+   "Widening the search costs latency and still plateaus"
+  ]
+ },
+ "pitfalls": [
+  "Benchmarking as an unrestricted role and publishing the number as the system's recall",
+  "Concluding a metric is fine because no error appeared",
+  "Letting an empty candidate list inflate the abstention metric"
+ ],
+ "when": {
+  "use": [],
+  "avoid": [
+   "Relying on ef_search alone to fix it \u2014 it plateaus"
+  ]
+ },
+ "interacts_with": [
+  "hnsw",
+  "rls",
+  "partitioning",
+  "abstention",
+  "recall"
+ ],
+ "code": {
+  "file": "harness/interactive/rls_demo.py",
+  "symbol": "main"
+ },
+ "related": [
+  "rls",
+  "partitioning",
+  "hnsw"
+ ]
+}

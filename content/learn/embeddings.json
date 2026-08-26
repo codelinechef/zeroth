@@ -1,0 +1,73 @@
+{
+ "id": "embeddings",
+ "title": "Embeddings and dense retrieval",
+ "category": "Retrieval",
+ "summary": "Text mapped to a vector so that passages with similar meaning land near each other, letting search work by meaning rather than by shared words.",
+ "what": "An embedding model converts a passage into a fixed-length list of numbers \u2014 here 384 of them. Similar meanings produce nearby vectors, so retrieval becomes a nearest-neighbour search in that space.",
+ "why": "Users do not use the document's vocabulary. Someone asks about 'ending a contract early' when the document says 'termination for convenience'. Lexical search scores that zero; dense retrieval finds it.",
+ "how": "The model is a small transformer. The vector for the CLS token is taken as the passage representation and normalised to unit length, which makes the dot product of two vectors equal to their cosine similarity \u2014 so similarity is one multiply-accumulate rather than a division.",
+ "in_this_project": "bge-small-en-v1.5 embeds all 51,310 chunks in about 1.5 minutes on an RTX 5060 at 558 chunks/second, producing a 79 MB float32 matrix. Verified after generation: all L2 norms within 0.0006 of 1.0, no NaN rows, no zero rows. The embeddings are not committed \u2014 they are reproducible from the committed corpus manifest.",
+ "sections": [],
+ "formula": {
+  "notation": "cos(a,b) = (a . b) / (|a| |b|)\n\nWith both vectors L2-normalised, |a| = |b| = 1, so:\n\ncos(a,b) = a . b\n\nAnd pgvector's cosine distance operator <=> returns 1 - cos(a,b).",
+  "terms": [
+   {
+    "symbol": "a . b",
+    "meaning": "dot product, the sum of elementwise products"
+   },
+   {
+    "symbol": "384",
+    "meaning": "the dimensionality bge-small produces"
+   },
+   {
+    "symbol": "<=>",
+    "meaning": "pgvector's cosine distance operator; smaller is more similar"
+   }
+  ]
+ },
+ "table": null,
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Finds paraphrase and synonymy",
+   "One vector per passage regardless of length",
+   "Similarity is cheap once vectors exist"
+  ],
+  "limitations": [
+   "Rare identifiers can be washed out by surrounding prose",
+   "Embedding quality is domain-dependent",
+   "Recomputing the whole corpus is required when the model changes"
+  ]
+ },
+ "pitfalls": [
+  "Forgetting to normalise, then using dot product as if it were cosine",
+  "Mixing vectors from two different models in one index",
+  "Assuming a high cosine means relevance rather than surface similarity"
+ ],
+ "when": {
+  "use": [
+   "Users phrase questions in their own words",
+   "As one half of a hybrid retriever"
+  ],
+  "avoid": [
+   "Alone, when exact identifiers must match"
+  ]
+ },
+ "interacts_with": [
+  "hnsw",
+  "rrf",
+  "hybrid-retrieval",
+  "chunking"
+ ],
+ "code": {
+  "file": "harness/interactive/embed.py",
+  "symbol": "main"
+ },
+ "related": [
+  "bm25",
+  "hnsw",
+  "rrf"
+ ]
+}

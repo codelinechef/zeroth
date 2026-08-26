@@ -1,0 +1,74 @@
+{
+ "id": "hybrid-retrieval",
+ "title": "Hybrid retrieval",
+ "category": "Retrieval",
+ "summary": "Running lexical and dense retrieval independently and merging their results, because each finds passages the other misses.",
+ "what": "Two retrievers with different failure modes are run over the same corpus and their ranked lists are combined into one.",
+ "why": "Lexical search fails on paraphrase; dense search fails on rare exact strings. Their errors are largely independent, so the union recovers passages either alone would lose.",
+ "how": "Both retrievers return a ranked list. The lists are merged by rank rather than score, because the two scoring scales have nothing in common.",
+ "in_this_project": "Measured on real queries against the real corpus: of the top 20 from each path, the two agree on only 5 on average. Three quarters of each list is unique to that path. That number is the entire argument for fusion, and it is visible in the walkthrough demo.",
+ "sections": [],
+ "formula": null,
+ "table": {
+  "headers": [
+   "",
+   "Finds",
+   "Misses"
+  ],
+  "rows": [
+   [
+    "Lexical (BM25)",
+    "exact terms, identifiers, defined phrases",
+    "paraphrase, synonymy"
+   ],
+   [
+    "Dense (bge-small)",
+    "paraphrase, related concepts",
+    "rare exact strings, precise identifiers"
+   ],
+   [
+    "Overlap measured here",
+    "5 of 20",
+    "\u2014"
+   ]
+  ]
+ },
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Recovers what either path alone would lose",
+   "Failure modes are largely independent",
+   "Needs no training"
+  ],
+  "limitations": [
+   "Two indexes to build and keep in sync",
+   "Two sets of latency",
+   "Fusion parameters are another thing to tune"
+  ]
+ },
+ "pitfalls": [
+  "Merging by raw score instead of rank",
+  "Assuming more candidates always helps \u2014 precision falls"
+ ],
+ "when": {
+  "use": [
+   "Mixed vocabulary between users and documents"
+  ],
+  "avoid": [
+   "When one path demonstrably dominates on your query set"
+  ]
+ },
+ "interacts_with": [
+  "bm25",
+  "embeddings",
+  "rrf",
+  "reranking"
+ ],
+ "code": null,
+ "related": [
+  "rrf",
+  "reranking"
+ ]
+}

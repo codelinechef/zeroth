@@ -1,0 +1,49 @@
+{
+ "id": "static-export",
+ "title": "Static export and precomputed interaction",
+ "category": "Engineering",
+ "summary": "Shipping a site as plain files with no server, and making it interactive by committing captured state instead of querying a backend.",
+ "what": "Every route is rendered to HTML at build time. There is no server process, no API and no database behind the site.",
+ "why": "Hosting is free and the attack surface is essentially zero. The constraint is that nothing can run a live query.",
+ "how": "Interactive elements replay real state captured offline: run the pipeline, capture the intermediate results, commit them as JSON, and let the client move between them.",
+ "in_this_project": "The site renders committed JSON and never queries the platform. Interactive demos read from data/interactive/, where each dataset carries the script that produced it and the command that regenerates it. The demos degrade honestly: with JavaScript disabled the reader still gets the full table of figures rendered server-side, not a blank box.",
+ "sections": [],
+ "formula": null,
+ "table": null,
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Free hosting, no runtime to attack",
+   "Content is present without JavaScript and is indexable",
+   "Every figure traces to a committed file"
+  ],
+  "limitations": [
+   "Nothing can be live",
+   "Demo data must be regenerated when the pipeline changes",
+   "Large datasets inflate the repository"
+  ]
+ },
+ "pitfalls": [
+  "Synthesising demo data because the real pipeline is not ready",
+  "Interactive states with no number attached"
+ ],
+ "when": {
+  "use": [
+   "Documentation and result sites whose data changes on a build cadence"
+  ],
+  "avoid": [
+   "Genuinely live or per-user data"
+  ]
+ },
+ "interacts_with": [
+  "provenance",
+  "hydration"
+ ],
+ "code": null,
+ "related": [
+  "provenance",
+  "hydration"
+ ]
+}

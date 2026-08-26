@@ -1,0 +1,63 @@
+{
+ "id": "llm-judge",
+ "title": "LLM-as-judge and blind judging",
+ "category": "Evaluation",
+ "summary": "Using a language model to grade relevance or faithfulness against a published rubric \u2014 and keeping it blind to the answers you want.",
+ "what": "A model grades each query-passage pair against a written rubric, standing in for a human annotator at a fraction of the cost.",
+ "why": "Grading 10,000 candidates by hand is not feasible. A model does it in hours for a couple of dollars. The question is whether the grades mean anything.",
+ "how": "The rubric is published. The judge sees only the question and the passage text. A stratified sample is re-graded by a human and the agreement rate published beside the results.",
+ "in_this_project": "Drafting and judging use different models, and the judge is blind by construction: the judging prompt interpolates only the relevance statement, the question and the passages. Whether a passage was one the query was drafted from is recorded in the output but never sent to the judge. Model references are pinned to dated snapshots, and every record carries name@snapshot rather than a bare name.",
+ "sections": [
+  {
+   "heading": "Why blindness is the whole design",
+   "body": "If the judge can see which passages a query was written from, it agrees with them, and the agreement rate then measures conformity rather than correctness. The number goes up, which is exactly what makes it dangerous \u2014 a high agreement rate looks like a well-constructed set."
+  },
+  {
+   "heading": "What happened here",
+   "body": "The human verification sample is currently unusable and the site says so rather than publishing it. Of 32 verified judgments, 30 were graded 3 and 2 were graded 2 \u2014 94% a single value \u2014 while the model graded 91% of the same pool as 0. A sample that does not discriminate cannot measure a judge in either direction, so the agreement rate is withheld with the reason stated, pending re-grading."
+  }
+ ],
+ "formula": null,
+ "table": null,
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Scales to thousands of judgments",
+   "Consistent application of a written rubric",
+   "Cheap enough to re-run"
+  ],
+  "limitations": [
+   "Inherits the model's biases",
+   "Non-deterministic unless temperature is pinned",
+   "Silently changes if the model reference floats"
+  ]
+ },
+ "pitfalls": [
+  "Letting the judge see the drafter's labels",
+  "Using a -latest alias, so re-running months later silently changes the judge",
+  "Publishing an agreement rate from a degenerate sample"
+ ],
+ "when": {
+  "use": [
+   "Grading at a scale humans cannot reach"
+  ],
+  "avoid": [
+   "As the sole authority with no human verification at all"
+  ]
+ },
+ "interacts_with": [
+  "golden-set",
+  "faithfulness",
+  "model-pinning"
+ ],
+ "code": {
+  "file": "harness/golden/generate.py",
+  "symbol": "JUDGE_PROMPT"
+ },
+ "related": [
+  "golden-set",
+  "model-pinning"
+ ]
+}

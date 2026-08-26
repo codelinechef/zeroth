@@ -1,0 +1,46 @@
+{
+ "id": "abstention",
+ "title": "Abstention and knowing when not to answer",
+ "category": "Evaluation",
+ "summary": "Declining to answer when the retrieved evidence does not support one \u2014 and measuring whether the system does it for the right reason.",
+ "what": "An abstention gate inspects the retrieved context and the draft answer and suppresses the answer when support is insufficient.",
+ "why": "A confident wrong answer is worse than no answer in any domain where the output is acted on. Most benchmarks do not measure this at all.",
+ "how": "The query set includes queries that are plausible, on-topic and genuinely unanswerable from the corpus. The metric is the proportion of those correctly declined.",
+ "in_this_project": "30 of the 200 planned queries are unanswerable by construction. The metric is deliberately reported separately from headline retrieval numbers, and this is why: if approximate search under access control returns an empty candidate list, the system abstains because it received nothing, not because it judged the evidence insufficient. That inflates the abstention score for a reason that has nothing to do with the behaviour being measured.",
+ "sections": [],
+ "formula": null,
+ "table": null,
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Directly measures a failure mode users care about",
+   "Cheap to add to a query set"
+  ],
+  "limitations": [
+   "Requires genuinely unanswerable queries, which are hard to write",
+   "Trivially gamed by abstaining more often"
+  ]
+ },
+ "pitfalls": [
+  "Reporting abstention without reporting answer coverage",
+  "Letting an empty retrieval result count as a correct abstention"
+ ],
+ "when": {
+  "use": [
+   "The output is acted on rather than browsed"
+  ],
+  "avoid": []
+ },
+ "interacts_with": [
+  "ann-post-filtering",
+  "recall",
+  "citation-verification"
+ ],
+ "code": null,
+ "related": [
+  "ann-post-filtering",
+  "citation-verification"
+ ]
+}

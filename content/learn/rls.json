@@ -1,0 +1,61 @@
+{
+ "id": "rls",
+ "title": "PostgreSQL Row-Level Security",
+ "category": "Security",
+ "summary": "Access rules enforced by the database inside the query itself, so a row a role may not see is never returned regardless of how the query was written.",
+ "what": "A policy is a boolean expression attached to a table. PostgreSQL adds it to every query against that table automatically, as a security-barrier condition the planner may not optimise around.",
+ "why": "Filtering in application code means every query path must remember to filter. One forgotten WHERE clause is a data leak. Enforcing in the database makes the rule structural: there is no query that bypasses it.",
+ "how": "The policy typically checks the row's tenant against a session variable set per request. It is evaluated before any user-supplied condition, so a crafted predicate cannot see rows the policy excludes.",
+ "in_this_project": "Policies check the row's tenant against an ACL table keyed on a session setting. Every measurement connects as zeroth_app, which is NOSUPERUSER NOBYPASSRLS, and the demo script asserts rolbypassrls is false before taking a single reading.",
+ "sections": [
+  {
+   "heading": "Two silent bypasses",
+   "body": "A superuser is exempt from row-level security entirely. Connect as postgres and every policy silently does nothing \u2014 no error, no warning, and every access-control test passes for the wrong reason. Separately, a table's OWNER is also exempt unless FORCE ROW LEVEL SECURITY is set, because relforcerowsecurity defaults to false. Both were confirmed here: running a probe as the table owner returned recall of 0.95 with no restriction applied at all."
+  },
+  {
+   "heading": "The ACL table is itself readable",
+   "body": "If a policy reads an ACL table, the querying role needs SELECT on it, which means any query can enumerate the entire authorisation matrix. Putting it behind a SECURITY DEFINER function or its own policy is the fix."
+  }
+ ],
+ "formula": null,
+ "table": null,
+ "diagram": null,
+ "terms": [],
+ "example": null,
+ "tradeoffs": {
+  "advantages": [
+   "Cannot be forgotten by application code",
+   "Applies to every query path, including ad-hoc ones",
+   "Enforced by the database, not by convention"
+  ],
+  "limitations": [
+   "Policy expressions run per row and can be costly",
+   "Interacts badly with approximate index scans",
+   "Bypassed silently by superusers and table owners"
+  ]
+ },
+ "pitfalls": [
+  "Connecting as postgres and concluding the tests pass",
+  "Forgetting FORCE ROW LEVEL SECURITY",
+  "Assuming correct enforcement means unchanged recall"
+ ],
+ "when": {
+  "use": [
+   "Multi-tenant data where isolation must be structural"
+  ],
+  "avoid": [
+   "Single-tenant systems where the complexity buys nothing"
+  ]
+ },
+ "interacts_with": [
+  "ann-post-filtering",
+  "partitioning",
+  "tenancy"
+ ],
+ "code": null,
+ "related": [
+  "ann-post-filtering",
+  "partitioning",
+  "tenancy"
+ ]
+}
