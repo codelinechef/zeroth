@@ -1,6 +1,7 @@
 {
   "id": "mrr_at_10",
   "name": "MRR@10",
+  "expansion": "Mean Reciprocal Rank at rank 10",
   "family": "retrieval",
   "tag": "RET",
   "one_line": "Mean reciprocal rank of the first relevant chunk. Rewards getting one right answer high.",

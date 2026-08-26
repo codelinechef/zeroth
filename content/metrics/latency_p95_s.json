@@ -1,6 +1,7 @@
 {
   "id": "latency_p95_s",
   "name": "p95 latency",
+  "expansion": "95th-percentile end-to-end latency, in seconds",
   "family": "performance",
   "tag": "PRF",
   "one_line": "95th percentile end-to-end time, retrieval through verification.",
@@ -37,6 +38,6 @@
     "planner-flip"
   ],
   "related": [
-    "cost_per_query"
+    "cost_per_query_usd"
   ]
 }

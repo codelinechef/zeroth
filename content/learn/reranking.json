@@ -1,62 +1,61 @@
 {
- "id": "reranking",
- "title": "Cross-encoder reranking",
- "category": "Retrieval",
- "summary": "A second-stage model that reads the query and a passage together and scores their relevance directly, reordering the shortlist retrieval produced.",
- "what": "A bi-encoder embeds query and passage separately and compares vectors. A cross-encoder feeds both into one model at once, so every query token can attend to every passage token.",
- "why": "Separate encoding forces each passage into a single vector before it knows what was asked. A cross-encoder decides relevance with the question in hand, which is strictly more informative and measurably more accurate.",
- "how": "Too expensive to run over a whole corpus \u2014 it is one forward pass per query-passage pair. So it runs only over the shortlist retrieval already produced, typically the top 50, and reorders it.",
- "in_this_project": "bge-reranker-base runs over the top 50 fused candidates in harness/interactive/retrieval.py. The walkthrough shows movement per result, so the reader can see how much reordering the reranker actually does and judge whether it earned its latency.",
- "sections": [],
- "formula": null,
- "table": null,
- "diagram": {
-  "type": "flow",
-  "nodes": [
-   "51,310 chunks",
-   "retrieve top 50",
-   "cross-encode 50 pairs",
-   "reordered top 10"
+  "id": "reranking",
+  "title": "Cross-encoder reranking",
+  "category": "Retrieval",
+  "summary": "A second-stage model that reads the query and a passage together and scores their relevance directly, reordering the shortlist retrieval produced.",
+  "what": "A bi-encoder embeds query and passage separately and compares vectors. A cross-encoder feeds both into one model at once, so every query token can attend to every passage token.",
+  "why": "Separate encoding forces each passage into a single vector before it knows what was asked. A cross-encoder decides relevance with the question in hand, which is strictly more informative and measurably more accurate.",
+  "how": "Too expensive to run over a whole corpus \u2014 it is one forward pass per query-passage pair. So it runs only over the shortlist retrieval already produced, typically the top 50, and reorders it.",
+  "in_this_project": "bge-reranker-base runs over the top 50 fused candidates in harness/interactive/retrieval.py. The walkthrough shows movement per result, so the reader can see how much reordering the reranker actually does and judge whether it earned its latency.",
+  "sections": [],
+  "formula": null,
+  "table": null,
+  "diagram": {
+    "type": "flow",
+    "nodes": [
+      "51,310 chunks",
+      "retrieve top 50",
+      "cross-encode 50 pairs",
+      "reordered top 10"
+    ],
+    "note": "Cost grows with shortlist depth, not corpus size. That is what makes the stage affordable."
+  },
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "Substantially more accurate than vector similarity",
+      "Needs no index of its own",
+      "Drops in without changing retrieval"
+    ],
+    "limitations": [
+      "One model forward pass per candidate",
+      "Latency scales with shortlist depth",
+      "Cannot recover a passage retrieval never returned"
+    ]
+  },
+  "pitfalls": [
+    "Reranking a shortlist so shallow the right passage was never in it",
+    "Ignoring the latency it adds to p95"
   ],
-  "note": "Cost grows with shortlist depth, not corpus size. That is what makes the stage affordable."
- },
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "Substantially more accurate than vector similarity",
-   "Needs no index of its own",
-   "Drops in without changing retrieval"
+  "when": {
+    "use": [
+      "Precision at the top of the list matters"
+    ],
+    "avoid": [
+      "Latency budgets that cannot absorb a second model"
+    ]
+  },
+  "interacts_with": [
+    "rrf",
+    "hybrid-retrieval"
   ],
-  "limitations": [
-   "One model forward pass per candidate",
-   "Latency scales with shortlist depth",
-   "Cannot recover a passage retrieval never returned"
+  "code": {
+    "file": "harness/interactive/retrieval.py",
+    "symbol": "main"
+  },
+  "related": [
+    "rrf",
+    "hybrid-retrieval"
   ]
- },
- "pitfalls": [
-  "Reranking a shortlist so shallow the right passage was never in it",
-  "Ignoring the latency it adds to p95"
- ],
- "when": {
-  "use": [
-   "Precision at the top of the list matters"
-  ],
-  "avoid": [
-   "Latency budgets that cannot absorb a second model"
-  ]
- },
- "interacts_with": [
-  "rrf",
-  "hybrid-retrieval",
-  "latency"
- ],
- "code": {
-  "file": "harness/interactive/retrieval.py",
-  "symbol": "main"
- },
- "related": [
-  "rrf",
-  "hybrid-retrieval"
- ]
 }

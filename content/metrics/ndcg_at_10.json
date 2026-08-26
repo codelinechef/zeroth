@@ -1,6 +1,7 @@
 {
   "id": "ndcg_at_10",
   "name": "NDCG@10",
+  "expansion": "Normalised Discounted Cumulative Gain at rank 10",
   "family": "retrieval",
   "tag": "RET",
   "one_line": "Discounted cumulative gain over graded relevance, normalised against the ideal ranking.",

@@ -1,6 +1,7 @@
 {
   "id": "recall_at_10",
   "name": "Recall@10",
+  "expansion": "Recall at rank 10",
   "family": "retrieval",
   "tag": "RET",
   "one_line": "Proportion of queries where at least one chunk graded 2 or higher appears in the top 10.",

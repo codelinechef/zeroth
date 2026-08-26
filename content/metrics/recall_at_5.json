@@ -1,6 +1,7 @@
 {
   "id": "recall_at_5",
   "name": "Recall@5",
+  "expansion": "Recall at rank 5",
   "family": "retrieval",
   "tag": "RET",
   "one_line": "The same measure at rank 5. Harder, and more sensitive to reranking.",

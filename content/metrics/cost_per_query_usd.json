@@ -1,6 +1,7 @@
 {
   "id": "cost_per_query_usd",
   "name": "Cost per query",
+  "expansion": "Cost per query, in US dollars",
   "family": "cost",
   "tag": "CST",
   "one_line": "Token counts multiplied by the rates in the run config. Local models cost zero, stated openly.",
