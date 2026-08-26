@@ -561,3 +561,285 @@ html.modal-open { overflow: hidden; }
   margin-top: 0.1rem;
   word-break: break-all;
 }
+
+/* ===========================================================================
+   nthlabs imprint
+   =========================================================================== */
+
+/* Centred over the measure, above the paper title. Bounded by the same
+   --measure the title and lede use, so the mark centres on the text column
+   rather than on the viewport — at wide viewports centring on the viewport
+   would drift it away from the column it belongs to. */
+.masthead {
+  max-width: var(--measure);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-875);
+  letter-spacing: 0.16em;
+  /* Letterspacing adds a trailing gap after the final letter, which visually
+     shifts a centred mark left. Half the tracking back as padding re-centres
+     the optical mass. */
+  padding-left: 0.16em;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.wordmark sup {
+  font-size: 0.62em;
+  /* `vertical-align: super` on a letterspaced run rides too high against the
+     x-height of a lowercase mark. A measured lift sits it on the shoulder of
+     the n. */
+  vertical-align: baseline;
+  position: relative;
+  top: -0.42em;
+  letter-spacing: 0.08em;
+}
+
+/* ===========================================================================
+   Abbreviations
+   =========================================================================== */
+
+/* Deliberately quieter than .metric-ref: a metric name opens a whole panel of
+   material, an abbreviation only ever yields one line. Muted rather than
+   family-hued, and no hover weight change, so a paragraph carrying several
+   abbreviations does not turn into a field of dotted underlines. */
+.abbr-ref {
+  font: inherit;
+  color: inherit;
+  cursor: help;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--rule);
+}
+.abbr-ref:hover { text-decoration-color: var(--ink-muted); }
+
+/* Family line at the head of a metric popover — the tag expanded. */
+.metric-pop-family {
+  font-size: var(--t-75);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+/* ===========================================================================
+   Glossary — About §8
+   =========================================================================== */
+
+.glossary { margin-top: 1.25rem; max-width: var(--measure); }
+
+.glossary-list { margin-top: 0.5rem; }
+
+/* Term and definition on one row at reading widths, stacked on narrow ones.
+   A fixed term column keeps the definitions aligned into a single edge, which
+   is what makes a glossary scannable rather than a list of paragraphs. */
+.glossary-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.1rem 1.25rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+@media (min-width: 640px) {
+  .glossary-row { grid-template-columns: 9rem 1fr; gap: 1.25rem; }
+}
+
+.glossary-row dt {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+.glossary-row dd {
+  font-size: var(--t-875);
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* Second line inside a definition: the clause of context, or the family. */
+.glossary-note {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  line-height: 1.5;
+  color: var(--ink-muted);
+  margin-top: 0.2rem;
+}
+
+/* ===========================================================================
+   Table controls — sort and facet
+   =========================================================================== */
+
+.table-controls {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.facet { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+.facet-option {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  color: var(--ink-muted);
+  background: none;
+  border: 1px solid var(--rule);
+  padding: 0.15rem 0.55rem;
+  cursor: pointer;
+}
+.facet-option:hover { border-color: var(--ink-muted); color: var(--ink); }
+/* The selected facet inverts rather than tinting: the family hues are spoken
+   for, and a delta colour here would read as better-or-worse than baseline. */
+.facet-option[aria-pressed="true"] {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+/* Column sort trigger. Inherits the .eyebrow treatment of the <th> so the
+   header row looks unchanged until pointed at. */
+.col-sort {
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+}
+.col-sort:hover { color: var(--ink); }
+
+/* Reserve the mark's width at all times so activating a sort cannot reflow
+   the header row. */
+.col-sort-mark {
+  font-size: 0.85em;
+  color: var(--ink-muted);
+  display: inline-block;
+  min-width: 1ch;
+}
+.col-sort:hover .col-sort-mark { color: var(--ink); }
+
+/* ===========================================================================
+   Figure inspection — hover/focus readout
+   =========================================================================== */
+
+/* Reserve two lines at all widths. The readout swaps text on hover, and a
+   height that tracked its content would make the page jump every time the
+   pointer crossed a box. */
+.figure-readout {
+  font-size: var(--t-75);
+  line-height: 1.5;
+  color: var(--ink-muted);
+  margin: 0.6rem 0 0;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--rule);
+  min-height: 3rem;
+}
+/* Active state earns full ink and a darker rule — the hint is background, the
+   detail is the thing being read. */
+.figure-readout.is-active {
+  color: var(--ink);
+  border-left-color: var(--ink-muted);
+}
+
+/* Inspectable figure targets. */
+.fig-hot { cursor: pointer; }
+.fig-hot rect[fill="none"],
+.fig-hot text { transition: opacity 120ms ease-out; }
+
+/* Dim the rest of the figure rather than highlighting the target: raising one
+   box means picking a colour, and every colour here is already spoken for by
+   a metric family or a delta. Withdrawing attention costs no palette. */
+svg:has(.fig-hot.is-active) .fig-hot:not(.is-active) { opacity: 0.45; }
+
+.fig-hot:focus-visible { outline: none; }
+.fig-hot:focus-visible rect:first-of-type {
+  fill: transparent;
+  stroke: var(--signal);
+  stroke-width: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fig-hot rect[fill="none"], .fig-hot text { transition: none; }
+}
+
+/* ===========================================================================
+   Section sub-index in the contents rail
+   =========================================================================== */
+
+/* Indented to the clause title, not the number, so the hierarchy reads without
+   a bullet or a connector. */
+.section-spy {
+  list-style: none;
+  margin: 0.35rem 0 0.6rem 1.1rem;
+  padding: 0;
+  border-left: 1px solid var(--rule);
+}
+.section-spy li { margin: 0; }
+.section-spy a {
+  display: block;
+  padding: 0.15rem 0 0.15rem 0.6rem;
+  margin-left: -1px;
+  font-size: var(--t-75);
+  line-height: 1.4;
+  color: var(--ink-muted);
+  text-decoration: none;
+  border-left: 1px solid transparent;
+}
+.section-spy a:hover { color: var(--ink); }
+/* The current section takes a solid ink edge. Weight alone was not enough to
+   find at a glance in a list of nine muted lines. */
+.section-spy a.is-current {
+  color: var(--ink);
+  border-left-color: var(--ink);
+}
+
+/* ===========================================================================
+   Chunk boundary strip — ChunkingExplorer
+   =========================================================================== */
+
+/* The visible mark stays a hairline; the button is widened around it so it can
+   actually be hit. Transparent background, so overlapping targets on a dense
+   strip do not stack into a visible band. */
+.chunk-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 9px;
+  margin-left: -4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.chunk-tick::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4px;
+  border-left: 1px solid var(--ink);
+}
+/* Reserved delta colour, used here in its documented sense: a boundary that
+   crosses a section is the failure this figure exists to show. */
+.chunk-tick.is-crossing::before { border-left-color: var(--regress); }
+
+.chunk-tick.is-active::before { border-left-width: 3px; left: 3px; }
+.chunk-tick:focus-visible { outline: 2px solid var(--signal); outline-offset: 0; }

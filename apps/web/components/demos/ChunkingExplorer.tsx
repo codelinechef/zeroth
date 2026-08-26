@@ -19,9 +19,26 @@ export type ChunkingData = {
 
 const STRATS = ["fixed-512", "section-aware"] as const;
 
+/**
+ * One boundary, in words. Reports only what the committed span record already
+ * says — ordinal, page, token count, section, and the two boundary flags.
+ */
+function describe(x: Span): string {
+  const flags = [
+    x.starts_mid_sentence ? "starts mid-sentence" : null,
+    x.crosses_section ? "spans a section boundary" : null,
+  ].filter(Boolean);
+  return (
+    `Chunk #${x.ordinal} · page ${x.page} · ${x.n_tokens} tokens · ` +
+    `"${x.section.slice(0, 60)}"` +
+    (flags.length ? ` · ${flags.join(" · ")}` : "")
+  );
+}
+
 export function ChunkingExplorer({ docs }: { docs: ChunkingData[] }) {
   const [di, setDi] = useState(0);
   const [strat, setStrat] = useState<(typeof STRATS)[number]>("fixed-512");
+  const [hot, setHot] = useState<Span | null>(null);
   const d = docs[di];
   const s = d.strategies[strat];
   const other = d.strategies[strat === "fixed-512" ? "section-aware" : "fixed-512"];
@@ -35,7 +52,7 @@ export function ChunkingExplorer({ docs }: { docs: ChunkingData[] }) {
             shrink; the full id is shown below rather than inside an option. */}
         <div className="min-w-0 flex-1 basis-56">
           <label htmlFor="ch-doc" className="eyebrow block mb-2">Document</label>
-          <select id="ch-doc" value={di} onChange={(e) => setDi(Number(e.target.value))}
+          <select id="ch-doc" value={di} onChange={(e) => { setDi(Number(e.target.value)); setHot(null); }}
             className="mono text-[length:var(--t-75)] border border-rule bg-paper px-2 py-1 w-full max-w-full">
             {docs.map((x, i) => (
               <option key={x.doc_id} value={i}>{x.source}</option>
@@ -46,7 +63,7 @@ export function ChunkingExplorer({ docs }: { docs: ChunkingData[] }) {
           <legend className="eyebrow mb-2">Strategy</legend>
           <div className="flex gap-1">
             {STRATS.map((st) => (
-              <button key={st} type="button" onClick={() => setStrat(st)}
+              <button key={st} type="button" onClick={() => { setStrat(st); setHot(null); }}
                 aria-pressed={strat === st}
                 className={`mono text-[length:var(--t-75)] border px-2 py-1 ${
                   strat === st ? "border-ink text-ink" : "border-rule text-ink-muted"}`}>
@@ -72,17 +89,31 @@ export function ChunkingExplorer({ docs }: { docs: ChunkingData[] }) {
       </p>
 
       <p className="eyebrow mt-6 mb-2">boundaries over the first {d.excerpt.length.toLocaleString()} characters</p>
-      <div className="relative h-10 border border-rule" role="img"
+      {/* Each boundary is a target rather than a tick. The strip already knew
+          which chunk starts where; before, that was the one thing a reader
+          could not ask it. The hit area is padded well beyond the 1px rule —
+          a hairline is not a pointer target. */}
+      <div className="relative h-10 border border-rule" role="group"
         aria-label={`${inExcerpt.length} chunk boundaries in this excerpt under ${strat}`}>
         {inExcerpt.map((x) => (
-          <span key={x.ordinal}
-            className={`absolute top-0 bottom-0 border-l ${
-              x.crosses_section ? "border-regress" : "border-ink"}`}
-            style={{ left: `${(x.char_start / d.excerpt.length) * 100}%` }} />
+          <button
+            key={x.ordinal}
+            type="button"
+            className={`chunk-tick ${x.crosses_section ? "is-crossing" : ""} ${
+              hot?.ordinal === x.ordinal ? "is-active" : ""}`}
+            style={{ left: `${(x.char_start / d.excerpt.length) * 100}%` }}
+            onMouseEnter={() => setHot(x)}
+            onMouseLeave={() => setHot(null)}
+            onFocus={() => setHot(x)}
+            onBlur={() => setHot(null)}
+            aria-label={describe(x)}
+          />
         ))}
       </div>
-      <p className="mono text-[length:var(--t-75)] text-ink-muted mt-2">
-        each line is a chunk start · red = this chunk spans a section boundary
+      <p className={`figure-readout mono ${hot ? "is-active" : ""}`} aria-live="polite">
+        {hot
+          ? describe(hot)
+          : "Each line is a chunk start; red spans a section boundary. Point at one for the chunk it opens."}
       </p>
 
       <details className="mt-5">

@@ -141,14 +141,6 @@ export function TopicBody({ topic, all }: { topic: Topic; all: Topic[] }) {
           </p>
         </S>
       ) : null}
-
-      {topic.code ? (
-        <S h="Where it lives in this repository">
-          <p className="mono text-[length:var(--t-75)]">
-            {topic.code.file} · {topic.code.symbol}
-          </p>
-        </S>
-      ) : null}
     </>
   );
 }

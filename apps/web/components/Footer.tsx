@@ -24,12 +24,6 @@ export function Footer() {
           </a>
         </p>
         <p>
-          <a href={LINKS.repo} target="_blank" rel="noopener noreferrer">
-            Source and data
-          </a>{" "}
-          ·{" "}
-          <a href={LINKS.github} target="_blank" rel="noopener noreferrer">GitHub</a>{" "}
-          ·{" "}
           <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>{" "}
           · Corpus {corpus ?? "not yet ingested"}
         </p>

@@ -5,6 +5,8 @@ import { Pipeline } from "@/components/figures/Pipeline";
 import { CorpusComposition } from "@/components/figures/CorpusComposition";
 import { InProgress } from "@/components/InProgress";
 import { Metric } from "@/components/Metric";
+import { Wordmark } from "@/components/Wordmark";
+import { Abbr } from "@/components/Abbr";
 
 export default function BoardPage() {
   const runs = getRuns();
@@ -12,10 +14,16 @@ export default function BoardPage() {
   return (
     <>
       <header>
+        {/* Imprint. Centred over the full column while the title stays flush
+            left — the asymmetry is what makes it read as a masthead rather
+            than a heading of its own. */}
+        <div className="masthead">
+          <Wordmark />
+        </div>
         <h1 className="display">Zeroth</h1>
         <p className="mt-4 text-[length:var(--t-125)] text-ink-muted prose-measure">
-          A reproducible benchmark of end-to-end RAG pipeline quality, measured
-          on a public corpus.
+          A reproducible benchmark of end-to-end <Abbr id="rag" expand /> pipeline
+          quality, measured on a public corpus.
         </p>
         <hr className="rule mt-8 mb-3 max-w-[var(--measure)]" />
         <p className="mono text-[length:var(--t-75)] text-ink-muted">

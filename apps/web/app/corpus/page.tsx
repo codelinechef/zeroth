@@ -1,6 +1,7 @@
 import { Prose, MarginNote, Figure } from "@/components/Paper";
 import { CorpusComposition } from "@/components/figures/CorpusComposition";
 import { getCorpusStats } from "@/lib/content";
+import { Abbr } from "@/components/Abbr";
 
 export const metadata = { title: "Corpus · Zeroth" };
 
@@ -50,7 +51,8 @@ export default function CorpusPage() {
         </p>
         <h3>RFCs</h3>
         <p>
-          Documents from the HTTP and TLS families. Freely redistributable,
+          Documents from the HTTP and <Abbr id="tls" expand /> families. Freely
+          redistributable,
           densely cross-referencing, and a clean hard-mode subset — the only
           genuinely independent third source.
         </p>
@@ -59,11 +61,12 @@ export default function CorpusPage() {
       <h2 className="mt-14">3.2 Attribution</h2>
       <Prose>
         <p className="text-ink-muted">
-          CUAD: Hendrycks et al., NeurIPS 2021; The Atticus Project. Licensed
-          CC BY 4.0. Chunking and re-indexing constitute modification and are
-          indicated as such. EDGAR filings are published by the US Securities
-          and Exchange Commission. RFCs are published by the IETF and RFC
-          Editor under BCP 78.
+          <Abbr id="cuad" />: Hendrycks et al., NeurIPS 2021; The Atticus
+          Project. Licensed <Abbr id="ccby" /> 4.0. Chunking and re-indexing
+          constitute modification and are indicated as such.{" "}
+          <Abbr id="edgar" /> filings are published by the US Securities and
+          Exchange Commission. <Abbr id="rfc" />s are published by the{" "}
+          <Abbr id="ietf" /> and RFC Editor under <Abbr id="bcp" /> 78.
         </p>
         {s ? (
           <p className="mono text-[length:var(--t-75)] text-ink-muted">

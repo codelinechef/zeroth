@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import type { Metric } from "@/lib/metrics";
+import { FAMILY_HUE, FAMILY_LABEL } from "@/lib/families";
 import { panelDomId } from "@/lib/metricIds";
 
 /**
@@ -22,14 +23,6 @@ import { panelDomId } from "@/lib/metricIds";
  * If you need a block element, put it in the panel.
  */
 
-const HUE: Record<string, string> = {
-  retrieval: "var(--fam-retrieval)",
-  grounding: "var(--fam-grounding)",
-  abstention: "var(--fam-abstention)",
-  performance: "var(--fam-performance)",
-  cost: "var(--fam-cost)",
-};
-
 export function MetricRef({
   metric,
   children,
@@ -38,11 +31,15 @@ export function MetricRef({
   metric: Metric;
   children?: React.ReactNode;
   /**
-   * "inline" — inside prose: the hover/focus popover is the whole point.
-   * "list"   — in a listing that already prints the definition beside the
-   *            name. A popover there repeats what is on screen and covers the
-   *            neighbouring rows, so it is suppressed and the trigger goes
-   *            straight to the panel.
+   * "inline" — inside prose. The popover leads with the one-line definition,
+   *            which is the thing a reader mid-sentence is missing.
+   * "list"   — in a listing that already prints that one-liner beside the
+   *            name. The popover previously did not open at all here, which
+   *            read as a broken control: the name carries the same dotted
+   *            underline as every other metric reference, so a reader expects
+   *            it to behave the same way. It now opens with the one-liner
+   *            dropped and the full form, formula and range promoted, so it
+   *            adds to the row instead of repeating it.
    */
   variant?: "inline" | "list";
 }) {
@@ -51,11 +48,11 @@ export function MetricRef({
   const wrapRef = useRef<HTMLSpanElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const popId = useId();
-  const hue = HUE[metric.family];
+  const hue = FAMILY_HUE[metric.family];
+  const familyLabel = FAMILY_LABEL[metric.family];
   const panelId = panelDomId(metric.id);
 
   const show = () => {
-    if (variant === "list") return;
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => {
       // Flip below when there is not enough room above, so the popover never
@@ -102,8 +99,12 @@ export function MetricRef({
           {metric.tag}
         </span>
         {children ?? metric.name}
+        {/* The tag itself is aria-hidden — three letters read aloud are noise.
+            The family word carries it instead, along with the full form. */}
         <span className="sr-only">
-          {" "}— {metric.one_line} Activate for the full definition.
+          {" "}({familyLabel}
+          {metric.expansion ? `, ${metric.expansion}` : ""}) — {metric.one_line}{" "}
+          Activate for the full definition.
         </span>
       </button>
 
@@ -111,7 +112,28 @@ export function MetricRef({
       {open ? (
         <span role="tooltip" id={popId}
           className={`metric-pop mono ${below ? "metric-pop-below" : ""}`}>
-          <span className="block text-ink">{metric.one_line}</span>
+          {/* The three-letter tag is the family identification channel, but
+              it is only spelled out in the methodology legend. Expanding it
+              here means a reader never has to leave the page to learn what
+              RET or GRD stands for. */}
+          <span className="block metric-pop-family" style={{ color: hue }}>
+            {metric.tag} · {familyLabel}
+          </span>
+          {/* In a list the one-liner is already printed beside the name.
+              Repeating it here would spend the whole popover on text the
+              reader can see, so the full form takes the lead line instead. */}
+          {variant === "list" ? (
+            metric.expansion ? (
+              <span className="block mt-1 text-ink">{metric.expansion}</span>
+            ) : null
+          ) : (
+            <>
+              <span className="block mt-1 text-ink">{metric.one_line}</span>
+              {metric.expansion ? (
+                <span className="block mt-1 text-ink-muted">{metric.expansion}</span>
+              ) : null}
+            </>
+          )}
           <span className="block mt-2 text-ink-muted whitespace-pre-wrap">
             {metric.formula.notation}
           </span>

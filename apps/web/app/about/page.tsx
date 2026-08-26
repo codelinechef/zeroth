@@ -3,7 +3,9 @@ import { getCorpusStats } from "@/lib/content";
 import { Pipeline } from "@/components/figures/Pipeline";
 import { Figure } from "@/components/Paper";
 import { LINKS } from "@/lib/links";
-import { LinkedInIcon, GitHubIcon, GlobeIcon } from "@/components/Icons";
+import { LinkedInIcon, GlobeIcon } from "@/components/Icons";
+import { Abbr } from "@/components/Abbr";
+import { Glossary } from "@/components/Glossary";
 
 export const metadata = {
   title: "About · Zeroth",
@@ -134,8 +136,13 @@ export default function AboutPage() {
           <p>
             {c.documents.toLocaleString()} documents, {c.pages.toLocaleString()}{" "}
             pages and {c.chunks.toLocaleString()} chunks across {c.tenants}{" "}
-            tenants, from SEC EDGAR annual filings, the CUAD contract set and
-            IETF RFCs. Corpus id <span className="mono">{c.corpusId}</span>.
+            {/* Bare, not expanded. Four full forms in one sentence buries the
+                numbers it exists to report; each abbreviation carries its own
+                definition on hover, and the corpus page spells them out. */}
+            tenants, from <Abbr id="sec" /> <Abbr id="edgar" /> annual filings,
+            the <Abbr id="cuad" /> contract set and <Abbr id="ietf" />{" "}
+            <Abbr id="rfc" />s. Corpus id{" "}
+            <span className="mono">{c.corpusId}</span>.
           </p>
         ) : (
           <p>No corpus has been ingested yet.</p>
@@ -185,7 +192,8 @@ export default function AboutPage() {
         <blockquote className="border-l-2 border-rule pl-5">
           <p>
             Zeroth is an open reconstruction of a production
-            confidential-document RAG platform. The original was built for an
+            confidential-document <Abbr id="rag" expand /> platform. The
+            original was built for an
             employer over a private corpus and is not public. This is a
             from-scratch rebuild of the same architecture over public documents.
             Every number published here was measured on the public corpus
@@ -194,17 +202,25 @@ export default function AboutPage() {
         </blockquote>
       </Prose>
 
-      <h2 className="mt-14">8 · Author and links</h2>
+      <h2 className="mt-14">8 · Glossary</h2>
       <Prose>
         <p>
-          Built by Anant Sharma, AI Engineer. The repository carries the
-          platform, the harness, the corpus manifest and this site.
+          Every abbreviation the paper uses, written out. In the prose each one
+          also carries its full form on hover or focus; this is the list for
+          reading straight through.
+        </p>
+      </Prose>
+      <Glossary />
+
+      <h2 className="mt-14">9 · Author and links</h2>
+      <Prose>
+        <p>
+          Built by Anant Sharma, AI Engineer, at nthlabs. The project carries
+          the platform, the harness, the corpus manifest and this site.
         </p>
       </Prose>
       <ul className="link-cards mt-5">
         {[
-          { href: LINKS.repo, label: "Repository", sub: "github.com/codelinechef/zeroth", icon: <GitHubIcon /> },
-          { href: LINKS.github, label: "GitHub", sub: "github.com/codelinechef", icon: <GitHubIcon /> },
           { href: LINKS.linkedin, label: "LinkedIn", sub: "linkedin.com/in/codelinechef", icon: <LinkedInIcon /> },
           { href: LINKS.website, label: "Website", sub: "anantsharma.co.in", icon: <GlobeIcon /> },
         ].map((l) => (

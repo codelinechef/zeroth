@@ -5,12 +5,27 @@ const ROOT = path.join(process.cwd(), "..", "..");
 const METRICS_DIR = path.join(ROOT, "content", "metrics");
 const GOLDEN = path.join(ROOT, "data", "golden");
 
-export type Family =
-  | "retrieval" | "grounding" | "abstention" | "performance" | "cost";
+// Family names, order and hues live in lib/families.ts so client components
+// can reach them without pulling node:fs into the browser bundle. Re-exported
+// here because every existing importer asks lib/metrics for them.
+export type { Family } from "./families";
+export { FAMILY_LABEL, FAMILY_ORDER, TAG_LABEL, FAMILY_HUE } from "./families";
+
+import type { Family } from "./families";
+import { FAMILY_ORDER } from "./families";
 
 export type Metric = {
   id: string;
   name: string;
+  /**
+   * The abbreviated name written out in full — "NDCG@10" -> "Normalised
+   * Discounted Cumulative Gain at rank 10".
+   *
+   * Optional on purpose. Only names that are actually abbreviated or symbolic
+   * carry one; spelling out "Faithfulness" as "Faithfulness" would be noise.
+   * Absent means "the name is already the full form", not "not written yet".
+   */
+  expansion?: string;
   family: Family;
   tag: string;
   one_line: string;
@@ -21,14 +36,6 @@ export type Metric = {
   worked_example: { requires: string; state: string };
   failure_modes: string[];
   related: string[];
-};
-
-export const FAMILY_LABEL: Record<Family, string> = {
-  retrieval: "Retrieval",
-  grounding: "Grounding",
-  abstention: "Abstention",
-  performance: "Performance",
-  cost: "Cost",
 };
 
 let cache: Map<string, Metric> | null = null;
@@ -54,8 +61,7 @@ export function getMetric(id: string): Metric | undefined {
 }
 
 export function metricsByFamily(): [Family, Metric[]][] {
-  const order: Family[] =
-    ["retrieval", "grounding", "abstention", "performance", "cost"];
+  const order = FAMILY_ORDER;
   const out = new Map<Family, Metric[]>(order.map((f) => [f, []]));
   for (const m of getMetrics().values()) out.get(m.family)!.push(m);
   return order.map((f) => [f, out.get(f)!.sort((a, b) => a.name.localeCompare(b.name))]);
