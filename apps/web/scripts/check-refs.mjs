@@ -79,6 +79,51 @@ if (broken.length) {
   process.exit(1);
 }
 
+/* ---------------------------------------------------------------------------
+   Outbound URLs must come from content, never from a component.
+
+   A URL hardcoded into a component once shipped an address that had never been
+   registered, inside the citation block — the one place a wrong address is
+   copied into someone else's bibliography and cannot be corrected. Components
+   may render a URL; they may not author one.
+--------------------------------------------------------------------------- */
+import { readdirSync as rd, statSync as st } from "node:fs";
+
+const CODE_DIRS = ["components", "app", "lib"];
+const ALLOWED_IN_CODE = [
+  // Standards URLs that are part of a spec reference, not a project address.
+  "https://nextjs.org",
+];
+
+function walkCode(dir) {
+  if (!existsSync(dir)) return [];
+  return rd(dir).flatMap((f) => {
+    const p = join(dir, f);
+    return st(p).isDirectory() ? walkCode(p) : [p];
+  });
+}
+
+const hardcoded = [];
+for (const dir of CODE_DIRS) {
+  for (const f of walkCode(dir).filter((f) => /\.(ts|tsx)$/.test(f))) {
+    const src = readFileSync(f, "utf8");
+    for (const m of src.matchAll(/["'`](https?:\/\/[^"'`\s]+)["'`]/g)) {
+      const url = m[1];
+      if (ALLOWED_IN_CODE.some((a) => url.startsWith(a))) continue;
+      hardcoded.push({ file: f, url });
+    }
+  }
+}
+if (hardcoded.length) {
+  console.error(`check-refs: ${hardcoded.length} hardcoded URL(s) in components:\n`);
+  for (const h of hardcoded) console.error(`  ${h.file}\n    ${h.url}`);
+  console.error(
+    `\nMove it into content/ (site.json, references.json, links) and read it ` +
+    `from there. A component that authors a URL can invent one.`
+  );
+  process.exit(1);
+}
+
 console.log(
   `check-refs: ${CHECKS.reduce((n, c) => n + c[3].length, 0)} reference(s) across ` +
   `${metrics.length} metrics, ${failures.length} failure modes and ` +

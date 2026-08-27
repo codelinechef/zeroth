@@ -1,14 +1,16 @@
 import { SectionLabel } from "@/components/SectionLabel";
+import { RedTeamResults } from "@/components/RedTeamResults";
+import { Provenance } from "@/components/Provenance";
+import { getRedTeam } from "@/lib/security";
 import { Subsection } from "@/components/Subsection";
 import { Prose, MarginNote, Figure } from "@/components/Paper";
 import { InProgress } from "@/components/InProgress";
 import { Partitioned } from "@/components/figures/Partitioned";
-import { getRuns } from "@/lib/content";
 
 export const metadata = { title: "Security · Zeroth" };
 
 export default function SecurityPage() {
-  const withSecurity = getRuns().filter((r) => r.security);
+  const redteam = getRedTeam();
   return (
     <>
       <SectionLabel href="/security" />
@@ -38,21 +40,19 @@ export default function SecurityPage() {
 
       <Subsection href="/security" n={1} className="mt-14">Red-team results</Subsection>
       <div className="mt-4">
-        {withSecurity.length === 0 ? (
-          <InProgress phase={3} blockedBy="the retrieval platform (Phase 2)">
+        {redteam ? (
+          <>
+            <RedTeamResults data={redteam} />
+            <Provenance {...redteam.generated_by}
+              extra={`${redteam.source.roles} roles x ${redteam.source.tenants} tenants on corpus ${redteam.source.corpus}`} />
+          </>
+        ) : (
+          <InProgress phase={3}>
             Cross-tenant retrieval attempts, role escalation, prompt injection
             through document content and through the query, citation forgery,
             and abstention bypass. Results publish including any attacks that
             succeed.
           </InProgress>
-        ) : (
-          <ul className="mono space-y-2">
-            {withSecurity.map((r) => (
-              <li key={r.run_id}>
-                {r.clause} · {r.security!.passed}/{r.security!.tests} passed
-              </li>
-            ))}
-          </ul>
         )}
       </div>
 

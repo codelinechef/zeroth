@@ -1,0 +1,243 @@
+==============================================================================
+PER-QUERY REVIEW — 4.1 baseline: fixed-512, bge-small, dense only, no reranker, k=10
+run 4.1-20260826212550  commit 74cbff4  corpus edgar-cuad-rfc-v1
+plan fingerprint 8bc6e4e7e329db95caf19d9157f128ca  uniform=True
+==============================================================================
+
+RUBRIC   3 fully answers · 2 substantial part · 1 related only · 0 not relevant
+RELEVANT means grade >= 2. Grade 1 does NOT count.
+
+------------------------------------------------------------------------------
+cross-document-000   [cross-document]   answerable=True
+------------------------------------------------------------------------------
+Q: What was the total operating income for the North America segment in fiscal 2023, and which XBRL financial taxonomy members are associated with cash flow hedging using foreign exchange contracts during the same fiscal period?
+
+  judged chunks: 53   graded >= 2: 8
+
+  rank  grade  by                     src  chunk
+     1      0  unjudged                    edgar-0001099219-000109921924000035::fixed-512::0059
+     2      0  unjudged                    edgar-0000829224-000082922423000058::fixed-512::0019
+     3      0  unjudged                    edgar-0001099219-000109921926000013::fixed-512::0057
+     4      0  gemini-3.1-flash-lite       edgar-0000796343-000079634325000004::fixed-512::0015
+     5      0  unjudged                    edgar-0001099219-000109921925000044::fixed-512::0055
+     6      0  gemini-3.1-flash-lite       edgar-0000796343-000079634324000006::fixed-512::0015
+     7      0  unjudged                    edgar-0000019617-000001961724000225::fixed-512::0059
+     8      2  HUMAN                       edgar-0000796343-000079634326000003::fixed-512::0014 <-- relevant
+     9      0  unjudged                    edgar-0001551152-000155115224000011::fixed-512::0008
+    10      0  unjudged                    edgar-0000315189-000155837024016169::fixed-512::0015
+
+  working:
+    grades in rank order        [0, 0, 0, 0, 0, 0, 0, 2, 0, 0]
+    recall@5   = 0   (any grade>=2 in ranks 1-5? no)
+    recall@10  = 1   (any grade>=2 in ranks 1-10? yes)
+    mrr@10     = 0.1250   (first relevant at rank 8, 1/8 = 0.1250)
+    ctx prec   = 0.1000   (1 relevant / 10 returned)
+    ndcg@10    = 0.0377
+      dcg(returned) = 0.9464
+      ideal grades  = [3, 3, 3, 3, 3, 3, 2, 2, 0, 0]
+      idcg          = 25.0791
+    latency    = 724 ms
+
+------------------------------------------------------------------------------
+multi-chunk-000   [multi-chunk]   answerable=True
+------------------------------------------------------------------------------
+Q: At what specific address is the Contractor, Redwater LLC, required to maintain original Subscription Agreements and Note Confirmations, absent a different location designated by the Company?
+
+  judged chunks: 51   graded >= 2: 8
+
+  rank  grade  by                     src  chunk
+     1      3  HUMAN                       cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-590938 <-- relevant
+     2      0  unjudged                    rfc-9000::fixed-512::00068
+     3      3  HUMAN                       cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-590938 <-- relevant
+     4      0  unjudged                    rfc-9000::fixed-512::00067
+     5      0  gemini-3.1-flash-lite  yes  cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-590938
+     6      0  unjudged                    rfc-9000::fixed-512::00062
+     7      3  HUMAN                       cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-590938 <-- relevant
+     8      0  unjudged                    cuad-meritlifeinsuranceco-06-19-2020-ex-10-xi-27e7c5
+     9      3  HUMAN                       cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-590938 <-- relevant
+    10      0  unjudged                    cuad-meritlifeinsuranceco-06-19-2020-ex-10-xi-27e7c5
+
+  working:
+    grades in rank order        [3, 0, 3, 0, 0, 0, 3, 0, 3, 0]
+    recall@5   = 1   (any grade>=2 in ranks 1-5? yes)
+    recall@10  = 1   (any grade>=2 in ranks 1-10? yes)
+    mrr@10     = 1.0000   (first relevant at rank 1, 1/1 = 1.0000)
+    ctx prec   = 0.4000   (4 relevant / 10 returned)
+    ndcg@10    = 0.5399
+      dcg(returned) = 14.9405
+      ideal grades  = [3, 3, 3, 3, 3, 3, 3, 3, 0, 0]
+      idcg          = 27.6743
+    latency    = 476 ms
+
+------------------------------------------------------------------------------
+single-chunk-000   [single-chunk]   answerable=True
+------------------------------------------------------------------------------
+Q: Under Section 11.2 of the agreement in the Verizon ABS LLC filing, what are the presumptive discovery limits placed on each party regarding witness depositions?
+
+  judged chunks: 50   graded >= 2: 1
+
+  rank  grade  by                     src  chunk
+     1      0  gemini-3.1-flash-lite       cuad-verizonabsllc-20200123-8-k-ex-10-4-11952-2ae910
+     2      0  unjudged                    edgar-0000019617-000001961725000270::fixed-512::0041
+     3      0  unjudged                    edgar-0000732712-000073271224000010::fixed-512::0025
+     4      0  unjudged                    edgar-0000019617-000001961724000225::fixed-512::0042
+     5      0  unjudged                    cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-590938
+     6      0  unjudged                    edgar-0000886982-000088698224000006::fixed-512::0058
+     7      0  unjudged                    edgar-0000732712-000073271226000007::fixed-512::0025
+     8      0  unjudged                    edgar-0000732712-000073271226000007::fixed-512::0021
+     9      1  gemini-3.1-flash-lite       cuad-verizonabsllc-20200123-8-k-ex-10-4-11952-2ae910
+    10      0  unjudged                    edgar-0000886982-000088698226000091::fixed-512::0036
+
+  working:
+    grades in rank order        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
+    recall@5   = 0   (any grade>=2 in ranks 1-5? no)
+    recall@10  = 0   (any grade>=2 in ranks 1-10? no)
+    mrr@10     = 0.0000   (no relevant chunk in top 10)
+    ctx prec   = 0.0000   (0 relevant / 10 returned)
+    ndcg@10    = 0.0370
+      dcg(returned) = 0.3010
+      ideal grades  = [3, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+      idcg          = 8.1309
+    latency    = 379 ms
+
+------------------------------------------------------------------------------
+single-chunk-001   [single-chunk]   answerable=True
+------------------------------------------------------------------------------
+Q: For how long after a Note is fully paid must the Contractor retain all related records, files, and documents under section (d) Retention?
+
+  NO JUDGMENTS EXIST FOR THIS QUERY.
+  Excluded from every metric. Scoring it 0 would report a
+  retrieval failure where nobody has said what success is.
+
+------------------------------------------------------------------------------
+single-chunk-002   [single-chunk]   answerable=True
+------------------------------------------------------------------------------
+Q: Under Section 15.2.1 of the agreement, how long does a breaching party have to cure a material breach after receiving written notice before the other party may terminate?
+
+  NO JUDGMENTS EXIST FOR THIS QUERY.
+  Excluded from every metric. Scoring it 0 would report a
+  retrieval failure where nobody has said what success is.
+
+------------------------------------------------------------------------------
+single-chunk-003   [single-chunk]   answerable=True
+------------------------------------------------------------------------------
+Q: In this agreement, which specific section is referenced to define the term 'Ancillary Software'?
+
+  NO JUDGMENTS EXIST FOR THIS QUERY.
+  Excluded from every metric. Scoring it 0 would report a
+  retrieval failure where nobody has said what success is.
+
+------------------------------------------------------------------------------
+single-chunk-004   [single-chunk]   answerable=True
+------------------------------------------------------------------------------
+Q: Which entity ID (CIK 0000886982) member tags specify the applicability of Standardized versus Advanced Approaches for Total Credit RWAs as of 2024-12-31?
+
+  NO JUDGMENTS EXIST FOR THIS QUERY.
+  Excluded from every metric. Scoring it 0 would report a
+  retrieval failure where nobody has said what success is.
+
+------------------------------------------------------------------------------
+single-chunk-005   [single-chunk]   answerable=True
+------------------------------------------------------------------------------
+Q: According to the agreement between Todos Medical Ltd. and Care G. B. Plus Ltd., which entity has the authority to appoint a single arbitrator if the parties fail to agree on one within 7 days of notice?
+
+  NO JUDGMENTS EXIST FOR THIS QUERY.
+  Excluded from every metric. Scoring it 0 would report a
+  retrieval failure where nobody has said what success is.
+
+------------------------------------------------------------------------------
+single-chunk-006   [single-chunk]   answerable=True
+------------------------------------------------------------------------------
+Q: What is the annual production capacity specified for pure Astaxanthin at the MANUFACTURING FACILITY to be constructed by Parent?
+
+  NO JUDGMENTS EXIST FOR THIS QUERY.
+  Excluded from every metric. Scoring it 0 would report a
+  retrieval failure where nobody has said what success is.
+
+------------------------------------------------------------------------------
+single-chunk-007   [single-chunk]   answerable=True
+------------------------------------------------------------------------------
+Q: Which specific tax jurisdiction member is listed for CIK 0001099219 for the period 2023-01-01 to 2023-12-31 related to tax legislation in Bermuda?
+
+  NO JUDGMENTS EXIST FOR THIS QUERY.
+  Excluded from every metric. Scoring it 0 would report a
+  retrieval failure where nobody has said what success is.
+
+------------------------------------------------------------------------------
+tenant-scoped-000   [tenant-scoped]   answerable=True
+------------------------------------------------------------------------------
+Q: How much did Comcast spend on customer premise equipment capital expenditures in 2024?
+
+  judged chunks: 52   graded >= 2: 8
+
+  rank  grade  by                     src  chunk
+     1      0  unjudged                    cuad-neoformainc-19991202-s-1a-ex-10-26-52245-c43c00
+     2      3  HUMAN                  yes  edgar-0001166691-000116669125000011::fixed-512::0011 <-- relevant
+     3      0  unjudged                    edgar-0000886982-000088698224000006::fixed-512::0061
+     4      3  HUMAN                       edgar-0001166691-000162828026004994::fixed-512::0017 <-- relevant
+     5      0  unjudged                    edgar-0000886982-000088698226000091::fixed-512::0059
+     6      0  unjudged                    edgar-0001166691-000116669125000011::fixed-512::0015
+     7      0  unjudged                    edgar-0000019617-000001961725000270::fixed-512::0038
+     8      0  unjudged                    edgar-0001166691-000116669125000011::fixed-512::0014
+     9      0  unjudged                    cuad-quantumgroupincfl-20090120-8-k-ex-99-2-3-b5afef
+    10      0  unjudged                    edgar-0001166691-000162828026004994::fixed-512::0018
+
+  working:
+    grades in rank order        [0, 3, 0, 3, 0, 0, 0, 0, 0, 0]
+    recall@5   = 1   (any grade>=2 in ranks 1-5? yes)
+    recall@10  = 1   (any grade>=2 in ranks 1-10? yes)
+    mrr@10     = 0.5000   (first relevant at rank 2, 1/2 = 0.5000)
+    ctx prec   = 0.2000   (2 relevant / 10 returned)
+    ndcg@10    = 0.2629
+      dcg(returned) = 7.4312
+      ideal grades  = [3, 3, 3, 3, 3, 3, 3, 3, 1, 1]
+      idcg          = 28.2643
+    latency    = 465 ms
+
+------------------------------------------------------------------------------
+unanswerable-000   [unanswerable]   answerable=False
+------------------------------------------------------------------------------
+Q: How many business days does TouchStar have to review and approve non-English marketing materials submitted by the Reseller?
+
+  judged chunks: 50   graded >= 2: 8
+
+  rank  grade  by                     src  chunk
+     1      3  HUMAN                       cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e94 <-- relevant
+     2      3  HUMAN                  yes  cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e94 <-- relevant
+     3      0  gemini-3.1-flash-lite       cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e94
+     4      0  gemini-3.1-flash-lite       cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e94
+     5      0  gemini-3.1-flash-lite       cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e94
+     6      0  gemini-3.1-flash-lite       cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e94
+     7      0  gemini-3.1-flash-lite       cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e94
+     8      0  gemini-3.1-flash-lite       cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e94
+     9      3  HUMAN                       cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e94 <-- relevant
+    10      0  gemini-3.1-flash-lite       cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e94
+
+  working:
+    grades in rank order        [3, 3, 0, 0, 0, 0, 0, 0, 3, 0]
+    recall@5   = 1   (any grade>=2 in ranks 1-5? yes)
+    recall@10  = 1   (any grade>=2 in ranks 1-10? yes)
+    mrr@10     = 1.0000   (first relevant at rank 1, 1/1 = 1.0000)
+    ctx prec   = 0.3000   (3 relevant / 10 returned)
+    ndcg@10    = 0.4887
+      dcg(returned) = 13.5237
+      ideal grades  = [3, 3, 3, 3, 3, 3, 3, 3, 0, 0]
+      idcg          = 27.6743
+    latency    = 458 ms
+
+==============================================================================
+SCORED 5 of 12 queries. 7 excluded as unjudged.
+Aggregate metrics below are computed over the SCORED queries only.
+==============================================================================
+  recall_at_5          0.6000   95% CI [0.2000, 1.0000]   n=5
+  recall_at_10         0.8000   95% CI [0.4000, 1.0000]   n=5
+  mrr_at_10            0.5250   95% CI [0.1750, 0.9000]   n=5
+  ndcg_at_10           0.2732   95% CI [0.0826, 0.4640]   n=5
+  context_precision    0.2000   95% CI [0.0800, 0.3200]   n=5
+
+To agree the scoring is correct, check for each query above that:
+  1. the grade beside each retrieved chunk matches the golden set
+  2. recall is 1 only when a grade >= 2 appears in the top k
+  3. mrr equals 1/rank of the FIRST grade >= 2
+  4. context precision equals (count of grade >= 2) / (chunks returned)
+  5. ndcg equals dcg(returned) / idcg, using ALL judged grades for ideal

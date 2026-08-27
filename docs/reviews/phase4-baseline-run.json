@@ -1,0 +1,626 @@
+{
+  "run_id": "4.1-20260826214038",
+  "clause": "4.1",
+  "label": "baseline",
+  "baseline": true,
+  "run_date": "2026-08-26",
+  "commit": "74cbff4",
+  "dry_run": true,
+  "corpus": {
+    "id": "edgar-cuad-rfc-v1"
+  },
+  "queries": {
+    "total": 12,
+    "answerable": 11,
+    "unanswerable": 1,
+    "judged": 5,
+    "unjudged_excluded": 7
+  },
+  "config": {
+    "chunking": "fixed-512",
+    "embedder": "BAAI/bge-small-en-v1.5",
+    "retrieval": "dense",
+    "reranker": "none",
+    "top_k": 10,
+    "role": "all_tenants",
+    "generator": "none (dry run)"
+  },
+  "plan": {
+    "fingerprint": "8bc6e4e7e329db95caf19d9157f128ca",
+    "nodes": [
+      {
+        "node": "Limit",
+        "index": ""
+      },
+      {
+        "node": "Merge Append",
+        "index": ""
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_cuad_alliance_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_cuad_distribution_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_cuad_license_ip_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_cuad_marketing_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_cuad_other_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_cuad_services_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_cuad_supply_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_abbv_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_adbe_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_amd_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_amgn_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_axp_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_ba_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_cat_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_cmcsa_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_crm_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_cvx_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_de_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_dis_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_dow_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_duk_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_fdx_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_gs_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_intc_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_jpm_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_lin_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_manufacturing_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_mdt_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_met_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_misc_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_mrk_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_msft_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_mu_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_nee_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_nem_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_nke_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_nvda_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_orcl_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_pfe_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_retail_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_sbux_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_schw_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_t_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_vz_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_edgar_wmt_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_rfc_httpbis_hnsw"
+      },
+      {
+        "node": "Index Scan",
+        "index": "chunk_rfc_tls_hnsw"
+      }
+    ],
+    "gucs": {
+      "hnsw.ef_search": "200",
+      "hnsw.iterative_scan": "off",
+      "random_page_cost": "1.1",
+      "enable_seqscan": "off"
+    },
+    "fingerprints_seen": [
+      "8bc6e4e7e329db95caf19d9157f128ca"
+    ],
+    "uniform": true
+  },
+  "environment": {
+    "python": "3.11.16",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "embed_device": "cuda"
+  },
+  "metrics": {
+    "recall_at_5": {
+      "value": 0.6,
+      "ci95": [
+        0.2,
+        1.0
+      ],
+      "n": 5,
+      "resamples": 1000,
+      "level": 0.95
+    },
+    "recall_at_10": {
+      "value": 0.8,
+      "ci95": [
+        0.4,
+        1.0
+      ],
+      "n": 5,
+      "resamples": 1000,
+      "level": 0.95
+    },
+    "mrr_at_10": {
+      "value": 0.525,
+      "ci95": [
+        0.175,
+        0.9
+      ],
+      "n": 5,
+      "resamples": 1000,
+      "level": 0.95
+    },
+    "ndcg_at_10": {
+      "value": 0.253016,
+      "ci95": [
+        0.076842,
+        0.439302
+      ],
+      "n": 5,
+      "resamples": 1000,
+      "level": 0.95
+    },
+    "context_precision": {
+      "value": 0.2,
+      "ci95": [
+        0.08,
+        0.32
+      ],
+      "n": 5,
+      "resamples": 1000,
+      "level": 0.95
+    },
+    "latency_p50_s": {
+      "value": 0.4642,
+      "n": 12,
+      "note": "retrieval only"
+    },
+    "latency_p95_s": {
+      "value": 0.9231,
+      "n": 12,
+      "note": "retrieval only"
+    },
+    "latency_p99_s": {
+      "value": 1.3099,
+      "n": 12,
+      "note": "retrieval only"
+    }
+  },
+  "per_query": [
+    {
+      "judged": true,
+      "judged_chunks": 53,
+      "relevant_available": 8,
+      "query_id": "cross-document-000",
+      "category": "cross-document",
+      "answerable": true,
+      "retrieved": [
+        "edgar-0001099219-000109921924000035::fixed-512::00595",
+        "edgar-0000829224-000082922423000058::fixed-512::00190",
+        "edgar-0001099219-000109921926000013::fixed-512::00579",
+        "edgar-0000796343-000079634325000004::fixed-512::00153",
+        "edgar-0001099219-000109921925000044::fixed-512::00559",
+        "edgar-0000796343-000079634324000006::fixed-512::00151",
+        "edgar-0000019617-000001961724000225::fixed-512::00592",
+        "edgar-0000796343-000079634326000003::fixed-512::00140",
+        "edgar-0001551152-000155115224000011::fixed-512::00084",
+        "edgar-0000315189-000155837024016169::fixed-512::00157"
+      ],
+      "latency_ms": 1406.6,
+      "recall_at_5": 0.0,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 0.125,
+      "ndcg_at_10": 0.037736449320165566,
+      "context_precision": 0.1
+    },
+    {
+      "judged": true,
+      "judged_chunks": 51,
+      "relevant_available": 8,
+      "query_id": "multi-chunk-000",
+      "category": "multi-chunk",
+      "answerable": true,
+      "retrieved": [
+        "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00009",
+        "rfc-9000::fixed-512::00068",
+        "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00001",
+        "rfc-9000::fixed-512::00067",
+        "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00024",
+        "rfc-9000::fixed-512::00062",
+        "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00026",
+        "cuad-meritlifeinsuranceco-06-19-2020-ex-10-xi-27e7c541::fixed-512::00003",
+        "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00000",
+        "cuad-meritlifeinsuranceco-06-19-2020-ex-10-xi-27e7c541::fixed-512::00006"
+      ],
+      "latency_ms": 527.6,
+      "recall_at_5": 1.0,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 1.0,
+      "ndcg_at_10": 0.539871629124755,
+      "context_precision": 0.4
+    },
+    {
+      "judged": true,
+      "judged_chunks": 50,
+      "relevant_available": 1,
+      "query_id": "single-chunk-000",
+      "category": "single-chunk",
+      "answerable": true,
+      "retrieved": [
+        "cuad-verizonabsllc-20200123-8-k-ex-10-4-11952-2ae9109f::fixed-512::00083",
+        "edgar-0000019617-000001961725000270::fixed-512::00410",
+        "edgar-0000732712-000073271224000010::fixed-512::00258",
+        "edgar-0000019617-000001961724000225::fixed-512::00420",
+        "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00021",
+        "edgar-0000886982-000088698224000006::fixed-512::00588",
+        "edgar-0000732712-000073271226000007::fixed-512::00259",
+        "edgar-0000732712-000073271226000007::fixed-512::00217",
+        "cuad-verizonabsllc-20200123-8-k-ex-10-4-11952-2ae9109f::fixed-512::00002",
+        "edgar-0000886982-000088698226000091::fixed-512::00367"
+      ],
+      "latency_ms": 333.1,
+      "recall_at_5": 0.0,
+      "recall_at_10": 0.0,
+      "mrr_at_10": 0.0,
+      "ndcg_at_10": 0.03702282577607508,
+      "context_precision": 0.0
+    },
+    {
+      "judged": false,
+      "judged_chunks": 0,
+      "relevant_available": 0,
+      "query_id": "single-chunk-001",
+      "category": "single-chunk",
+      "answerable": true,
+      "retrieved": [
+        "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00012",
+        "cuad-meritlifeinsuranceco-06-19-2020-ex-10-xi-27e7c541::fixed-512::00002",
+        "cuad-meritlifeinsuranceco-06-19-2020-ex-10-xi-27e7c541::fixed-512::00006",
+        "cuad-meritlifeinsuranceco-06-19-2020-ex-10-xi-27e7c541::fixed-512::00003",
+        "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00011",
+        "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00008",
+        "cuad-emeraldhealththerapeuticsinc-06-10-2020--e1677697::fixed-512::00001",
+        "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00016",
+        "cuad-niceltd-06-26-2003-ex-4-5-outsourcing-ag-7f2400b1::fixed-512::00043",
+        "cuad-emeraldhealththerapeuticsinc-06-10-2020--e1677697::fixed-512::00003"
+      ],
+      "latency_ms": 465.3,
+      "recall_at_5": 0.0,
+      "recall_at_10": 0.0,
+      "mrr_at_10": 0.0,
+      "ndcg_at_10": 0.0,
+      "context_precision": 0.0
+    },
+    {
+      "judged": false,
+      "judged_chunks": 0,
+      "relevant_available": 0,
+      "query_id": "single-chunk-002",
+      "category": "single-chunk",
+      "answerable": true,
+      "retrieved": [
+        "cuad-harpoontherapeuticsinc-20200312-10-k-ex--521ac3e1::fixed-512::00106",
+        "cuad-cytodyninc-20200109-10-q-ex-10-5-1194163-ae84888c::fixed-512::00058",
+        "cuad-revolutionmedicinesinc-20200117-s-1-ex-1-166a89bb::fixed-512::00092",
+        "cuad-ccaindustriesinc-04-14-2014-ex-10-1-outs-55b1cd06::fixed-512::00009",
+        "cuad-atninternationalinc-20191108-10-q-ex-10--5d0d7a95::fixed-512::00067",
+        "cuad-waste2energyholdings-inc-06-03-2010-ex-1-f71cb656::fixed-512::00013",
+        "cuad-aimmunetherapeuticsinc-20200205-8-k-ex-1-cef2400b::fixed-512::00063",
+        "cuad-etonpharmaceuticalsinc-20191114-10-q-ex--7ff20e3c::fixed-512::00018",
+        "cuad-berkeleylights-inc-06-26-2020-ex-10-12-c-d480fde6::fixed-512::00095",
+        "cuad-zogenixinc-20190509-10-q-ex-10-2-1166331-36caa509::fixed-512::00066"
+      ],
+      "latency_ms": 486.0,
+      "recall_at_5": 0.0,
+      "recall_at_10": 0.0,
+      "mrr_at_10": 0.0,
+      "ndcg_at_10": 0.0,
+      "context_precision": 0.0
+    },
+    {
+      "judged": false,
+      "judged_chunks": 0,
+      "relevant_available": 0,
+      "query_id": "single-chunk-003",
+      "category": "single-chunk",
+      "answerable": true,
+      "retrieved": [
+        "rfc-9114::fixed-512::00074",
+        "cuad-inktomicorp-06-08-1998-ex-10-14-software-cab6cfee::fixed-512::00020",
+        "cuad-revolutionmedicinesinc-20200117-s-1-ex-1-166a89bb::fixed-512::00025",
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00013",
+        "rfc-9114::fixed-512::00075",
+        "cuad-ehaveinc-20190515-20-f-ex-4-44-11678816--e48141a6::fixed-512::00005",
+        "cuad-babcock-wilcoxenterprises-inc-08-04-2015-ec06466a::fixed-512::00000",
+        "cuad-stampscominc-20001114-10-q-ex-10-47-2631-5d1eab17::fixed-512::00005",
+        "cuad-aspirityholdingsllc-05-07-2012-ex-10-6-o-5909385e::fixed-512::00000",
+        "cuad-scansourceinc-20190822-10-k-ex-10-38-117-9537614f::fixed-512::00034"
+      ],
+      "latency_ms": 472.9,
+      "recall_at_5": 0.0,
+      "recall_at_10": 0.0,
+      "mrr_at_10": 0.0,
+      "ndcg_at_10": 0.0,
+      "context_precision": 0.0
+    },
+    {
+      "judged": false,
+      "judged_chunks": 0,
+      "relevant_available": 0,
+      "query_id": "single-chunk-004",
+      "category": "single-chunk",
+      "answerable": true,
+      "retrieved": [
+        "cuad-borrowmoneycom-inc-06-11-2020-ex-10-1-jo-3bdbf81c::fixed-512::00003",
+        "edgar-0000886982-000088698224000006::fixed-512::00126",
+        "cuad-borrowmoneycom-inc-06-11-2020-ex-10-1-jo-3bdbf81c::fixed-512::00002",
+        "edgar-0000732717-000073271726000120::fixed-512::00043",
+        "cuad-invendacorp-20000828-s-1a-ex-10-2-258820-3396de86::fixed-512::00014",
+        "edgar-0000886982-000088698226000091::fixed-512::00099",
+        "cuad-borrowmoneycom-inc-06-11-2020-ex-10-1-jo-3bdbf81c::fixed-512::00005",
+        "edgar-0000886982-000088698225000005::fixed-512::00125",
+        "cuad-borrowmoneycom-inc-06-11-2020-ex-10-1-jo-3bdbf81c::fixed-512::00004",
+        "edgar-0000886982-000088698225000005::fixed-512::00139"
+      ],
+      "latency_ms": 431.5,
+      "recall_at_5": 0.0,
+      "recall_at_10": 0.0,
+      "mrr_at_10": 0.0,
+      "ndcg_at_10": 0.0,
+      "context_precision": 0.0
+    },
+    {
+      "judged": false,
+      "judged_chunks": 0,
+      "relevant_available": 0,
+      "query_id": "single-chunk-005",
+      "category": "single-chunk",
+      "answerable": true,
+      "retrieved": [
+        "cuad-phasebiopharmaceuticalsinc-20200330-10-k-856024e1::fixed-512::00139",
+        "cuad-macrogenicsinc-08-02-2013-ex-10-collabor-5a6cea8e::fixed-512::00068",
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00030",
+        "cuad-todosmedicalltd-20190328-20-f-ex-4-10-11-7861f9b7::fixed-512::00014",
+        "cuad-monsanto-company-second-a-r-exclusive-ag-b34dffba::fixed-512::00069",
+        "cuad-gocallinc-03-30-2000-ex-10-7-promotion-a-98e251a9::fixed-512::00007",
+        "cuad-transphorm-inc-02-14-2020-ex-10-12-1-joi-35a3ab37::fixed-512::00042",
+        "cuad-todosmedicalltd-20190328-20-f-ex-4-10-11-7861f9b7::fixed-512::00013",
+        "cuad-nanophasetechnologiescorp-11-01-2005-ex--940eec09::fixed-512::00014",
+        "cuad-impressecorp-20000322-s-1a-ex-10-11-5199-024c48c2::fixed-512::00010"
+      ],
+      "latency_ms": 429.2,
+      "recall_at_5": 0.0,
+      "recall_at_10": 0.0,
+      "mrr_at_10": 0.0,
+      "ndcg_at_10": 0.0,
+      "context_precision": 0.0
+    },
+    {
+      "judged": false,
+      "judged_chunks": 0,
+      "relevant_available": 0,
+      "query_id": "single-chunk-006",
+      "category": "single-chunk",
+      "answerable": true,
+      "retrieved": [
+        "edgar-0000318154-000031815424000011::fixed-512::00092",
+        "edgar-0000318154-000031815426000010::fixed-512::00090",
+        "cuad-igenebiotechnologyinc-05-13-2003-ex-1-jo-7321675a::fixed-512::00013",
+        "cuad-zounds-hearing-inc-manufacturing-design--2d230b05::fixed-512::00005",
+        "cuad-igenebiotechnologyinc-05-13-2003-ex-1-jo-7321675a::fixed-512::00004",
+        "edgar-0000318154-000031815425000010::fixed-512::00089",
+        "edgar-0000318154-000031815425000010::fixed-512::00090",
+        "cuad-upjohninc-20200121-10-12g-ex-2-6-1194869-dcd3a46d::fixed-512::00008",
+        "edgar-0001751788-000175178824000010::fixed-512::00107",
+        "cuad-igenebiotechnologyinc-05-13-2003-ex-1-jo-7321675a::fixed-512::00012"
+      ],
+      "latency_ms": 463.0,
+      "recall_at_5": 0.0,
+      "recall_at_10": 0.0,
+      "mrr_at_10": 0.0,
+      "ndcg_at_10": 0.0,
+      "context_precision": 0.0
+    },
+    {
+      "judged": false,
+      "judged_chunks": 0,
+      "relevant_available": 0,
+      "query_id": "single-chunk-007",
+      "category": "single-chunk",
+      "answerable": true,
+      "retrieved": [
+        "edgar-0000078003-000007800324000039::fixed-512::00287",
+        "edgar-0001326160-000132616026000014::fixed-512::00268",
+        "edgar-0000002488-000000248824000012::fixed-512::00096",
+        "edgar-0001551152-000155115224000011::fixed-512::00234",
+        "edgar-0000002488-000000248825000012::fixed-512::00094",
+        "edgar-0001099219-000109921926000013::fixed-512::00323",
+        "edgar-0000078003-000007800325000054::fixed-512::00281",
+        "edgar-0001326160-000132616024000037::fixed-512::00082",
+        "edgar-0000829224-000082922423000058::fixed-512::00161",
+        "edgar-0001551152-000155115224000011::fixed-512::00233"
+      ],
+      "latency_ms": 513.9,
+      "recall_at_5": 0.0,
+      "recall_at_10": 0.0,
+      "mrr_at_10": 0.0,
+      "ndcg_at_10": 0.0,
+      "context_precision": 0.0
+    },
+    {
+      "judged": true,
+      "judged_chunks": 52,
+      "relevant_available": 8,
+      "query_id": "tenant-scoped-000",
+      "category": "tenant-scoped",
+      "answerable": true,
+      "retrieved": [
+        "cuad-neoformainc-19991202-s-1a-ex-10-26-52245-c43c0054::fixed-512::00039",
+        "edgar-0001166691-000116669125000011::fixed-512::00116",
+        "edgar-0000886982-000088698224000006::fixed-512::00617",
+        "edgar-0001166691-000162828026004994::fixed-512::00177",
+        "edgar-0000886982-000088698226000091::fixed-512::00593",
+        "edgar-0001166691-000116669125000011::fixed-512::00156",
+        "edgar-0000019617-000001961725000270::fixed-512::00381",
+        "edgar-0001166691-000116669125000011::fixed-512::00147",
+        "cuad-quantumgroupincfl-20090120-8-k-ex-99-2-3-b5afefe2::fixed-512::00039",
+        "edgar-0001166691-000162828026004994::fixed-512::00181"
+      ],
+      "latency_ms": 452.2,
+      "recall_at_5": 1.0,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 0.5,
+      "ndcg_at_10": 0.2339790523304549,
+      "context_precision": 0.2
+    },
+    {
+      "judged": true,
+      "judged_chunks": 50,
+      "relevant_available": 8,
+      "query_id": "unanswerable-000",
+      "category": "unanswerable",
+      "answerable": false,
+      "retrieved": [
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00008",
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00011",
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00007",
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00006",
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00005",
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00012",
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00019",
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00016",
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00014",
+        "cuad-worldwidestrategiesinc-11-02-2005-ex-10--3c6e9438::fixed-512::00023"
+      ],
+      "latency_ms": 427.2,
+      "recall_at_5": 1.0,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 1.0,
+      "ndcg_at_10": 0.41647114681555086,
+      "context_precision": 0.3
+    }
+  ],
+  "elapsed_s": 6.65
+}

@@ -6,7 +6,7 @@ import { CorpusComposition } from "@/components/figures/CorpusComposition";
 import { InProgress } from "@/components/InProgress";
 import { Metric } from "@/components/Metric";
 import { NthLabs, Zeroth } from "@/components/Wordmark";
-import { MarkSteps } from "@/components/Logo";
+import { MarkRanked } from "@/components/Logo";
 import { Abbr } from "@/components/Abbr";
 
 export default function BoardPage() {
@@ -15,17 +15,28 @@ export default function BoardPage() {
   return (
     <>
       <header>
-        {/* Publisher masthead. NthLabs is the parent; Zeroth is one project
-            under it, so the company sits above the paper and is banded by
-            rules the way a journal masthead is. The band is what carries the
-            hierarchy — at this size an unruled wordmark would just read as a
-            second title competing with the first. */}
+        {/* Endorsed brand architecture, not a co-brand.
+            
+            The pattern every AI lab converges on: the PROJECT name stands
+            alone and the parent appears as a small, separate endorsement.
+            AlphaFold is not "AlphaFold by Google DeepMind" in its own header;
+            Claude is not "Claude by Anthropic". Putting the parent inside the
+            lockup makes the project look like a division rather than a work.
+            
+            So the mark locks up with Zeroth, and NthLabs sits beneath as an
+            endorsement line at caption size. The earlier arrangement had it
+            backwards — NthLabs was the masthead and the paper title came
+            second, which read as a company page that happened to contain a
+            benchmark. */}
         <div className="masthead">
-          <MarkSteps size={30} className="masthead-mark" />
-          <p className="masthead-name"><NthLabs /></p>
-          <p className="masthead-sub">Applied AI systems · a research project</p>
+          <p className="masthead-lockup">
+            <MarkRanked size={40} className="masthead-mark" />
+            <span className="display"><Zeroth /></span>
+          </p>
+          <p className="masthead-endorse">
+            a research project by <NthLabs className="is-endorsement" />
+          </p>
         </div>
-        <h1 className="display"><Zeroth /></h1>
         <p className="mt-4 text-[length:var(--t-125)] text-ink-muted prose-measure">
           A reproducible benchmark of end-to-end <Abbr id="rag" expand /> pipeline
           quality, measured on a public corpus.
@@ -87,7 +98,7 @@ export default function BoardPage() {
       <Bleed className="mt-14">
         <h2 className="mb-4">Results</h2>
         {runs.length === 0 ? (
-          <InProgress phase={5} blockedBy="the retrieval platform (Phase 2) and the evaluation harness (Phase 4)">
+          <InProgress phase={5} blockedBy="the security suite (Phase 3) and the evaluation harness (Phase 4)">
             Nine configurations, each differing from the baseline by exactly one
             factor, so every difference is attributable to a single change.
           </InProgress>

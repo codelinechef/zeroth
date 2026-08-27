@@ -1,0 +1,18 @@
+{
+  "generated_at": "2026-08-26T21:46:59Z",
+  "draft_model": "gemini-3.6-flash",
+  "judge_model": "gemini-3.1-flash-lite",
+  "candidates_per_query": 50,
+  "chunks_per_judge_call": 5,
+  "seed": 20260824,
+  "relevance": "absolute \u2014 not role-relative; benchmark clauses run as all_tenants",
+  "categories": {
+    "single-chunk": 60,
+    "multi-chunk": 60,
+    "cross-document": 30,
+    "tenant-scoped": 20,
+    "unanswerable": 30
+  },
+  "corpus_chunks": "data/corpus/chunks/fixed-512.jsonl",
+  "judge_model_ref": "gemini-3.1-flash-lite@3.1-flash-lite-05-2026"
+}

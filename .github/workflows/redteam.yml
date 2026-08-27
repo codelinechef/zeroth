@@ -1,0 +1,48 @@
+name: redteam
+
+# Phase 3 gate: the security suite runs in CI and the build fails if any
+# attack succeeds.
+#
+# CI seeds a small synthetic corpus rather than the real 51,310-chunk one. The
+# access-control properties under test are properties of the POLICY, not of the
+# data volume, and a suite that needs a 1 GB corpus restored before it can run
+# is a suite that stops being run.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  redteam:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: local_dev_only
+          POSTGRES_DB: zeroth
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s --health-timeout 5s --health-retries 10
+    env:
+      ZEROTH_OWNER_DSN: postgresql://postgres:local_dev_only@localhost:5433/zeroth
+      ZEROTH_APP_DSN: postgresql://zeroth_app:local_dev_only@localhost:5433/zeroth
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install "psycopg[binary]" pydantic
+      - name: Apply migrations and seed a synthetic corpus
+        run: python3 tests/redteam/seed.py
+      - name: Red-team suite
+        run: python3 tests/redteam/run.py --json redteam-report.json
+      - name: Prove the suite detects a broken policy
+        run: python3 tests/redteam/mutation_check.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: redteam-report
+          path: redteam-report.json

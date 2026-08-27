@@ -1,0 +1,73 @@
+{
+  "describes": "Phase 3 red-team suite results, written by tests/redteam/run.py.",
+  "generated_by": {
+    "script": "tests/redteam/run.py",
+    "regenerate": "python3 tests/redteam/run.py --json content/security/redteam.json",
+    "commit": "74cbff4",
+    "at": "2026-08-26T20:29:47Z"
+  },
+  "source": {
+    "corpus": "edgar-cuad-rfc-v1",
+    "tenants": 47,
+    "roles": 3
+  },
+  "total": 246,
+  "passed": 246,
+  "rate": 100.0,
+  "elapsed_s": 4.95,
+  "by_category": {
+    "policy-config": {
+      "total": 9,
+      "passed": 9
+    },
+    "cross-tenant": {
+      "total": 141,
+      "passed": 141
+    },
+    "role-escalation": {
+      "total": 23,
+      "passed": 23
+    },
+    "defence-in-depth": {
+      "total": 15,
+      "passed": 15
+    },
+    "prompt-injection": {
+      "total": 37,
+      "passed": 37
+    },
+    "citation-forgery": {
+      "total": 17,
+      "passed": 17
+    },
+    "abstention-bypass": {
+      "total": 4,
+      "passed": 4
+    }
+  },
+  "failures": [],
+  "mutation_check": {
+    "describes": "Proof the suite fails when the policy is broken.",
+    "mutations": [
+      {
+        "name": "policy always true",
+        "detected": true
+      },
+      {
+        "name": "row level security disabled",
+        "detected": true
+      },
+      {
+        "name": "force disabled (owner bypass path)",
+        "detected": true
+      }
+    ],
+    "note": "The third was NOT detected on the first run. FORCE ROW LEVEL SECURITY only changes what the table owner sees, and the suite connects as the application role \u2014 correctly. Nine configuration invariants were added to close it, rather than having a test connect as the owner."
+  },
+  "caveats": [
+    "A 100% pass rate means every attack in this suite was withstood, not that the system is secure. It bounds what was tried.",
+    "Cross-tenant coverage is exhaustive over the current matrix: every role against every tenant. Adding a tenant adds cases automatically.",
+    "Citation and abstention cases exercise the verification logic directly rather than a live model, so they test the checker rather than any particular model's behaviour.",
+    "The suite runs against a populated database. In CI it runs against a small synthetic corpus, because the properties tested belong to the policy and not to the data volume."
+  ]
+}

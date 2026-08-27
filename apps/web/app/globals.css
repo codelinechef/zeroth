@@ -552,31 +552,49 @@ figcaption {
 .zeroth { font-weight: inherit; letter-spacing: inherit; }
 .zeroth sup { font-size: 0.44em; top: -0.66em; }
 
-/* --- the masthead band ----------------------------------------------------
-   Rules above and below, centred on the measure. The band is what makes a
-   large company name read as a publisher rather than as a competing title. */
-.masthead {
-  max-width: var(--measure);
-  text-align: center;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  padding: 1.5rem 0 1.25rem;
-  margin-bottom: 2.5rem;
+/* --- the masthead -------------------------------------------------------
+   Left-aligned, unbanded, and led by the project.
+
+   It was previously a centred band with NthLabs set large inside it. That
+   read as a company header that happened to contain a paper. Every AI lab
+   converges on the opposite arrangement — the work is the headline and the
+   organisation endorses it — so the rules and the centring are gone and the
+   mark locks up with the project name instead. */
+.masthead { margin-bottom: 1.75rem; }
+
+.masthead-lockup {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
 }
 .masthead-mark {
-  display: block;
-  margin: 0 auto 0.75rem;
   color: var(--ink);
+  flex-shrink: 0;
+  /* Optically aligned to cap height rather than the bounding box, which sits
+     low against a wordmark with no descenders. */
+  transform: translateY(-0.02em);
 }
-.masthead-name { margin: 0; }
-.masthead-sub {
+
+/* The endorsement. Caption size and muted, because a parent that competes
+   with its project has the hierarchy backwards. */
+.masthead-endorse {
   font-family: var(--font-mono);
   font-size: var(--t-75);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-muted);
-  margin: 0.6rem 0 0;
+  margin: 0.9rem 0 0;
 }
+/* NthLabs inline in the endorsement line: inherits the caption size, keeps
+   only the ordinal device that ties it to Zeroth. */
+.nthlabs.is-endorsement {
+  font-size: inherit;
+  font-weight: 600;
+  letter-spacing: inherit;
+  color: var(--ink);
+}
+.nthlabs.is-endorsement sup { font-size: 0.62em; top: -0.45em; }
 
 /* Logo marks never introduce colour — they inherit ink. */
 .logo-mark { display: inline-block; vertical-align: middle; }
@@ -1197,4 +1215,14 @@ svg:has(.fig-hot.is-active) .fig-hot:not(.is-active) { opacity: 0.45; }
   font-size: var(--t-875);
   line-height: 1.55;
   color: var(--ink-muted);
+}
+
+/* A citation that names an address which may move has to say so. */
+.cite-provisional {
+  font-size: var(--t-75);
+  line-height: 1.5;
+  color: var(--ink-muted);
+  border-left: 2px solid var(--regress);
+  padding-left: 0.75rem;
+  margin-top: 0.75rem;
 }

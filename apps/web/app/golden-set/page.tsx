@@ -3,7 +3,8 @@ import { Subsection } from "@/components/Subsection";
 import { Prose, MarginNote, Bleed } from "@/components/Paper";
 import { InProgress } from "@/components/InProgress";
 import { GoldenQueries } from "@/components/golden/GoldenQueries";
-import { goldenSummary, queryDetails, RUBRIC } from "@/lib/golden";
+import { goldenSummary, queryDetails, getConsistency, RUBRIC } from "@/lib/golden";
+import { Provenance } from "@/components/Provenance";
 
 export const metadata = {
   title: "Golden set · Zeroth",
@@ -14,6 +15,7 @@ export const metadata = {
 export default function GoldenSetPage() {
   const s = goldenSummary();
   const queries = queryDetails();
+  const consistency = getConsistency();
 
   if (!s) {
     return (
@@ -188,8 +190,62 @@ export default function GoldenSetPage() {
         </p>
       </Prose>
 
+      {/* ---------------- internal contradictions ---------------- */}
+      {consistency && consistency.issues.length ? (
+        <>
+          <Subsection href="/golden-set" n={3}>Contradictions inside the set</Subsection>
+          <Prose>
+            <MarginNote label="Found by hand-checking">
+              These surfaced while checking the first baseline run query by
+              query, not from a test that was looking for them.
+            </MarginNote>
+            <p>
+              The disagreement above counts how often the human and the model
+              differ. It does not say which is right. Checking the set against
+              itself does say something: these are statements the golden set
+              makes that cannot all be true at once, whoever made them.
+            </p>
+            <p>
+              The clearest is the unanswerable query. It is marked as having no
+              answer in the corpus, and eight of its chunks carry a human grade
+              of 3 — <em>fully answers the question on its own</em>. If a chunk
+              fully answers it, the query is answerable. One of those two
+              statements is wrong, and the model&apos;s stated reasoning on
+              those same chunks (&ldquo;lacks a specific timeframe&rdquo;) reads
+              as the correct one.
+            </p>
+            <p>
+              That matters for how the disagreement figure above should be read.
+              It was tempting to conclude the judge under-grades. On at least
+              this query the judge looks right and the verification looks wrong,
+              so the 28 disagreements are not all the same kind of thing.
+            </p>
+          </Prose>
+          <dl className="practice-list mt-4">
+            {consistency.issues.map((i, n) => (
+              <div key={`${i.kind}-${n}`} className="practice-row">
+                <dt>{i.kind}</dt>
+                <dd>
+                  <span className="mono text-ink">{i.where}</span>
+                  <span className="block mt-1">{i.detail}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <Provenance {...consistency.generated_by} />
+          <Prose className="mt-6">
+            <p>
+              No retrieval metric is published anywhere on this site, and this
+              is the second reason. The first is the sample size; this is the
+              set disagreeing with itself. Both are fixable, and neither is
+              fixed by publishing a number and adding a footnote.
+            </p>
+          </Prose>
+        </>
+      ) : null}
+
       {/* ---------------- rubric and grades ---------------- */}
-      <Subsection href="/golden-set" n={3}>The rubric</Subsection>
+      <Subsection href="/golden-set" n={4}>The rubric</Subsection>
       <Prose>
         <p>
           The same four grades are given to the model and to the human verifier.
@@ -219,7 +275,7 @@ export default function GoldenSetPage() {
       </p>
 
       {/* ---------------- categories ---------------- */}
-      <Subsection href="/golden-set" n={4}>Query categories</Subsection>
+      <Subsection href="/golden-set" n={5}>Query categories</Subsection>
       <Prose>
         <p>
           Categories are not decoration — the set is sampled and the agreement
@@ -237,7 +293,7 @@ export default function GoldenSetPage() {
       </dl>
 
       {/* ---------------- the queries themselves ---------------- */}
-      <Subsection href="/golden-set" n={5}>Every query</Subsection>
+      <Subsection href="/golden-set" n={6}>Every query</Subsection>
       <Prose>
         <p>
           The full set, with each query&apos;s candidate grades and the

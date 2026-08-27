@@ -1,0 +1,25 @@
+{
+  "describes": "Where this paper actually lives, for citation purposes.",
+  "note": "This exists so no component ever hardcodes a URL. A citation is the one place a wrong address does real damage: it sends a reader somewhere that does not exist and cannot be corrected after the fact.",
+  "canonical_url": "https://zeroth-nthlabs.netlify.app",
+  "url_status": "provisional",
+  "url_note": "The project is hosted on a platform subdomain. A permanent domain has not been registered, so this address may change; cite the corpus id and access date alongside it.",
+  "publisher": "NthLabs",
+  "author": "Sharma, Anant",
+  "author_display": "Anant Sharma",
+  "first_published_year": 2026,
+  "author_links": [
+    {
+      "label": "LinkedIn",
+      "sub": "linkedin.com/in/codelinechef",
+      "href": "https://www.linkedin.com/in/codelinechef/",
+      "icon": "linkedin"
+    },
+    {
+      "label": "Website",
+      "sub": "anantsharma.co.in",
+      "href": "https://anantsharma.co.in/",
+      "icon": "globe"
+    }
+  ]
+}

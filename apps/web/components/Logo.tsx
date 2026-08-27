@@ -105,9 +105,79 @@ export function MarkOrdinal(p: MarkProps) {
   );
 }
 
+/**
+ * E — Ranked rows. Four rules of decreasing width: a results table, read as a
+ * mark. The most literal fit for a company whose first project is a benchmark,
+ * and the only candidate that says what the work IS rather than what "nth"
+ * means. Reads cleanly at 16px because it is four straight lines.
+ */
+export function MarkRanked(p: MarkProps) {
+  return (
+    <Frame {...p}>
+      <line x1={2} y1={6} x2={30} y2={6} />
+      <line x1={2} y1={13} x2={24} y2={13} />
+      <line x1={2} y1={20} x2={16} y2={20} />
+      <line x1={2} y1={27} x2={9} y2={27} />
+    </Frame>
+  );
+}
+
+/**
+ * F — Aperture. Two squares, one rotated 45°, sharing a centre: convergence
+ * from two directions, which is what hybrid retrieval does. Geometric and
+ * quiet; the rotated square is what keeps it from being a plain box.
+ */
+export function MarkAperture(p: MarkProps) {
+  return (
+    <Frame {...p}>
+      <rect x={6.5} y={6.5} width={19} height={19} />
+      <path d="M16 1.5 L30.5 16 L16 30.5 L1.5 16 Z" />
+    </Frame>
+  );
+}
+
+/**
+ * G — Nth term. A triangle of dots with the apex raised clear of the run: a
+ * sequence and the term that sits above it. The most abstract, and the one
+ * that pairs most naturally with the raised "th" in the wordmark.
+ */
+export function MarkTerm(p: MarkProps) {
+  return (
+    <Frame {...p}>
+      <circle cx={5} cy={26} r={2} />
+      <circle cx={13} cy={26} r={2} />
+      <circle cx={21} cy={26} r={2} />
+      <circle cx={16} cy={7} r={3.5} />
+      <line x1={16} y1={10.5} x2={16} y2={22} strokeDasharray="2 2.5" />
+    </Frame>
+  );
+}
+
+/**
+ * H — Indexed cell. A 3x3 grid with one cell marked: retrieval as addressing
+ * the right cell out of many. Densest of the set; the marked cell is the first
+ * thing lost below 20px, so this one wants to be used large.
+ */
+export function MarkIndexed(p: MarkProps) {
+  return (
+    <Frame {...p}>
+      <rect x={2.5} y={2.5} width={27} height={27} />
+      <line x1={11.5} y1={2.5} x2={11.5} y2={29.5} />
+      <line x1={20.5} y1={2.5} x2={20.5} y2={29.5} />
+      <line x1={2.5} y1={11.5} x2={29.5} y2={11.5} />
+      <line x1={2.5} y1={20.5} x2={29.5} y2={20.5} />
+      <rect x={21.5} y={12.5} width={7} height={7} fill="currentColor" stroke="none" />
+    </Frame>
+  );
+}
+
 export const MARKS = {
   steps: { component: MarkSteps, label: "Steps" },
   nested: { component: MarkNested, label: "Nested" },
   sequence: { component: MarkSequence, label: "Sequence" },
   ordinal: { component: MarkOrdinal, label: "Ordinal N" },
+  ranked: { component: MarkRanked, label: "Ranked rows" },
+  aperture: { component: MarkAperture, label: "Aperture" },
+  term: { component: MarkTerm, label: "Nth term" },
+  indexed: { component: MarkIndexed, label: "Indexed cell" },
 } as const;

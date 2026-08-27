@@ -19,5 +19,59 @@ services:
       timeout: 5s
       retries: 5
 
+  # The generator. Absent from this file until Phase 4, which meant every run
+  # paid a 166-second cold start: vLLM writes its torch.compile output and CUDA
+  # graph captures to /root/.cache/vllm, and `docker run --rm` discarded them.
+  # Nine benchmark runs would have spent 25 minutes on pure recompilation.
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: zeroth-vllm
+    restart: unless-stopped
+    # Both of these are mandatory on WSL2 and neither is discoverable from the
+    # error. Without them vLLM dies in GPUModelRunnerV2 init with
+    # "RuntimeError: UVA is not available" — WSL2 disables pinned memory by
+    # default, and UVA buffers require it.
+    ipc: host
+    environment:
+      VLLM_WSL2_ENABLE_PIN_MEMORY: "1"
+    ports: ["8001:8000"]
+    volumes:
+      # Share the host model cache so models download once and are visible to
+      # the non-container tooling.
+      - ~/.cache/huggingface:/root/.cache/huggingface
+      - vllm-cache:/root/.cache/vllm
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    # The model is positional: `--model` is deprecated and warns on every boot.
+    #
+    # The structured-output backend is pinned rather than left at `auto`,
+    # which silently cascades xgrammar -> guidance -> outlines. Two runs could
+    # otherwise use different decoders with nothing in the output to say so.
+    # `--guided-decoding-backend` was the old spelling and no longer parses;
+    # the current image takes it as a field on StructuredOutputsConfig.
+    #
+    # 0.55 rather than the 0.70 used during setup: measured usage was 2.77 GiB
+    # against a 5.57 GiB budget, and the embedder and reranker have to stay
+    # co-resident on the same 8 GB card.
+    command: >
+      Qwen/Qwen2.5-3B-Instruct-AWQ
+      --quantization awq
+      --max-model-len 4096
+      --gpu-memory-utilization 0.55
+      --structured-outputs-config.backend=xgrammar
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request;urllib.request.urlopen('http://localhost:8000/health')\""]
+      interval: 15s
+      timeout: 5s
+      retries: 40
+      start_period: 300s
+
 volumes:
   pgdata:
+  # Named, so the compile cache survives a container replacement.
+  vllm-cache:

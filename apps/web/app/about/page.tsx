@@ -4,12 +4,12 @@ import { Prose, MarginNote, Bleed } from "@/components/Paper";
 import { getCorpusStats } from "@/lib/content";
 import { Pipeline } from "@/components/figures/Pipeline";
 import { Figure } from "@/components/Paper";
-import { LINKS } from "@/lib/links";
 import { LinkedInIcon, GlobeIcon } from "@/components/Icons";
 import { Abbr } from "@/components/Abbr";
 import { Glossary } from "@/components/Glossary";
 import { Cite } from "@/components/Cite";
 import { References } from "@/components/References";
+import { getSite } from "@/lib/site";
 
 export const metadata = {
   title: "About · Zeroth",
@@ -19,6 +19,7 @@ export const metadata = {
 
 export default function AboutPage() {
   const c = getCorpusStats();
+  const site = getSite();
 
   return (
     <>
@@ -229,7 +230,17 @@ export default function AboutPage() {
       <References />
 
       <h2 className="mt-14">10 · Citation</h2>
-      <Cite corpusId={c?.corpusId ?? null} year={2026} />
+      {site ? (
+        <Cite
+          corpusId={c?.corpusId ?? null}
+          year={site.first_published_year}
+          url={site.canonical_url}
+          publisher={site.publisher}
+          author={site.author}
+          provisional={site.url_status === "provisional"}
+          urlNote={site.url_note}
+        />
+      ) : null}
 
       <h2 className="mt-14">11 · Author and links</h2>
       <Prose>
@@ -243,13 +254,12 @@ export default function AboutPage() {
         </p>
       </Prose>
       <ul className="link-cards mt-5">
-        {[
-          { href: LINKS.linkedin, label: "LinkedIn", sub: "linkedin.com/in/codelinechef", icon: <LinkedInIcon /> },
-          { href: LINKS.website, label: "Website", sub: "anantsharma.co.in", icon: <GlobeIcon /> },
-        ].map((l) => (
+        {(site?.author_links ?? []).map((l) => (
           <li key={l.href}>
             <a href={l.href} target="_blank" rel="noopener noreferrer" className="link-card">
-              <span className="link-card-icon" aria-hidden="true">{l.icon}</span>
+              <span className="link-card-icon" aria-hidden="true">
+                {l.icon === "linkedin" ? <LinkedInIcon /> : <GlobeIcon />}
+              </span>
               <span>
                 <span className="link-card-label">{l.label}</span>
                 <span className="link-card-sub">{l.sub}</span>

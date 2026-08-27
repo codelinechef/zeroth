@@ -70,6 +70,22 @@ export const RUBRIC: { grade: number; meaning: string }[] = [
   { grade: 0, meaning: "not relevant" },
 ];
 
+/** Internal contradictions, written by harness/eval/consistency.py. */
+export type Consistency = {
+  generated_by: { script: string; regenerate: string; commit: string; at: string };
+  issues: { kind: string; where: string; detail: string }[];
+};
+
+export function getConsistency(): Consistency | null {
+  const p = path.join(process.cwd(), "..", "..", "content", "golden", "consistency.json");
+  if (!fs.existsSync(p)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(p, "utf8")) as Consistency;
+  } catch {
+    return null;
+  }
+}
+
 export type GoldenSummary = {
   queries: number;
   judgments: number;

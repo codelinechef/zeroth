@@ -1,11 +1,15 @@
 /**
- * Outbound links, defined once.
+ * Outbound author links.
  *
- * The repository and GitHub profile links were removed from the About page and
- * the footer at the author's request. The URLs are deliberately NOT kept here
- * as dead constants — an unused export invites someone to wire it back in.
+ * The URLs themselves live in content/site.json, not here. scripts/check-refs
+ * fails the build on a URL authored inside a component or lib module — a
+ * hardcoded address once shipped a domain that had never been registered, and
+ * the rule that prevents a repeat is that code renders URLs but never writes
+ * them.
  */
-export const LINKS = {
-  linkedin: "https://www.linkedin.com/in/codelinechef/",
-  website: "https://anantsharma.co.in/",
-} as const;
+export type AuthorLink = {
+  label: string;
+  sub: string;
+  href: string;
+  icon: "linkedin" | "globe";
+};

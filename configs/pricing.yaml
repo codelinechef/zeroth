@@ -1,0 +1,27 @@
+# Token rates, USD per 1,000,000 tokens.
+#
+# Local models are 0.00 and that is stated rather than hidden. It is a real
+# property of the configuration: a run on a local generator is not comparable
+# on cost with a hosted one, and a blank or omitted figure would let a reader
+# assume otherwise.
+#
+# Hosted rates must be dated, because they change. A cost figure computed from
+# an undated rate cannot be reproduced.
+
+providers:
+  vllm:
+    # Runs on the local RTX 5060. No per-token charge; the cost is electricity
+    # and the card, neither of which is a token rate.
+    input_per_million: 0.00
+    output_per_million: 0.00
+    local: true
+    note: "Local vLLM. Zero marginal token cost, stated openly."
+
+  ollama:
+    input_per_million: 0.00
+    output_per_million: 0.00
+    local: true
+    note: "Local Ollama. Zero marginal token cost."
+
+# Hosted providers are listed only when a variant actually uses one. An unused
+# rate in this file is a number nobody has checked.

@@ -1,0 +1,39 @@
+{
+  "describes": "Internal contradictions in the golden set, found by harness/eval/consistency.py.",
+  "generated_by": {
+    "script": "harness/eval/consistency.py",
+    "regenerate": "python3 harness/eval/consistency.py --json content/golden/consistency.json",
+    "commit": "74cbff4",
+    "at": "2026-08-26T21:40:14Z"
+  },
+  "source": {
+    "queries": 12
+  },
+  "issues": [
+    {
+      "kind": "unanswerable query has relevant chunks",
+      "where": "unanswerable-000",
+      "detail": "8 chunk(s) graded >= 2 (['HUMAN']). A chunk that answers the question contradicts answerable=false \u2014 one of the two is wrong."
+    },
+    {
+      "kind": "declared source graded irrelevant",
+      "where": "cross-document-000",
+      "detail": "1 of 3 source chunk(s) the query itself names as its answer are graded below 2."
+    },
+    {
+      "kind": "declared source graded irrelevant",
+      "where": "multi-chunk-000",
+      "detail": "3 of 4 source chunk(s) the query itself names as its answer are graded below 2."
+    },
+    {
+      "kind": "declared source graded irrelevant",
+      "where": "tenant-scoped-000",
+      "detail": "2 of 3 source chunk(s) the query itself names as its answer are graded below 2."
+    },
+    {
+      "kind": "queries with no judgments",
+      "where": "single-chunk-001, single-chunk-002, single-chunk-003, single-chunk-004, single-chunk-005, single-chunk-006, single-chunk-007",
+      "detail": "7 of 12 queries have no relevance judgments and cannot contribute to any metric."
+    }
+  ]
+}

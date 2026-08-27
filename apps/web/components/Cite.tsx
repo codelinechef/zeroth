@@ -13,27 +13,37 @@ import { useState } from "react";
  * The year and access date are read at render time on the server, so the
  * committed corpus id is the only thing that has to be passed in.
  */
-export function Cite({ corpusId, year }: { corpusId: string | null; year: number }) {
+export function Cite({
+  corpusId, year, url, publisher, author, provisional, urlNote,
+}: {
+  corpusId: string | null;
+  year: number;
+  /** From content/site.json — never hardcoded here. */
+  url: string;
+  publisher: string;
+  author: string;
+  provisional: boolean;
+  urlNote: string;
+}) {
   const [copied, setCopied] = useState<"bibtex" | "text" | null>(null);
-
-  const url = "https://zeroth.nthlabs.dev";
   const accessed = new Date().toISOString().slice(0, 10);
   const note = corpusId ? `Corpus ${corpusId}` : "Corpus not yet ingested";
 
+  const key = author.split(",")[0].trim().toLowerCase().replace(/[^a-z]/g, "");
   const bibtex = [
-    "@misc{sharma_zeroth_" + year + ",",
-    "  author       = {Sharma, Anant},",
+    "@misc{" + key + "_zeroth_" + year + ",",
+    "  author       = {" + author + "},",
     "  title        = {Zeroth: a reproducible benchmark of end-to-end RAG pipeline quality},",
     "  year         = {" + year + "},",
     "  howpublished = {\\url{" + url + "}},",
     "  note         = {" + note + ". Accessed " + accessed + "},",
-    "  organization = {NthLabs}",
+    "  organization = {" + publisher + "}",
     "}",
   ].join("\n");
 
   const plain =
-    `Sharma, A. (${year}). Zeroth: a reproducible benchmark of end-to-end RAG ` +
-    `pipeline quality. NthLabs. ${note}. Retrieved ${accessed}, from ${url}`;
+    `${author} (${year}). Zeroth: a reproducible benchmark of end-to-end RAG ` +
+    `pipeline quality. ${publisher}. ${note}. Retrieved ${accessed}, from ${url}`;
 
   const copy = async (what: "bibtex" | "text", value: string) => {
     try {
@@ -63,6 +73,11 @@ export function Cite({ corpusId, year }: { corpusId: string | null; year: number
         The corpus id is part of the citation on purpose: every number here is a
         property of that corpus and does not transfer to another one.
       </p>
+      {provisional ? (
+        <p className="cite-provisional mono">
+          Provisional address. {urlNote}
+        </p>
+      ) : null}
     </div>
   );
 }
