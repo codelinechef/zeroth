@@ -7,10 +7,13 @@ import { InProgress } from "@/components/InProgress";
 import { Metric } from "@/components/Metric";
 import { NthLabs, Zeroth } from "@/components/Wordmark";
 import { MarkRanked } from "@/components/Logo";
+import Link from "next/link";
 import { Abbr } from "@/components/Abbr";
+import { getFindings } from "@/lib/findings";
 
 export default function BoardPage() {
   const runs = getRuns();
+  const findings = getFindings();
 
   return (
     <>
@@ -94,6 +97,35 @@ export default function BoardPage() {
       <Figure n={7} caption="Corpus composition, read from the committed manifest rather than hardcoded.">
         <div className="p-4"><CorpusComposition /></div>
       </Figure>
+
+      {/* The one measured result, surfaced on the board rather than left in a
+          walkthrough. It is not a quality metric — it is measured against
+          exact search — so it sits above the empty results table rather than
+          inside it, and says which kind of number it is. */}
+      {findings ? (
+        <Prose className="mt-14">
+          <h2>What has been measured</h2>
+          <p>
+            One result exists. Enforcing access control inside an approximate
+            retrieval query costs recall in proportion to how restrictive the
+            role is: at the default search width a role seeing all{" "}
+            {findings.roles.all_tenants?.tenants_total} tenants recalls{" "}
+            {findings.roles.all_tenants?.recall_at_10.toFixed(3)} of what exact
+            search returns, and a single-tenant role recalls{" "}
+            {findings.roles.single_tenant?.recall_at_10.toFixed(3)} — returning
+            nothing at all for{" "}
+            {findings.roles.single_tenant?.empty_results} of{" "}
+            {findings.roles.single_tenant?.queries} queries that exact search
+            answers under the same policy.
+          </p>
+          <p>
+            It needs no relevance judgments, because exact search is its own
+            ground truth. That is why it is published and the quality metrics
+            below are not. <Link href="/findings/">Read the finding in full</Link>,
+            including the earlier measurement it contradicts.
+          </p>
+        </Prose>
+      ) : null}
 
       <Bleed className="mt-14">
         <h2 className="mb-4">Results</h2>

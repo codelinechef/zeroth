@@ -1265,3 +1265,25 @@ svg:has(.fig-hot.is-active) .fig-hot:not(.is-active) { opacity: 0.45; }
   padding-left: 0.75rem;
   margin: 0.7rem 0 0;
 }
+
+/* ===========================================================================
+   Findings — recall by role
+   =========================================================================== */
+
+/* An inline rule under each recall figure, scaled to its share of the
+   unrestricted baseline. Not a chart: it sits inside the number's own cell so
+   the comparison costs no extra column, and it is aria-hidden because the
+   figure beside it already says the same thing precisely. */
+.recall-bar {
+  display: block;
+  height: 2px;
+  width: 100%;
+  max-width: 9rem;
+  background: var(--rule);
+  margin-top: 0.35rem;
+}
+.recall-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+}

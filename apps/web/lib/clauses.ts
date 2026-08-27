@@ -13,6 +13,7 @@ export type Clause = { num: string; title: string; href: string };
 
 const ORDER: { title: string; href: string }[] = [
   { title: "Board", href: "/" },
+  { title: "Findings", href: "/findings" },
   { title: "Methodology", href: "/methodology" },
   { title: "Corpus", href: "/corpus" },
   { title: "Golden set", href: "/golden-set" },
