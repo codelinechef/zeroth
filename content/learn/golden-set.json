@@ -1,75 +1,75 @@
 {
- "id": "golden-set",
- "title": "Golden sets and graded relevance",
- "category": "Evaluation",
- "summary": "The labelled query set a retrieval system is scored against, and the grades that define what counts as a correct result.",
- "what": "A golden set pairs queries with judgments: for each query, which passages are relevant and how relevant, usually on a 0-3 scale.",
- "why": "Every retrieval metric is a function of these grades. If the grades are wrong, the metrics are wrong in a way no amount of engineering downstream can detect.",
- "how": "Queries are drafted across categories, candidates are pooled with a lexical retriever, and each candidate is graded. A stratified sample is then re-graded by a human and the agreement rate published.",
- "in_this_project": "Targets 200 queries across five categories: single-chunk factual, multi-chunk synthesis, cross-document, tenant-scoped, and genuinely unanswerable. Candidates are pooled 50 per query by BM25, with the passages a query was drafted from always included so a known positive is always in the pool. The set is model-drafted and only partially human-verified, and is described that way rather than as hand-labelled.",
- "sections": [],
- "formula": null,
- "table": {
-  "headers": [
-   "Grade",
-   "Meaning"
+  "id": "golden-set",
+  "title": "Golden sets and graded relevance",
+  "category": "Evaluation",
+  "summary": "The labelled query set a retrieval system is scored against, and the grades that define what counts as a correct result.",
+  "what": "A golden set pairs queries with judgments: for each query, which passages are relevant and how relevant, usually on a 0-3 scale.",
+  "why": "Every retrieval metric is a function of these grades. If the grades are wrong, the metrics are wrong in a way no amount of engineering downstream can detect.",
+  "how": "Queries are drafted across categories, candidates are pooled with a lexical retriever, and each candidate is graded. A stratified sample is then re-graded by a human and the agreement rate published.",
+  "in_this_project": "Targets 200 queries across five categories: single-chunk factual, multi-chunk synthesis, cross-document, tenant-scoped, and genuinely unanswerable. Candidates are pooled 50 per query by BM25, with the passages a query was drafted from always included so a known positive is always in the pool. The set is model-drafted and only partially human-verified, and is described that way rather than as hand-labelled.",
+  "sections": [],
+  "formula": null,
+  "table": {
+    "headers": [
+      "Grade",
+      "Meaning"
+    ],
+    "rows": [
+      [
+        "3",
+        "fully answers the question on its own"
+      ],
+      [
+        "2",
+        "contains a substantial part of the answer"
+      ],
+      [
+        "1",
+        "related context, does not contain the answer"
+      ],
+      [
+        "0",
+        "not relevant"
+      ]
+    ]
+  },
+  "diagram": null,
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "Makes retrieval quality measurable at all",
+      "Graded relevance supports NDCG, not just hit-or-miss"
+    ],
+    "limitations": [
+      "Expensive to build",
+      "Grades encode one person's judgement",
+      "Pooling can miss relevant passages no retriever surfaced"
+    ]
+  },
+  "pitfalls": [
+    "Describing a model-drafted set as hand-labelled",
+    "Publishing an agreement rate from a sample that does not discriminate"
   ],
-  "rows": [
-   [
-    "3",
-    "fully answers the question on its own"
-   ],
-   [
-    "2",
-    "contains a substantial part of the answer"
-   ],
-   [
-    "1",
-    "related context, does not contain the answer"
-   ],
-   [
-    "0",
-    "not relevant"
-   ]
+  "when": {
+    "use": [
+      "Any retrieval system you intend to make claims about"
+    ],
+    "avoid": []
+  },
+  "interacts_with": [
+    "llm-judge",
+    "recall",
+    "ndcg",
+    "abstention"
+  ],
+  "code": {
+    "file": "generate.py",
+    "symbol": "stage_judge"
+  },
+  "related": [
+    "llm-judge",
+    "recall",
+    "ndcg"
   ]
- },
- "diagram": null,
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "Makes retrieval quality measurable at all",
-   "Graded relevance supports NDCG, not just hit-or-miss"
-  ],
-  "limitations": [
-   "Expensive to build",
-   "Grades encode one person's judgement",
-   "Pooling can miss relevant passages no retriever surfaced"
-  ]
- },
- "pitfalls": [
-  "Describing a model-drafted set as hand-labelled",
-  "Publishing an agreement rate from a sample that does not discriminate"
- ],
- "when": {
-  "use": [
-   "Any retrieval system you intend to make claims about"
-  ],
-  "avoid": []
- },
- "interacts_with": [
-  "llm-judge",
-  "recall",
-  "ndcg",
-  "abstention"
- ],
- "code": {
-  "file": "harness/golden/generate.py",
-  "symbol": "stage_judge"
- },
- "related": [
-  "llm-judge",
-  "recall",
-  "ndcg"
- ]
 }

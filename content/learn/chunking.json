@@ -1,90 +1,90 @@
 {
- "id": "chunking",
- "title": "Chunking strategies",
- "category": "Data",
- "summary": "Splitting documents into passages small enough to embed and retrieve, without destroying the structure that makes them meaningful.",
- "what": "A 200-page filing cannot be one vector. It is split into passages \u2014 here targeting 512 tokens \u2014 each embedded and indexed independently.",
- "why": "Chunking decides what is findable. A fact split across two chunks may be retrievable from neither. This is a real design decision, not a parameter.",
- "how": "Fixed-token windows slide through the token stream with overlap so a fact near a boundary appears whole in at least one chunk. Section-aware packing instead respects document structure and never lets a chunk span two sections.",
- "in_this_project": "Both strategies are implemented behind one interface and run over the same corpus: 51,310 fixed-512 chunks and 59,579 section-aware. Page and section provenance is preserved through both, which is what lets a citation resolve to a location a reader can check.",
- "sections": [
-  {
-   "heading": "A correction to a common claim",
-   "body": "Section-aware chunking is often described as avoiding cuts mid-sentence. Measured here, it does not: it splits long sections internally using the same overlap, so it starts mid-sentence about as often as fixed windows do. What it actually guarantees is that no chunk spans two sections. Measured over one document per source, fixed-512 produced 4, 17 and 32 chunks crossing a section boundary; section-aware produced zero in every case, by construction."
+  "id": "chunking",
+  "title": "Chunking strategies",
+  "category": "Data",
+  "summary": "Splitting documents into passages small enough to embed and retrieve, without destroying the structure that makes them meaningful.",
+  "what": "A 200-page filing cannot be one vector. It is split into passages \u2014 here targeting 512 tokens \u2014 each embedded and indexed independently.",
+  "why": "Chunking decides what is findable. A fact split across two chunks may be retrievable from neither. This is a real design decision, not a parameter.",
+  "how": "Fixed-token windows slide through the token stream with overlap so a fact near a boundary appears whole in at least one chunk. Section-aware packing instead respects document structure and never lets a chunk span two sections.",
+  "in_this_project": "Both strategies are implemented behind one interface and run over the same corpus: 51,310 fixed-512 chunks and 59,579 section-aware. Page and section provenance is preserved through both, which is what lets a citation resolve to a location a reader can check.",
+  "sections": [
+    {
+      "heading": "A correction to a common claim",
+      "body": "Section-aware chunking is often described as avoiding cuts mid-sentence. Measured here, it does not: it splits long sections internally using the same overlap, so it starts mid-sentence about as often as fixed windows do. What it actually guarantees is that no chunk spans two sections. Measured over one document per source, fixed-512 produced 4, 17 and 32 chunks crossing a section boundary; section-aware produced zero in every case, by construction."
+    },
+    {
+      "heading": "Why the overlap exists",
+      "body": "15% overlap means roughly 77 tokens repeat between consecutive chunks. Without it, a sentence spanning a boundary is truncated in both chunks and retrievable from neither. The cost is index size and some duplicate results."
+    }
+  ],
+  "formula": null,
+  "table": {
+    "headers": [
+      "Document",
+      "fixed-512 chunks",
+      "crossing a section",
+      "section-aware chunks",
+      "crossing"
+    ],
+    "rows": [
+      [
+        "10-K filing",
+        "277",
+        "17",
+        "285",
+        "0"
+      ],
+      [
+        "Contract",
+        "16",
+        "4",
+        "17",
+        "0"
+      ],
+      [
+        "RFC",
+        "48",
+        "32",
+        "94",
+        "0"
+      ]
+    ]
   },
-  {
-   "heading": "Why the overlap exists",
-   "body": "15% overlap means roughly 77 tokens repeat between consecutive chunks. Without it, a sentence spanning a boundary is truncated in both chunks and retrievable from neither. The cost is index size and some duplicate results."
-  }
- ],
- "formula": null,
- "table": {
-  "headers": [
-   "Document",
-   "fixed-512 chunks",
-   "crossing a section",
-   "section-aware chunks",
-   "crossing"
+  "diagram": null,
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "Fixed: predictable size, simple, model-friendly",
+      "Section-aware: never splits a clause across chunks"
+    ],
+    "limitations": [
+      "Fixed: cuts through structure blindly",
+      "Section-aware: highly variable chunk sizes; more chunks on densely sectioned documents"
+    ]
+  },
+  "pitfalls": [
+    "Chunking before parsing structure, losing page and section provenance",
+    "Assuming section-aware prevents mid-sentence starts"
   ],
-  "rows": [
-   [
-    "10-K filing",
-    "277",
-    "17",
-    "285",
-    "0"
-   ],
-   [
-    "Contract",
-    "16",
-    "4",
-    "17",
-    "0"
-   ],
-   [
-    "RFC",
-    "48",
-    "32",
-    "94",
-    "0"
-   ]
+  "when": {
+    "use": [
+      "Fixed: uniform prose",
+      "Section-aware: contracts, standards, anything clause-structured"
+    ],
+    "avoid": []
+  },
+  "interacts_with": [
+    "embeddings",
+    "provenance",
+    "rag"
+  ],
+  "code": {
+    "file": "parse.py",
+    "symbol": "Chunker"
+  },
+  "related": [
+    "embeddings",
+    "provenance"
   ]
- },
- "diagram": null,
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "Fixed: predictable size, simple, model-friendly",
-   "Section-aware: never splits a clause across chunks"
-  ],
-  "limitations": [
-   "Fixed: cuts through structure blindly",
-   "Section-aware: highly variable chunk sizes; more chunks on densely sectioned documents"
-  ]
- },
- "pitfalls": [
-  "Chunking before parsing structure, losing page and section provenance",
-  "Assuming section-aware prevents mid-sentence starts"
- ],
- "when": {
-  "use": [
-   "Fixed: uniform prose",
-   "Section-aware: contracts, standards, anything clause-structured"
-  ],
-  "avoid": []
- },
- "interacts_with": [
-  "embeddings",
-  "provenance",
-  "rag"
- ],
- "code": {
-  "file": "harness/corpus/parse.py",
-  "symbol": "Chunker"
- },
- "related": [
-  "embeddings",
-  "provenance"
- ]
 }

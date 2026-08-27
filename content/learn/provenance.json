@@ -1,49 +1,49 @@
 {
- "id": "provenance",
- "title": "Provenance and reproducibility",
- "category": "Data",
- "summary": "Recording where every document and every number came from, so a stranger can verify a claim without trusting the person making it.",
- "what": "Provenance is the chain from a published figure back to the raw input that produced it: source URL, checksum, script, commit.",
- "why": "A benchmark nobody can re-run is a marketing claim. The corpus is also too large to redistribute, so the manifest has to stand in for the data.",
- "how": "Each document records source, identifier, URL, checksum, page count, tenant and licence. Each derived dataset records the script that produced it and the command that regenerates it.",
- "in_this_project": "corpus_manifest.json is committed; the 719 MB of raw documents are not. Replay the URL, verify the checksum. Every precomputed interactive dataset carries describes, generated_by.script, generated_by.regenerate and generated_by.commit \u2014 23 of 23 datasets verified as carrying full provenance. Page counts distinguish real page breaks from estimated ones, because a synthesised number presented as measured is a fabrication regardless of intent.",
- "sections": [],
- "formula": null,
- "table": null,
- "diagram": null,
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "Claims are checkable independently",
-   "Large corpora need not be redistributed",
-   "Attribution and licensing are recorded per document"
+  "id": "provenance",
+  "title": "Provenance and reproducibility",
+  "category": "Data",
+  "summary": "Recording where every document and every number came from, so a stranger can verify a claim without trusting the person making it.",
+  "what": "Provenance is the chain from a published figure back to the raw input that produced it: source URL, checksum, script, commit.",
+  "why": "A benchmark nobody can re-run is a marketing claim. The corpus is also too large to redistribute, so the manifest has to stand in for the data.",
+  "how": "Each document records source, identifier, URL, checksum, page count, tenant and licence. Each derived dataset records the script that produced it and the command that regenerates it.",
+  "in_this_project": "corpus_manifest.json is committed; the 719 MB of raw documents are not. Replay the URL, verify the checksum. Every precomputed interactive dataset carries describes, generated_by.script, generated_by.regenerate and generated_by.commit \u2014 23 of 23 datasets verified as carrying full provenance. Page counts distinguish real page breaks from estimated ones, because a synthesised number presented as measured is a fabrication regardless of intent.",
+  "sections": [],
+  "formula": null,
+  "table": null,
+  "diagram": null,
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "Claims are checkable independently",
+      "Large corpora need not be redistributed",
+      "Attribution and licensing are recorded per document"
+    ],
+    "limitations": [
+      "Sources can disappear or change",
+      "Checksums pin bytes, not meaning"
+    ]
+  },
+  "pitfalls": [
+    "Committing derived data without the script that made it",
+    "Prose quoting figures that drift from the data beside it"
   ],
-  "limitations": [
-   "Sources can disappear or change",
-   "Checksums pin bytes, not meaning"
+  "when": {
+    "use": [
+      "Any published measurement"
+    ],
+    "avoid": []
+  },
+  "interacts_with": [
+    "deduplication",
+    "corpus-acquisition"
+  ],
+  "code": {
+    "file": "_provenance.py",
+    "symbol": "write"
+  },
+  "related": [
+    "deduplication",
+    "corpus-acquisition"
   ]
- },
- "pitfalls": [
-  "Committing derived data without the script that made it",
-  "Prose quoting figures that drift from the data beside it"
- ],
- "when": {
-  "use": [
-   "Any published measurement"
-  ],
-  "avoid": []
- },
- "interacts_with": [
-  "deduplication",
-  "corpus-acquisition"
- ],
- "code": {
-  "file": "harness/interactive/_provenance.py",
-  "symbol": "write"
- },
- "related": [
-  "deduplication",
-  "corpus-acquisition"
- ]
 }

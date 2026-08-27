@@ -181,8 +181,7 @@ export default function FindingsPage() {
         <p className="mono text-[length:var(--t-75)] text-ink-muted">
           Index: {f.index.type} m={f.index.m}, ef_construction=
           {f.index.ef_construction}, built in {f.index.build_seconds}s ·
-          top-k {f.k} · roles measured as {f.measured_as} ·
-          regenerate with <code>python3 {f.code}</code>
+          top-k {f.k} · roles measured as {f.measured_as}
         </p>
       </Prose>
     </>

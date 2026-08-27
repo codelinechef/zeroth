@@ -1,79 +1,79 @@
 {
- "id": "bm25",
- "title": "BM25 and lexical search",
- "category": "Retrieval",
- "summary": "A ranking function that scores documents by term overlap with the query, weighted by how rare each term is and normalised for document length.",
- "what": "BM25 scores a passage by how often the query's terms appear in it, discounting terms that appear everywhere and correcting for the fact that longer passages contain more of everything by chance.",
- "why": "Exact terms matter. Identifiers, statute numbers, defined contract terms and product names must match literally, and an embedding model will happily rank a paraphrase above the exact string you asked for.",
- "how": "Each term contributes idf x saturated term frequency. The saturation means the tenth occurrence of a word adds far less than the second, and the length normalisation prevents long documents winning on volume alone.",
- "in_this_project": "Implemented by hand in harness/golden/bm25.py rather than pulled from a library, because it is used to pool judgment candidates for the golden set and that scoring has to be auditable. Postings are stored in array('i') rather than lists of tuples: 51,310 chunks produce roughly 15 million postings, and the tuple form costs gigabytes of object overhead for no benefit. Index build takes about 5 seconds.",
- "sections": [],
- "formula": {
-  "notation": "score(q,d) = sum over terms t in q of\n  idf(t) * ( tf(t,d) * (k1+1) ) / ( tf(t,d) + k1 * (1 - b + b * |d|/avgdl) )\n\nidf(t) = log( 1 + (N - df(t) + 0.5) / (df(t) + 0.5) )",
-  "terms": [
-   {
-    "symbol": "tf(t,d)",
-    "meaning": "how often term t appears in passage d"
-   },
-   {
-    "symbol": "df(t)",
-    "meaning": "how many passages contain t at all"
-   },
-   {
-    "symbol": "|d| / avgdl",
-    "meaning": "this passage's length against the average"
-   },
-   {
-    "symbol": "k1 = 1.5",
-    "meaning": "term-frequency saturation; higher means repetition keeps counting"
-   },
-   {
-    "symbol": "b = 0.75",
-    "meaning": "length normalisation strength; 0 disables it entirely"
-   }
-  ]
- },
- "table": null,
- "diagram": null,
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "No training, no model, no GPU",
-   "Exact identifiers and rare terms rank correctly",
-   "Scores are explainable term by term"
+  "id": "bm25",
+  "title": "BM25 and lexical search",
+  "category": "Retrieval",
+  "summary": "A ranking function that scores documents by term overlap with the query, weighted by how rare each term is and normalised for document length.",
+  "what": "BM25 scores a passage by how often the query's terms appear in it, discounting terms that appear everywhere and correcting for the fact that longer passages contain more of everything by chance.",
+  "why": "Exact terms matter. Identifiers, statute numbers, defined contract terms and product names must match literally, and an embedding model will happily rank a paraphrase above the exact string you asked for.",
+  "how": "Each term contributes idf x saturated term frequency. The saturation means the tenth occurrence of a word adds far less than the second, and the length normalisation prevents long documents winning on volume alone.",
+  "in_this_project": "Implemented by hand rather than pulled from a library, because it is used to pool judgment candidates for the golden set and that scoring has to be auditable. Postings are stored in array('i') rather than lists of tuples: 51,310 chunks produce roughly 15 million postings, and the tuple form costs gigabytes of object overhead for no benefit. Index build takes about 5 seconds.",
+  "sections": [],
+  "formula": {
+    "notation": "score(q,d) = sum over terms t in q of\n  idf(t) * ( tf(t,d) * (k1+1) ) / ( tf(t,d) + k1 * (1 - b + b * |d|/avgdl) )\n\nidf(t) = log( 1 + (N - df(t) + 0.5) / (df(t) + 0.5) )",
+    "terms": [
+      {
+        "symbol": "tf(t,d)",
+        "meaning": "how often term t appears in passage d"
+      },
+      {
+        "symbol": "df(t)",
+        "meaning": "how many passages contain t at all"
+      },
+      {
+        "symbol": "|d| / avgdl",
+        "meaning": "this passage's length against the average"
+      },
+      {
+        "symbol": "k1 = 1.5",
+        "meaning": "term-frequency saturation; higher means repetition keeps counting"
+      },
+      {
+        "symbol": "b = 0.75",
+        "meaning": "length normalisation strength; 0 disables it entirely"
+      }
+    ]
+  },
+  "table": null,
+  "diagram": null,
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "No training, no model, no GPU",
+      "Exact identifiers and rare terms rank correctly",
+      "Scores are explainable term by term"
+    ],
+    "limitations": [
+      "No notion of meaning: a paraphrase scores zero",
+      "Vocabulary mismatch between query and document is fatal",
+      "Stopword and tokenisation choices quietly change results"
+    ]
+  },
+  "pitfalls": [
+    "Comparing BM25 scores across queries \u2014 they are not calibrated and have no fixed range",
+    "Assuming a high score means relevance rather than term overlap"
   ],
-  "limitations": [
-   "No notion of meaning: a paraphrase scores zero",
-   "Vocabulary mismatch between query and document is fatal",
-   "Stopword and tokenisation choices quietly change results"
-  ]
- },
- "pitfalls": [
-  "Comparing BM25 scores across queries \u2014 they are not calibrated and have no fixed range",
-  "Assuming a high score means relevance rather than term overlap"
- ],
- "when": {
-  "use": [
-   "Identifiers, codes, names and defined terms",
-   "As one half of a hybrid retriever"
+  "when": {
+    "use": [
+      "Identifiers, codes, names and defined terms",
+      "As one half of a hybrid retriever"
+    ],
+    "avoid": [
+      "Alone, when users ask in their own words"
+    ]
+  },
+  "interacts_with": [
+    "rrf",
+    "hybrid-retrieval",
+    "embeddings"
   ],
-  "avoid": [
-   "Alone, when users ask in their own words"
+  "code": {
+    "file": "bm25.py",
+    "symbol": "BM25.search"
+  },
+  "related": [
+    "embeddings",
+    "rrf",
+    "hybrid-retrieval"
   ]
- },
- "interacts_with": [
-  "rrf",
-  "hybrid-retrieval",
-  "embeddings"
- ],
- "code": {
-  "file": "harness/golden/bm25.py",
-  "symbol": "BM25.search"
- },
- "related": [
-  "embeddings",
-  "rrf",
-  "hybrid-retrieval"
- ]
 }

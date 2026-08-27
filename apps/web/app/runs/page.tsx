@@ -27,7 +27,7 @@ export default function RunsPage() {
       </Prose>
       <div className="mt-8">
         {runs.length === 0 ? (
-          <InProgress phase={5} blockedBy="the evaluation harness (Phase 4)">
+          <InProgress phase={5} blockedBy="relevance judgments for the query set">
             Nine runs with per-query drill-down, raw JSON download, and the
             exact command to reproduce each one.
           </InProgress>

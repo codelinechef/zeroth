@@ -1,66 +1,66 @@
 {
- "id": "rrf",
- "title": "Reciprocal Rank Fusion",
- "category": "Retrieval",
- "summary": "Merging ranked lists using each item's rank position rather than its score, so incomparable scoring scales never have to be reconciled.",
- "what": "Each list contributes 1/(k + rank) for every item it ranks. Contributions are summed, and the total orders the fused list.",
- "why": "This is the step most people get wrong. BM25 scores are unbounded and query-dependent; cosine similarities sit in a narrow band near 1. Normalising them to a common scale requires assumptions that are wrong in different ways for every query. Rank sidesteps the problem entirely \u2014 rank 3 means rank 3 in any scale.",
- "how": "The constant k (60 here, the value from the original paper) damps the influence of the very top ranks. Without it, a single first place would dominate everything. With it, appearing in both lists at middling rank beats appearing first in one and nowhere in the other.",
- "in_this_project": "Implemented in harness/interactive/retrieval.py and shown in the walkthrough: expanding a fused result reveals its actual arithmetic, for example lexical 1/(60+3) plus dense 1/(60+11) equals 0.029968. The reader watches ranks combine rather than reading the formula.",
- "sections": [],
- "formula": {
-  "notation": "RRF(d) = sum over lists L of  1 / (k + rank_L(d))\n\nk = 60\n\nA passage at rank 1 in one list only:   1/61          = 0.016393\nA passage at rank 5 in both lists:      2 * 1/65      = 0.030769",
-  "terms": [
-   {
-    "symbol": "rank_L(d)",
-    "meaning": "1-indexed position of d in list L; absent means no contribution"
-   },
-   {
-    "symbol": "k = 60",
-    "meaning": "damping constant from the original paper; larger flattens the top ranks further"
-   }
-  ]
- },
- "table": null,
- "diagram": null,
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "No score normalisation, no calibration",
-   "Robust when one retriever misbehaves",
-   "Rewards agreement across retrievers"
+  "id": "rrf",
+  "title": "Reciprocal Rank Fusion",
+  "category": "Retrieval",
+  "summary": "Merging ranked lists using each item's rank position rather than its score, so incomparable scoring scales never have to be reconciled.",
+  "what": "Each list contributes 1/(k + rank) for every item it ranks. Contributions are summed, and the total orders the fused list.",
+  "why": "This is the step most people get wrong. BM25 scores are unbounded and query-dependent; cosine similarities sit in a narrow band near 1. Normalising them to a common scale requires assumptions that are wrong in different ways for every query. Rank sidesteps the problem entirely \u2014 rank 3 means rank 3 in any scale.",
+  "how": "The constant k (60 here, the value from the original paper) damps the influence of the very top ranks. Without it, a single first place would dominate everything. With it, appearing in both lists at middling rank beats appearing first in one and nowhere in the other.",
+  "in_this_project": "Shown in the walkthrough: expanding a fused result reveals its actual arithmetic, for example lexical 1/(60+3) plus dense 1/(60+11) equals 0.029968. The reader watches ranks combine rather than reading the formula.",
+  "sections": [],
+  "formula": {
+    "notation": "RRF(d) = sum over lists L of  1 / (k + rank_L(d))\n\nk = 60\n\nA passage at rank 1 in one list only:   1/61          = 0.016393\nA passage at rank 5 in both lists:      2 * 1/65      = 0.030769",
+    "terms": [
+      {
+        "symbol": "rank_L(d)",
+        "meaning": "1-indexed position of d in list L; absent means no contribution"
+      },
+      {
+        "symbol": "k = 60",
+        "meaning": "damping constant from the original paper; larger flattens the top ranks further"
+      }
+    ]
+  },
+  "table": null,
+  "diagram": null,
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "No score normalisation, no calibration",
+      "Robust when one retriever misbehaves",
+      "Rewards agreement across retrievers"
+    ],
+    "limitations": [
+      "Discards score magnitude, including confidence",
+      "k is a tuned constant with no principled derivation",
+      "Cannot express that one retriever is more trustworthy"
+    ]
+  },
+  "pitfalls": [
+    "Using 0 for a missing rank instead of no contribution",
+    "Tuning k per query, which overfits immediately"
   ],
-  "limitations": [
-   "Discards score magnitude, including confidence",
-   "k is a tuned constant with no principled derivation",
-   "Cannot express that one retriever is more trustworthy"
-  ]
- },
- "pitfalls": [
-  "Using 0 for a missing rank instead of no contribution",
-  "Tuning k per query, which overfits immediately"
- ],
- "when": {
-  "use": [
-   "Merging retrievers whose scores are not comparable"
+  "when": {
+    "use": [
+      "Merging retrievers whose scores are not comparable"
+    ],
+    "avoid": [
+      "When scores are genuinely calibrated and comparable"
+    ]
+  },
+  "interacts_with": [
+    "bm25",
+    "embeddings",
+    "hybrid-retrieval",
+    "reranking"
   ],
-  "avoid": [
-   "When scores are genuinely calibrated and comparable"
+  "code": {
+    "file": "retrieval.py",
+    "symbol": "main"
+  },
+  "related": [
+    "hybrid-retrieval",
+    "reranking"
   ]
- },
- "interacts_with": [
-  "bm25",
-  "embeddings",
-  "hybrid-retrieval",
-  "reranking"
- ],
- "code": {
-  "file": "harness/interactive/retrieval.py",
-  "symbol": "main"
- },
- "related": [
-  "hybrid-retrieval",
-  "reranking"
- ]
 }

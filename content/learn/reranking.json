@@ -6,7 +6,7 @@
   "what": "A bi-encoder embeds query and passage separately and compares vectors. A cross-encoder feeds both into one model at once, so every query token can attend to every passage token.",
   "why": "Separate encoding forces each passage into a single vector before it knows what was asked. A cross-encoder decides relevance with the question in hand, which is strictly more informative and measurably more accurate.",
   "how": "Too expensive to run over a whole corpus \u2014 it is one forward pass per query-passage pair. So it runs only over the shortlist retrieval already produced, typically the top 50, and reorders it.",
-  "in_this_project": "bge-reranker-base runs over the top 50 fused candidates in harness/interactive/retrieval.py. The walkthrough shows movement per result, so the reader can see how much reordering the reranker actually does and judge whether it earned its latency.",
+  "in_this_project": "bge-reranker-base runs over the top 50 fused candidates. The walkthrough shows movement per result, so the reader can see how much reordering the reranker actually does and judge whether it earned its latency.",
   "sections": [],
   "formula": null,
   "table": null,
@@ -51,7 +51,7 @@
     "hybrid-retrieval"
   ],
   "code": {
-    "file": "harness/interactive/retrieval.py",
+    "file": "retrieval.py",
     "symbol": "main"
   },
   "related": [

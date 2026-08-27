@@ -124,8 +124,12 @@ export function MetricPanels() {
 
               <section>
                 <h3 className="eyebrow">How this project computes it</h3>
+                {/* The function, not the path. A repository path describes a
+                    filesystem the reader does not have, and three of the paths
+                    this used to print named files that had never been written.
+                    The symbol is the part that identifies the implementation. */}
                 <p className="mono mt-1 text-[length:var(--t-75)]">
-                  {m.computed_by.file} · {m.computed_by.symbol}()
+                  {m.computed_by.symbol}()
                 </p>
                 <p className="mt-1 text-[length:var(--t-75)] text-ink-muted">
                   Arrives in Phase {m.computed_by.phase}.

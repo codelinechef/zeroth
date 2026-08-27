@@ -172,9 +172,8 @@ export default function GoldenSetPage() {
           </li>
           <li>
             <strong>An independent second opinion.</strong> Verification is not
-            blind — <span className="mono">harness/golden/verify.py</span> prints
-            the model&apos;s grade and its stated reason before asking for the
-            human&apos;s. Anchoring is possible in either direction, and a blind
+            blind — the verification tool prints the model&apos;s grade and its
+            stated reason before asking for the human&apos;s. Anchoring is possible in either direction, and a blind
             pass would be a stronger instrument.
           </li>
           <li>

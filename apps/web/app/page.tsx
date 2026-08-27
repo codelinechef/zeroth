@@ -129,8 +129,27 @@ export default function BoardPage() {
 
       <Bleed className="mt-14">
         <h2 className="mb-4">Results</h2>
+        {/* Say WHY the table is empty, in the reader's terms. "Phase 5" means
+            nothing to someone who has not read the plan, and an empty table
+            with no reason reads as abandonment rather than as a decision. */}
+        <Prose className="mb-6">
+          <p>
+            The evaluation harness is built and the security suite passes. What
+            is missing is relevance judgments: the query set has twelve
+            questions and only five carry graded candidates, because grading
+            the rest costs API quota the project has currently exhausted. Five
+            queries produce confidence intervals half a point wide, which is
+            not a result — so nothing is published here rather than published
+            with a caveat.
+          </p>
+          <p>
+            Completing the set is roughly two dollars of inference and half an
+            hour. It is the smallest blocker in the project and the reason this
+            table is empty.
+          </p>
+        </Prose>
         {runs.length === 0 ? (
-          <InProgress phase={5} blockedBy="the security suite (Phase 3) and the evaluation harness (Phase 4)">
+          <InProgress phase={5} blockedBy="relevance judgments for the query set">
             Nine configurations, each differing from the baseline by exactly one
             factor, so every difference is attributable to a single change.
           </InProgress>

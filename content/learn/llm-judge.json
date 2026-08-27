@@ -52,7 +52,7 @@
     "model-pinning"
   ],
   "code": {
-    "file": "harness/golden/generate.py",
+    "file": "generate.py",
     "symbol": "JUDGE_PROMPT"
   },
   "related": [

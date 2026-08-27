@@ -1,65 +1,65 @@
 {
- "id": "deduplication",
- "title": "Deduplication by containment",
- "category": "Data",
- "summary": "Detecting when one document is wholly contained inside another, which Jaccard similarity cannot do.",
- "what": "Containment measures the fraction of the smaller document's content that appears in the larger one.",
- "why": "An exhibit contract inside a 200-page filing is a complete subset of it, but Jaccard scores it near zero because the filing is far larger. Containment scores it 1.0.",
- "how": "Documents are reduced to overlapping word shingles. Containment is the fraction of the smaller document's shingles present in the larger.",
- "in_this_project": "Five-word shingles, hash-sampled at one in sixteen to keep the index for 140 MB of filing text in the low millions of entries rather than tens of millions. The sampling is uniform, so the estimate is unbiased. Validated with controls before its result was trusted: a contract embedded in a filing scored 1.0000, the same contract reformatted scored 1.0000, an unrelated contract scored 0.0045.",
- "sections": [],
- "formula": {
-  "notation": "containment(A, B) = |shingles(A)  n  shingles(B)| / |shingles(A)|\n\nwith A the smaller document.\n\nJaccard, for contrast:\n  J(A, B) = |A n B| / |A u B|\n\nFor a 20 KB contract inside a 400 KB filing, containment = 1.0 and Jaccard = 0.05.",
-  "terms": [
-   {
-    "symbol": "shingle",
-    "meaning": "a sliding window of 5 consecutive words"
-   },
-   {
-    "symbol": "1 in 16 sampling",
-    "meaning": "keep a shingle when its hash mod 16 is 0 \u2014 uniform, so unbiased"
-   },
-   {
-    "symbol": "threshold 0.80",
-    "meaning": "the containment above which a duplicate is declared"
-   }
-  ]
- },
- "table": null,
- "diagram": null,
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "Detects subset relationships Jaccard misses",
-   "Sampling makes it cheap at corpus scale",
-   "Survives reformatting"
+  "id": "deduplication",
+  "title": "Deduplication by containment",
+  "category": "Data",
+  "summary": "Detecting when one document is wholly contained inside another, which Jaccard similarity cannot do.",
+  "what": "Containment measures the fraction of the smaller document's content that appears in the larger one.",
+  "why": "An exhibit contract inside a 200-page filing is a complete subset of it, but Jaccard scores it near zero because the filing is far larger. Containment scores it 1.0.",
+  "how": "Documents are reduced to overlapping word shingles. Containment is the fraction of the smaller document's shingles present in the larger.",
+  "in_this_project": "Five-word shingles, hash-sampled at one in sixteen to keep the index for 140 MB of filing text in the low millions of entries rather than tens of millions. The sampling is uniform, so the estimate is unbiased. Validated with controls before its result was trusted: a contract embedded in a filing scored 1.0000, the same contract reformatted scored 1.0000, an unrelated contract scored 0.0045.",
+  "sections": [],
+  "formula": {
+    "notation": "containment(A, B) = |shingles(A)  n  shingles(B)| / |shingles(A)|\n\nwith A the smaller document.\n\nJaccard, for contrast:\n  J(A, B) = |A n B| / |A u B|\n\nFor a 20 KB contract inside a 400 KB filing, containment = 1.0 and Jaccard = 0.05.",
+    "terms": [
+      {
+        "symbol": "shingle",
+        "meaning": "a sliding window of 5 consecutive words"
+      },
+      {
+        "symbol": "1 in 16 sampling",
+        "meaning": "keep a shingle when its hash mod 16 is 0 \u2014 uniform, so unbiased"
+      },
+      {
+        "symbol": "threshold 0.80",
+        "meaning": "the containment above which a duplicate is declared"
+      }
+    ]
+  },
+  "table": null,
+  "diagram": null,
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "Detects subset relationships Jaccard misses",
+      "Sampling makes it cheap at corpus scale",
+      "Survives reformatting"
+    ],
+    "limitations": [
+      "Threshold is a judgement call",
+      "Sampling introduces variance on very short documents"
+    ]
+  },
+  "pitfalls": [
+    "Using Jaccard for subset detection",
+    "Trusting a dedup result without a positive control \u2014 a detector that finds nothing may be one that cannot find anything"
   ],
-  "limitations": [
-   "Threshold is a judgement call",
-   "Sampling introduces variance on very short documents"
-  ]
- },
- "pitfalls": [
-  "Using Jaccard for subset detection",
-  "Trusting a dedup result without a positive control \u2014 a detector that finds nothing may be one that cannot find anything"
- ],
- "when": {
-  "use": [
-   "Corpora assembled from overlapping sources"
+  "when": {
+    "use": [
+      "Corpora assembled from overlapping sources"
+    ],
+    "avoid": []
+  },
+  "interacts_with": [
+    "provenance",
+    "corpus-acquisition"
   ],
-  "avoid": []
- },
- "interacts_with": [
-  "provenance",
-  "corpus-acquisition"
- ],
- "code": {
-  "file": "harness/corpus/parse.py",
-  "symbol": "run_dedup"
- },
- "related": [
-  "provenance",
-  "corpus-acquisition"
- ]
+  "code": {
+    "file": "parse.py",
+    "symbol": "run_dedup"
+  },
+  "related": [
+    "provenance",
+    "corpus-acquisition"
+  ]
 }

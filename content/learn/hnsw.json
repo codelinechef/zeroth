@@ -1,72 +1,72 @@
 {
- "id": "hnsw",
- "title": "HNSW and approximate nearest neighbour search",
- "category": "Vector search",
- "summary": "A graph index that finds near-neighbours in a vector space quickly by walking a hierarchy of links, trading exactness for speed.",
- "what": "HNSW builds a layered graph where each vector links to its neighbours. Search enters at a sparse top layer, greedily walks toward the query, then descends to denser layers to refine.",
- "why": "Exact nearest-neighbour search compares the query to every vector. At 51,310 chunks that is tolerable; at ten million it is not. HNSW turns a linear scan into a graph walk.",
- "how": "Two knobs matter. m is how many links each node keeps, fixed at build time. ef_search is how many candidates the search keeps in flight, set per query \u2014 larger means more of the graph explored, better recall, more time.",
- "in_this_project": "Built in PostgreSQL via pgvector 0.8.6 with m=16, ef_construction=64. On the real corpus the index builds in about 8 seconds. Measured here: at the default ef_search=40 an unrestricted role recovers 0.850 of what exact search returns \u2014 approximate means approximate, and 15% is lost before access control is even involved.",
- "sections": [],
- "formula": {
-  "notation": "recall@k = |ANN top-k  n  exact top-k| / k\n\nMeasured on this corpus, unrestricted:\n  ef_search=40   -> 0.850\n  ef_search=100  -> 0.942\n  ef_search=200  -> 0.967\n  ef_search=800  -> 0.975",
-  "terms": [
-   {
-    "symbol": "m",
-    "meaning": "links per node, fixed at build; higher is better recall and a larger index"
-   },
-   {
-    "symbol": "ef_construction",
-    "meaning": "candidate list size while building; higher is a better graph and a slower build"
-   },
-   {
-    "symbol": "ef_search",
-    "meaning": "candidate list size while querying; the runtime recall/latency dial"
-   }
-  ]
- },
- "table": null,
- "diagram": null,
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "Sub-linear search",
-   "ef_search tunable per query without rebuilding",
-   "Well supported in pgvector"
+  "id": "hnsw",
+  "title": "HNSW and approximate nearest neighbour search",
+  "category": "Vector search",
+  "summary": "A graph index that finds near-neighbours in a vector space quickly by walking a hierarchy of links, trading exactness for speed.",
+  "what": "HNSW builds a layered graph where each vector links to its neighbours. Search enters at a sparse top layer, greedily walks toward the query, then descends to denser layers to refine.",
+  "why": "Exact nearest-neighbour search compares the query to every vector. At 51,310 chunks that is tolerable; at ten million it is not. HNSW turns a linear scan into a graph walk.",
+  "how": "Two knobs matter. m is how many links each node keeps, fixed at build time. ef_search is how many candidates the search keeps in flight, set per query \u2014 larger means more of the graph explored, better recall, more time.",
+  "in_this_project": "Built in PostgreSQL via pgvector 0.8.6 with m=16, ef_construction=64. On the real corpus the index builds in about 8 seconds. Measured here: at the default ef_search=40 an unrestricted role recovers 0.850 of what exact search returns \u2014 approximate means approximate, and 15% is lost before access control is even involved.",
+  "sections": [],
+  "formula": {
+    "notation": "recall@k = |ANN top-k  n  exact top-k| / k\n\nMeasured on this corpus, unrestricted:\n  ef_search=40   -> 0.850\n  ef_search=100  -> 0.942\n  ef_search=200  -> 0.967\n  ef_search=800  -> 0.975",
+    "terms": [
+      {
+        "symbol": "m",
+        "meaning": "links per node, fixed at build; higher is better recall and a larger index"
+      },
+      {
+        "symbol": "ef_construction",
+        "meaning": "candidate list size while building; higher is a better graph and a slower build"
+      },
+      {
+        "symbol": "ef_search",
+        "meaning": "candidate list size while querying; the runtime recall/latency dial"
+      }
+    ]
+  },
+  "table": null,
+  "diagram": null,
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "Sub-linear search",
+      "ef_search tunable per query without rebuilding",
+      "Well supported in pgvector"
+    ],
+    "limitations": [
+      "Approximate by construction \u2014 recall is never 1.0 at practical settings",
+      "Build is not deterministic, so figures move between runs",
+      "Index is roughly twice the size of the raw vectors"
+    ]
+  },
+  "pitfalls": [
+    "Assuming ANN results equal exact results",
+    "Benchmarking at ef_search=40 and reporting it as retrieval quality",
+    "Filtering after the index has already chosen \u2014 see ANN post-filtering"
   ],
-  "limitations": [
-   "Approximate by construction \u2014 recall is never 1.0 at practical settings",
-   "Build is not deterministic, so figures move between runs",
-   "Index is roughly twice the size of the raw vectors"
-  ]
- },
- "pitfalls": [
-  "Assuming ANN results equal exact results",
-  "Benchmarking at ef_search=40 and reporting it as retrieval quality",
-  "Filtering after the index has already chosen \u2014 see ANN post-filtering"
- ],
- "when": {
-  "use": [
-   "Corpora large enough that exact scan is too slow"
+  "when": {
+    "use": [
+      "Corpora large enough that exact scan is too slow"
+    ],
+    "avoid": [
+      "Small corpora where exact search is fast and exactly right"
+    ]
+  },
+  "interacts_with": [
+    "embeddings",
+    "ann-post-filtering",
+    "rls",
+    "partitioning"
   ],
-  "avoid": [
-   "Small corpora where exact search is fast and exactly right"
+  "code": {
+    "file": "rls_demo.py",
+    "symbol": "main"
+  },
+  "related": [
+    "embeddings",
+    "ann-post-filtering",
+    "partitioning"
   ]
- },
- "interacts_with": [
-  "embeddings",
-  "ann-post-filtering",
-  "rls",
-  "partitioning"
- ],
- "code": {
-  "file": "harness/interactive/rls_demo.py",
-  "symbol": "main"
- },
- "related": [
-  "embeddings",
-  "ann-post-filtering",
-  "partitioning"
- ]
 }

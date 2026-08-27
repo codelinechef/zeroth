@@ -1,72 +1,72 @@
 {
- "id": "tenancy",
- "title": "Multi-tenancy and tenant assignment",
- "category": "Data",
- "summary": "Partitioning a corpus into isolated groups so access control and leakage tests are meaningful rather than theatrical.",
- "what": "A tenant is the unit of isolation: a role is granted some tenants and must never see the rest.",
- "why": "Testing access control needs tenants that actually differ and that hold enough documents for a result set to be measurable. One document per tenant proves nothing.",
- "how": "Each document is assigned a tenant deterministically from its source, and the assignment is recorded per document so it can be audited.",
- "in_this_project": "47 tenants over 662 documents. SEC filings partition by filing company, which is the natural unit. RFCs partition by working group. CUAD could not: its 510 contracts come from 463 distinct filers, so one tenant per counterparty would hold about 1.1 documents each. Contract type is used instead \u2014 bounded, deterministic from the filename, and semantically coherent, so contracts sharing a tenant genuinely resemble each other, which is the property that makes retrieval under access control behave like the real system rather than like random filtering. Tenants below a 500-chunk floor are folded into a semantic sibling, and every document records both its final tenant and the unmerged original.",
- "sections": [],
- "formula": null,
- "table": {
-  "headers": [
-   "Source",
-   "Tenant axis",
-   "Tenants"
+  "id": "tenancy",
+  "title": "Multi-tenancy and tenant assignment",
+  "category": "Data",
+  "summary": "Partitioning a corpus into isolated groups so access control and leakage tests are meaningful rather than theatrical.",
+  "what": "A tenant is the unit of isolation: a role is granted some tenants and must never see the rest.",
+  "why": "Testing access control needs tenants that actually differ and that hold enough documents for a result set to be measurable. One document per tenant proves nothing.",
+  "how": "Each document is assigned a tenant deterministically from its source, and the assignment is recorded per document so it can be audited.",
+  "in_this_project": "47 tenants over 662 documents. SEC filings partition by filing company, which is the natural unit. RFCs partition by working group. CUAD could not: its 510 contracts come from 463 distinct filers, so one tenant per counterparty would hold about 1.1 documents each. Contract type is used instead \u2014 bounded, deterministic from the filename, and semantically coherent, so contracts sharing a tenant genuinely resemble each other, which is the property that makes retrieval under access control behave like the real system rather than like random filtering. Tenants below a 500-chunk floor are folded into a semantic sibling, and every document records both its final tenant and the unmerged original.",
+  "sections": [],
+  "formula": null,
+  "table": {
+    "headers": [
+      "Source",
+      "Tenant axis",
+      "Tenants"
+    ],
+    "rows": [
+      [
+        "SEC EDGAR",
+        "filing company",
+        "29 kept individually, 6 short filers folded by sector"
+      ],
+      [
+        "CUAD contracts",
+        "contract type",
+        "7 families after merging"
+      ],
+      [
+        "RFCs",
+        "working group",
+        "2 after merging"
+      ]
+    ]
+  },
+  "diagram": null,
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "Makes isolation testable",
+      "Semantic tenants keep embedding clusters realistic"
+    ],
+    "limitations": [
+      "Natural tenant axes are sometimes unusable",
+      "Merging is a judgement call that must be documented"
+    ]
+  },
+  "pitfalls": [
+    "Tenants so small that per-tenant indexes are meaningless",
+    "Hash-bucketing tenants, which destroys the clustering that makes tests realistic"
   ],
-  "rows": [
-   [
-    "SEC EDGAR",
-    "filing company",
-    "29 kept individually, 6 short filers folded by sector"
-   ],
-   [
-    "CUAD contracts",
-    "contract type",
-    "7 families after merging"
-   ],
-   [
-    "RFCs",
-    "working group",
-    "2 after merging"
-   ]
+  "when": {
+    "use": [
+      "Access control is part of what is being measured"
+    ],
+    "avoid": []
+  },
+  "interacts_with": [
+    "rls",
+    "partitioning",
+    "ann-post-filtering"
+  ],
+  "code": {
+    "file": "parse.py",
+    "symbol": "assign_tenant"
+  },
+  "related": [
+    "rls",
+    "partitioning"
   ]
- },
- "diagram": null,
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "Makes isolation testable",
-   "Semantic tenants keep embedding clusters realistic"
-  ],
-  "limitations": [
-   "Natural tenant axes are sometimes unusable",
-   "Merging is a judgement call that must be documented"
-  ]
- },
- "pitfalls": [
-  "Tenants so small that per-tenant indexes are meaningless",
-  "Hash-bucketing tenants, which destroys the clustering that makes tests realistic"
- ],
- "when": {
-  "use": [
-   "Access control is part of what is being measured"
-  ],
-  "avoid": []
- },
- "interacts_with": [
-  "rls",
-  "partitioning",
-  "ann-post-filtering"
- ],
- "code": {
-  "file": "harness/corpus/parse.py",
-  "symbol": "assign_tenant"
- },
- "related": [
-  "rls",
-  "partitioning"
- ]
 }

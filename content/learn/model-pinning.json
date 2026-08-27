@@ -1,71 +1,71 @@
 {
- "id": "model-pinning",
- "title": "Model pinning and reproducibility",
- "category": "Generation",
- "summary": "Recording the exact dated model snapshot used, rather than a floating alias that silently changes.",
- "what": "Providers expose both moving aliases and dated snapshots. An alias resolves to whatever is current at call time.",
- "why": "If a judge sets a published number, a floating reference means re-running months later silently uses a different judge, and the number moves with no explanation in the output.",
- "how": "Resolve the alias to its snapshot at run start and record that, not the name that was requested.",
- "in_this_project": "Verified against the provider's model list: a -latest alias reports a floating label as its version, while a dated model reports a snapshot. Every query and judgment records name@snapshot, and a run config captures both model references, the candidate depth, the batch size, the seed and the corpus file.",
- "sections": [],
- "formula": null,
- "table": {
-  "headers": [
-   "Reference",
-   "Reported version",
-   "Reproducible"
+  "id": "model-pinning",
+  "title": "Model pinning and reproducibility",
+  "category": "Generation",
+  "summary": "Recording the exact dated model snapshot used, rather than a floating alias that silently changes.",
+  "what": "Providers expose both moving aliases and dated snapshots. An alias resolves to whatever is current at call time.",
+  "why": "If a judge sets a published number, a floating reference means re-running months later silently uses a different judge, and the number moves with no explanation in the output.",
+  "how": "Resolve the alias to its snapshot at run start and record that, not the name that was requested.",
+  "in_this_project": "Verified against the provider's model list: a -latest alias reports a floating label as its version, while a dated model reports a snapshot. Every query and judgment records name@snapshot, and a run config captures both model references, the candidate depth, the batch size, the seed and the corpus file.",
+  "sections": [],
+  "formula": null,
+  "table": {
+    "headers": [
+      "Reference",
+      "Reported version",
+      "Reproducible"
+    ],
+    "rows": [
+      [
+        "gemini-flash-lite-latest",
+        "Gemini Flash-Lite Latest",
+        "no \u2014 floating"
+      ],
+      [
+        "gemini-3.1-flash-lite",
+        "3.1-flash-lite-05-2026",
+        "yes \u2014 dated snapshot"
+      ],
+      [
+        "gemini-3.6-flash",
+        "3.6-flash-07-2026",
+        "yes \u2014 dated snapshot"
+      ]
+    ]
+  },
+  "diagram": null,
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "Re-runs are comparable",
+      "The judge behind a published number is identifiable"
+    ],
+    "limitations": [
+      "Snapshots are eventually retired",
+      "Pinning forgoes upstream improvements"
+    ]
+  },
+  "pitfalls": [
+    "Using a -latest alias anywhere a number is published",
+    "Recording the requested name rather than the resolved snapshot"
   ],
-  "rows": [
-   [
-    "gemini-flash-lite-latest",
-    "Gemini Flash-Lite Latest",
-    "no \u2014 floating"
-   ],
-   [
-    "gemini-3.1-flash-lite",
-    "3.1-flash-lite-05-2026",
-    "yes \u2014 dated snapshot"
-   ],
-   [
-    "gemini-3.6-flash",
-    "3.6-flash-07-2026",
-    "yes \u2014 dated snapshot"
-   ]
+  "when": {
+    "use": [
+      "Any model call whose output becomes a published figure"
+    ],
+    "avoid": []
+  },
+  "interacts_with": [
+    "llm-judge",
+    "constrained-decoding"
+  ],
+  "code": {
+    "file": "gemini.py",
+    "symbol": "Gemini.ref"
+  },
+  "related": [
+    "llm-judge",
+    "constrained-decoding"
   ]
- },
- "diagram": null,
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "Re-runs are comparable",
-   "The judge behind a published number is identifiable"
-  ],
-  "limitations": [
-   "Snapshots are eventually retired",
-   "Pinning forgoes upstream improvements"
-  ]
- },
- "pitfalls": [
-  "Using a -latest alias anywhere a number is published",
-  "Recording the requested name rather than the resolved snapshot"
- ],
- "when": {
-  "use": [
-   "Any model call whose output becomes a published figure"
-  ],
-  "avoid": []
- },
- "interacts_with": [
-  "llm-judge",
-  "constrained-decoding"
- ],
- "code": {
-  "file": "harness/golden/gemini.py",
-  "symbol": "Gemini.ref"
- },
- "related": [
-  "llm-judge",
-  "constrained-decoding"
- ]
 }

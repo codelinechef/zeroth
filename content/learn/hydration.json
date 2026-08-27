@@ -1,62 +1,62 @@
 {
- "id": "hydration",
- "title": "Hydration and HTML nesting",
- "category": "Engineering",
- "summary": "The step where server-rendered HTML is adopted by client JavaScript \u2014 and the invalid nesting that silently breaks it.",
- "what": "The server sends HTML; the client renders the same tree and attaches it to the existing DOM. If the two disagree, the server HTML is discarded and the page is re-rendered from scratch.",
- "why": "A mismatch throws away the work the server did and re-renders everything on every load. The only symptom is a minified error in the console.",
- "how": "HTML forbids flow content inside a paragraph. When a parser meets a div inside a p it auto-closes the paragraph, so the DOM the browser builds does not match the tree the framework rendered.",
- "in_this_project": "This project hit exactly that: an inline metric reference rendered its full panel \u2014 dialog, section, headings, pre, lists \u2014 at the reference point, which sat inside a paragraph of prose. The fix was structural rather than per-tag: the inline trigger returns phrasing content only, and panels render once per page outside the prose tree. A build-time guard now scans the emitted HTML with an explicit element stack and fails the build on flow content inside a paragraph, and it was verified by reintroducing the bug and confirming it caught all four violations.",
- "sections": [],
- "formula": null,
- "table": {
-  "headers": [
-   "Allowed inside <p>",
-   "Not allowed"
+  "id": "hydration",
+  "title": "Hydration and HTML nesting",
+  "category": "Engineering",
+  "summary": "The step where server-rendered HTML is adopted by client JavaScript \u2014 and the invalid nesting that silently breaks it.",
+  "what": "The server sends HTML; the client renders the same tree and attaches it to the existing DOM. If the two disagree, the server HTML is discarded and the page is re-rendered from scratch.",
+  "why": "A mismatch throws away the work the server did and re-renders everything on every load. The only symptom is a minified error in the console.",
+  "how": "HTML forbids flow content inside a paragraph. When a parser meets a div inside a p it auto-closes the paragraph, so the DOM the browser builds does not match the tree the framework rendered.",
+  "in_this_project": "This project hit exactly that: an inline metric reference rendered its full panel \u2014 dialog, section, headings, pre, lists \u2014 at the reference point, which sat inside a paragraph of prose. The fix was structural rather than per-tag: the inline trigger returns phrasing content only, and panels render once per page outside the prose tree. A build-time guard now scans the emitted HTML with an explicit element stack and fails the build on flow content inside a paragraph, and it was verified by reintroducing the bug and confirming it caught all four violations.",
+  "sections": [],
+  "formula": null,
+  "table": {
+    "headers": [
+      "Allowed inside <p>",
+      "Not allowed"
+    ],
+    "rows": [
+      [
+        "span, a, button, code, em, strong",
+        "div, section, dialog, h1-h6"
+      ],
+      [
+        "img, br, small, abbr",
+        "p, ul, ol, li, dl, table, pre, figure"
+      ]
+    ]
+  },
+  "diagram": null,
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "Server HTML is reused rather than rebuilt",
+      "Content is visible before JavaScript loads"
+    ],
+    "limitations": [
+      "The server and client trees must agree exactly",
+      "Mismatches fail loudly only in development"
+    ]
+  },
+  "pitfalls": [
+    "Rendering block content at an inline reference point",
+    "Testing only in development, where production behaviour differs",
+    "Patching individual tags rather than fixing the structure"
   ],
-  "rows": [
-   [
-    "span, a, button, code, em, strong",
-    "div, section, dialog, h1-h6"
-   ],
-   [
-    "img, br, small, abbr",
-    "p, ul, ol, li, dl, table, pre, figure"
-   ]
+  "when": {
+    "use": [
+      "Any server-rendered framework"
+    ],
+    "avoid": []
+  },
+  "interacts_with": [
+    "static-export"
+  ],
+  "code": {
+    "file": "check-nesting.mjs",
+    "symbol": "main"
+  },
+  "related": [
+    "static-export"
   ]
- },
- "diagram": null,
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "Server HTML is reused rather than rebuilt",
-   "Content is visible before JavaScript loads"
-  ],
-  "limitations": [
-   "The server and client trees must agree exactly",
-   "Mismatches fail loudly only in development"
-  ]
- },
- "pitfalls": [
-  "Rendering block content at an inline reference point",
-  "Testing only in development, where production behaviour differs",
-  "Patching individual tags rather than fixing the structure"
- ],
- "when": {
-  "use": [
-   "Any server-rendered framework"
-  ],
-  "avoid": []
- },
- "interacts_with": [
-  "static-export"
- ],
- "code": {
-  "file": "apps/web/scripts/check-nesting.mjs",
-  "symbol": "main"
- },
- "related": [
-  "static-export"
- ]
 }

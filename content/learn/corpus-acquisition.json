@@ -1,55 +1,55 @@
 {
- "id": "corpus-acquisition",
- "title": "Corpus acquisition and rate limiting",
- "category": "Data",
- "summary": "Fetching a corpus from public sources politely, resumably, and in a way a stranger can repeat.",
- "what": "Bulk fetching from public APIs with a shared request ceiling, resumable state, and per-document failure isolation.",
- "why": "Public data providers rate-limit per IP. A run that trips the limit can be blocked for a day; a run that dies at document 200 of 300 without resuming costs hours.",
- "how": "A token bucket paces requests, Retry-After is honoured, transient failures back off, and each document is checkpointed so a restart resumes rather than restarts.",
- "in_this_project": "662 documents from three sources at a 9 requests/second ceiling. Two implementation details worth knowing: a token bucket that starts full fires a burst of rps requests instantly and only then settles, putting roughly twice the ceiling into the opening second \u2014 which is exactly the window a per-second limit measures \u2014 so capacity is pinned to 1.0 for strict pacing. And a daily quota is distinguished from a transient 429, because retrying a daily quota inside the same run cannot help and just burns the remaining attempts.",
- "sections": [
-  {
-   "heading": "Integrity, not just existence",
-   "body": "A resume check that only asks whether a file exists will skip a truncated download forever, and the failure surfaces much later as an inexplicable parser error. Content-Length is verified before the write, files are written through a .part file and renamed atomically, and resume compares the file on disk against the byte count recorded in the manifest."
-  }
- ],
- "formula": null,
- "table": null,
- "diagram": null,
- "terms": [],
- "example": null,
- "tradeoffs": {
-  "advantages": [
-   "Interruptible and resumable across sessions",
-   "One failed document does not end the run",
-   "Reproducible from the committed manifest"
+  "id": "corpus-acquisition",
+  "title": "Corpus acquisition and rate limiting",
+  "category": "Data",
+  "summary": "Fetching a corpus from public sources politely, resumably, and in a way a stranger can repeat.",
+  "what": "Bulk fetching from public APIs with a shared request ceiling, resumable state, and per-document failure isolation.",
+  "why": "Public data providers rate-limit per IP. A run that trips the limit can be blocked for a day; a run that dies at document 200 of 300 without resuming costs hours.",
+  "how": "A token bucket paces requests, Retry-After is honoured, transient failures back off, and each document is checkpointed so a restart resumes rather than restarts.",
+  "in_this_project": "662 documents from three sources at a 9 requests/second ceiling. Two implementation details worth knowing: a token bucket that starts full fires a burst of rps requests instantly and only then settles, putting roughly twice the ceiling into the opening second \u2014 which is exactly the window a per-second limit measures \u2014 so capacity is pinned to 1.0 for strict pacing. And a daily quota is distinguished from a transient 429, because retrying a daily quota inside the same run cannot help and just burns the remaining attempts.",
+  "sections": [
+    {
+      "heading": "Integrity, not just existence",
+      "body": "A resume check that only asks whether a file exists will skip a truncated download forever, and the failure surfaces much later as an inexplicable parser error. Content-Length is verified before the write, files are written through a .part file and renamed atomically, and resume compares the file on disk against the byte count recorded in the manifest."
+    }
   ],
-  "limitations": [
-   "Rate limits make large corpora slow",
-   "Sources can change or disappear"
+  "formula": null,
+  "table": null,
+  "diagram": null,
+  "terms": [],
+  "example": null,
+  "tradeoffs": {
+    "advantages": [
+      "Interruptible and resumable across sessions",
+      "One failed document does not end the run",
+      "Reproducible from the committed manifest"
+    ],
+    "limitations": [
+      "Rate limits make large corpora slow",
+      "Sources can change or disappear"
+    ]
+  },
+  "pitfalls": [
+    "A token bucket that starts full",
+    "Treating HTTP 200 as success when the body is an error page",
+    "Assuming a file that exists is a file that is complete"
+  ],
+  "when": {
+    "use": [
+      "Public corpora fetched over an API"
+    ],
+    "avoid": []
+  },
+  "interacts_with": [
+    "provenance",
+    "deduplication"
+  ],
+  "code": {
+    "file": "fetch.py",
+    "symbol": "TokenBucket"
+  },
+  "related": [
+    "provenance",
+    "deduplication"
   ]
- },
- "pitfalls": [
-  "A token bucket that starts full",
-  "Treating HTTP 200 as success when the body is an error page",
-  "Assuming a file that exists is a file that is complete"
- ],
- "when": {
-  "use": [
-   "Public corpora fetched over an API"
-  ],
-  "avoid": []
- },
- "interacts_with": [
-  "provenance",
-  "deduplication"
- ],
- "code": {
-  "file": "harness/corpus/fetch.py",
-  "symbol": "TokenBucket"
- },
- "related": [
-  "provenance",
-  "deduplication"
- ]
 }
