@@ -21,5 +21,7 @@
       "href": "https://anantsharma.co.in/",
       "icon": "globe"
     }
-  ]
+  ],
+  "project_name": "Zeroth",
+  "citation_title": "Zeroth: a reproducible benchmark of end-to-end RAG pipeline quality"
 }

@@ -1226,3 +1226,42 @@ svg:has(.fig-hot.is-active) .fig-hot:not(.is-active) { opacity: 0.45; }
   padding-left: 0.75rem;
   margin-top: 0.75rem;
 }
+
+/* ===========================================================================
+   Positioning — the honest assessment
+   =========================================================================== */
+
+.positioning { margin-top: 1.25rem; max-width: var(--measure); }
+
+/* The claim itself, set as a statement rather than a heading: it is a
+   sentence the project has to stand behind, not a label. */
+.positioning-claim {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-150);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  border-left: 2px solid var(--ink);
+  padding-left: 1rem;
+  margin: 0;
+}
+.positioning-why {
+  font-size: var(--t-875);
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin: 0.75rem 0 0 1.1rem;
+}
+
+.decision-body { font-size: var(--t-875); line-height: 1.55; margin: 0; }
+/* The caveat is set apart, because a claim with its limit attached is a
+   different statement from the claim alone. */
+.decision-caveat {
+  font-family: var(--font-mono);
+  font-size: var(--t-75);
+  line-height: 1.5;
+  color: var(--ink-muted);
+  border-left: 2px solid var(--rule);
+  padding-left: 0.75rem;
+  margin: 0.7rem 0 0;
+}

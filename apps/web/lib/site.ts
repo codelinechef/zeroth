@@ -24,6 +24,8 @@ export type Site = {
   author: string;
   author_display: string;
   first_published_year: number;
+  project_name: string;
+  citation_title: string;
   author_links: AuthorLink[];
 };
 

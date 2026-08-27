@@ -14,7 +14,7 @@ import { useState } from "react";
  * committed corpus id is the only thing that has to be passed in.
  */
 export function Cite({
-  corpusId, year, url, publisher, author, provisional, urlNote,
+  corpusId, year, url, publisher, author, provisional, urlNote, title,
 }: {
   corpusId: string | null;
   year: number;
@@ -24,6 +24,8 @@ export function Cite({
   author: string;
   provisional: boolean;
   urlNote: string;
+  /** From content/site.json. */
+  title: string;
 }) {
   const [copied, setCopied] = useState<"bibtex" | "text" | null>(null);
   const accessed = new Date().toISOString().slice(0, 10);
@@ -33,7 +35,7 @@ export function Cite({
   const bibtex = [
     "@misc{" + key + "_zeroth_" + year + ",",
     "  author       = {" + author + "},",
-    "  title        = {Zeroth: a reproducible benchmark of end-to-end RAG pipeline quality},",
+    "  title        = {" + title + "},",
     "  year         = {" + year + "},",
     "  howpublished = {\\url{" + url + "}},",
     "  note         = {" + note + ". Accessed " + accessed + "},",
@@ -42,8 +44,8 @@ export function Cite({
   ].join("\n");
 
   const plain =
-    `${author} (${year}). Zeroth: a reproducible benchmark of end-to-end RAG ` +
-    `pipeline quality. ${publisher}. ${note}. Retrieved ${accessed}, from ${url}`;
+    `${author} (${year}). ${title}. ${publisher}. ${note}. ` +
+    `Retrieved ${accessed}, from ${url}`;
 
   const copy = async (what: "bibtex" | "text", value: string) => {
     try {

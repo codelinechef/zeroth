@@ -1,0 +1,86 @@
+{
+  "describes": "An honest assessment of what this project is, written against the codebase rather than around it.",
+  "note": "Written because the alternative was to keep calling it a research paper and hope nobody checked. Every claim below is checkable against a file in the repository, and the claims that would flatter the project most are the ones that failed that test.",
+
+  "positioning": {
+    "claim": "A reproducible retrieval benchmark, published methodology-first.",
+    "rejected": [
+      {
+        "label": "Digital research paper",
+        "why": "A paper reports findings. This has none yet — the board is empty, and deliberately so. Calling it a paper before the first run would be claiming the one thing it does not have."
+      },
+      {
+        "label": "RAG demo",
+        "why": "Too weak in the other direction. A demo does not ship a 246-case red-team suite, a plan guard, bootstrapped confidence intervals, or a published golden set with its judge's error rate measured."
+      },
+      {
+        "label": "Technical case study",
+        "why": "Closer, but a case study describes a system that already shipped. This measures one, and the measurement apparatus is most of the work."
+      }
+    ],
+    "why_this_one": "The corpus, the golden set, the guardrails, the failure modes and the evaluation apparatus are all published BEFORE any number is. That order is unusual — benchmarks normally publish results and leave the method implicit — and it is the part a reader can check today."
+  },
+
+  "novelty": [
+    {
+      "claim": "What access control costs approximate retrieval, measured",
+      "strength": "differentiated",
+      "detail": "An approximate index returns nearest neighbours by distance, and only then does the policy discard the ones a role may not see. Nothing refills the discarded slots. The effect is measured here per role across a search-width sweep and reported separately from headline numbers rather than folded into them.",
+      "honest_caveat": "The mechanism is well understood in principle. What is uncommon is publishing the measurement rather than mentioning the risk."
+    },
+    {
+      "claim": "The silent planner flip, and a guard against it",
+      "strength": "differentiated",
+      "detail": "The same retrieval query executes as either an HNSW index scan or a sequential scan depending on table statistics and machine-level planner settings. The flip is silent, and it flips TOWARD exact search — so recall rises and nothing looks broken. A run simply scores higher on one machine than another. The guard pins the planner, asserts the executed plan shape, fails the run on mismatch, and records an md5 fingerprint so two runs can be compared for planner equivalence.",
+      "honest_caveat": "One of the two documented triggers does not reproduce at the current corpus size, and that is recorded rather than quietly dropped."
+    },
+    {
+      "claim": "The judge is measured, not trusted",
+      "strength": "uncommon practice",
+      "detail": "Relevance grades are drafted by a pinned model, a stratified sample is re-graded by hand, and the disagreement rate is published — 4 agreements in 32 checks. Checking that set against itself then found contradictions the disagreement rate alone had hidden.",
+      "honest_caveat": "Verification is not blind: the tool shows the model's grade before asking for the human's. A blind pass would be a stronger instrument."
+    },
+    {
+      "claim": "Refusing to publish is the argument",
+      "strength": "positioning",
+      "detail": "No retrieval score appears anywhere, because the golden set is small and disagrees with itself. An empty results table with the reason stated is a stronger claim about method than a filled one with a footnote."
+    }
+  ],
+
+  "established": [
+    "Hybrid retrieval, reciprocal rank fusion, cross-encoder reranking — all published technique, implemented carefully and claimed as nothing more.",
+    "HNSW approximate nearest-neighbour search via pgvector, and bge embedding and reranking models.",
+    "Schema-constrained decoding for parseable citations.",
+    "Row-level security as a Postgres feature. The application of it to a retrieval path, and the measurement of its cost, is the part that is not routine.",
+    "The corpus pipeline: fetch, parse, chunk, deduplicate, checksum. Careful, conventional, and not a contribution."
+  ],
+
+  "why_digital": [
+    {
+      "affordance": "The pipeline is steppable",
+      "detail": "A reader can follow one chunk through lexical, dense, fused and reranked, and see where each stage found or nearly lost it. A PDF can only describe that."
+    },
+    {
+      "affordance": "The corpus is browsable",
+      "detail": "All 663 documents, with source, tenant, licence and checksum, searchable. In print this is an appendix nobody opens."
+    },
+    {
+      "affordance": "The golden set is inspectable",
+      "detail": "Every query, every judgment, and every human/model disagreement, per row. Papers cite their evaluation set; they rarely let you read it."
+    },
+    {
+      "affordance": "Every figure carries its regenerate command",
+      "detail": "Script, commit and corpus id sit beside the figure, so a number traces to the code that produced it without leaving the page."
+    },
+    {
+      "affordance": "Definitions travel with the text",
+      "detail": "A metric name opens its formula, range and the failure modes that threaten it, in place. A printed paper pushes that to a table the reader has to hold in their head."
+    }
+  ],
+
+  "what_would_change_the_claim": [
+    "A published baseline run over a golden set that does not contradict itself would make 'benchmark' unqualified rather than methodology-first.",
+    "Nine one-factor variants with separated confidence intervals would make it a paper with findings.",
+    "Neither has happened yet, and the positioning above will change when they do rather than before."
+  ]
+}

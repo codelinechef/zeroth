@@ -10,6 +10,7 @@ import { Glossary } from "@/components/Glossary";
 import { Cite } from "@/components/Cite";
 import { References } from "@/components/References";
 import { getSite } from "@/lib/site";
+import { Positioning } from "@/components/Positioning";
 
 export const metadata = {
   title: "About · Zeroth",
@@ -56,7 +57,21 @@ export default function AboutPage() {
         </p>
       </Prose>
 
-      <h2 className="mt-14">2 · Problem</h2>
+      <h2 className="mt-14">2 · What this is, and what it is not</h2>
+      <Prose>
+        <MarginNote label="Assessed against the code">
+          Written by checking the repository rather than describing it. The
+          claims that would flatter the project most are the ones that failed.
+        </MarginNote>
+        <p>
+          It would be easy to call this a research paper. It is not one yet,
+          and the distinction is worth stating plainly rather than leaving a
+          reader to discover it.
+        </p>
+      </Prose>
+      <Positioning />
+
+      <h2 className="mt-14">3 · Problem</h2>
       <Prose>
         <p>
           Retrieval systems are usually reported as a single quality number, and
@@ -73,7 +88,7 @@ export default function AboutPage() {
         </p>
       </Prose>
 
-      <h2 className="mt-14">3 · How it works</h2>
+      <h2 className="mt-14">4 · How it works</h2>
       <Prose>
         <p>
           Documents are fetched from three public sources, parsed with page and
@@ -91,7 +106,7 @@ export default function AboutPage() {
         <div className="p-4"><Pipeline /></div>
       </Figure>
 
-      <h2 className="mt-14">4 · System architecture</h2>
+      <h2 className="mt-14">5 · System architecture</h2>
       <Prose>
         <p>
           The platform runs locally in Docker. Only the site is publicly hosted,
@@ -135,7 +150,7 @@ export default function AboutPage() {
         </table>
       </Bleed>
 
-      <h2 className="mt-14">5 · The corpus</h2>
+      <h2 className="mt-14">6 · The corpus</h2>
       <Prose>
         {c ? (
           <p>
@@ -160,7 +175,7 @@ export default function AboutPage() {
         </p>
       </Prose>
 
-      <h2 className="mt-14">6 · Key technical decisions</h2>
+      <h2 className="mt-14">7 · Key technical decisions</h2>
       <Prose>
         <ul className="list-disc pl-5 space-y-3">
           <li>
@@ -192,7 +207,7 @@ export default function AboutPage() {
         </ul>
       </Prose>
 
-      <h2 className="mt-14">7 · Statement of origin</h2>
+      <h2 className="mt-14">8 · Statement of origin</h2>
       <Prose>
         <blockquote className="border-l-2 border-rule pl-5">
           <p>
@@ -207,7 +222,7 @@ export default function AboutPage() {
         </blockquote>
       </Prose>
 
-      <h2 className="mt-14">8 · Glossary</h2>
+      <h2 className="mt-14">9 · Glossary</h2>
       <Prose>
         <p>
           Every abbreviation the paper uses, written out. In the prose each one
@@ -217,7 +232,7 @@ export default function AboutPage() {
       </Prose>
       <Glossary />
 
-      <h2 className="mt-14">9 · References</h2>
+      <h2 className="mt-14">10 · References</h2>
       <Prose>
         <p>
           The works this project is built on and measured against. Each entry
@@ -229,7 +244,7 @@ export default function AboutPage() {
       </Prose>
       <References />
 
-      <h2 className="mt-14">10 · Citation</h2>
+      <h2 className="mt-14">11 · Citation</h2>
       {site ? (
         <Cite
           corpusId={c?.corpusId ?? null}
@@ -237,12 +252,13 @@ export default function AboutPage() {
           url={site.canonical_url}
           publisher={site.publisher}
           author={site.author}
+          title={site.citation_title}
           provisional={site.url_status === "provisional"}
           urlNote={site.url_note}
         />
       ) : null}
 
-      <h2 className="mt-14">11 · Author and links</h2>
+      <h2 className="mt-14">12 · Author and links</h2>
       <Prose>
         <p>
           Built by Anant Sharma. AI Engineer who builds production Python
