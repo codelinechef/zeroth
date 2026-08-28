@@ -37,7 +37,7 @@ export default function BoardPage() {
             <span className="display"><Zeroth /></span>
           </p>
           <p className="masthead-endorse">
-            a research project by <NthLabs className="is-endorsement" />
+            by <NthLabs className="is-endorsement" />
           </p>
         </div>
         <p className="mt-4 text-[length:var(--t-125)] text-ink-muted prose-measure">
